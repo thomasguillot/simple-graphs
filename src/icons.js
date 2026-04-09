@@ -1,102 +1,19 @@
-import {
-	starFilled,
-	people,
-	chartBar,
-	trendingUp,
-	trendingDown,
-	check,
-	close,
-	warning,
-	info,
-	home,
-	store,
-	currencyDollar,
-	globe,
-	tool,
-	cog,
-	shield,
-	lock,
-	key,
-	comment,
-	tag,
-	calendar,
-	image,
-	video,
-	audio,
-	upload,
-	download,
-	cloud,
-	page,
-	post,
-	pencil,
-	trash,
-	plus,
-	arrowUp,
-	arrowDown,
-	arrowLeft,
-	arrowRight,
-	external,
-	link,
-	search,
-	filter,
-	listView,
-	desktop,
-	mobile,
-	tablet,
-	wordpress,
-	pin,
-} from '@wordpress/icons';
+import * as wpIcons from '@wordpress/icons';
 
-export const ICONS = {
-	starFilled,
-	people,
-	chartBar,
-	trendingUp,
-	trendingDown,
-	check,
-	close,
-	warning,
-	info,
-	home,
-	store,
-	currencyDollar,
-	globe,
-	tool,
-	cog,
-	shield,
-	lock,
-	key,
-	comment,
-	tag,
-	calendar,
-	image,
-	video,
-	audio,
-	upload,
-	download,
-	cloud,
-	page,
-	post,
-	pencil,
-	trash,
-	plus,
-	arrowUp,
-	arrowDown,
-	arrowLeft,
-	arrowRight,
-	external,
-	link,
-	search,
-	filter,
-	listView,
-	desktop,
-	mobile,
-	tablet,
-	wordpress,
-	pin,
-};
+// Expose every icon exported from @wordpress/icons. The module also exports
+// a default `Icon` component and a few non-icon helpers; filter those out.
+const EXCLUDE = new Set( [ 'default', 'Icon', 'blockDefault' ] );
 
-export const ICON_KEYS = Object.keys( ICONS );
+export const ICONS = Object.fromEntries(
+	Object.entries( wpIcons ).filter(
+		( [ key, value ] ) =>
+			! EXCLUDE.has( key ) &&
+			value &&
+			( typeof value === 'object' || typeof value === 'function' )
+	)
+);
+
+export const ICON_KEYS = Object.keys( ICONS ).sort();
 
 export function getIcon( iconKey ) {
 	return iconKey && ICONS[ iconKey ] ? ICONS[ iconKey ] : null;
