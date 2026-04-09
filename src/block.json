@@ -12,7 +12,12 @@
   "supports": {
     "html": false,
     "align": ["wide", "full"],
-    "spacing": { "margin": true, "padding": true }
+    "spacing": { "margin": true, "padding": true },
+    "color": {
+      "background": true,
+      "text": false,
+      "link": false
+    }
   },
   "attributes": {
     "items": {
@@ -22,8 +27,6 @@
         { "id": "b", "title": "Item B", "value": 30, "color": "#F59E0B", "icon": null },
         { "id": "c", "title": "Item C", "value": 30, "color": "#10B981", "icon": null }
       ]
-    },
-    "chartTitle": { "type": "string", "default": "" },
-    "chartBackground": { "type": "string", "default": "" }
+    }
   }
 }
