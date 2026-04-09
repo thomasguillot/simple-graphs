@@ -10,7 +10,7 @@ import {
 import DataItemsPanel from './components/DataItemsPanel';
 import Chart from './charts/Chart';
 
-export default function Edit( { attributes, setAttributes, className } ) {
+export default function Edit( { attributes, setAttributes } ) {
 	const { items, chartTitle, chartBackground } = attributes;
 	const blockProps = useBlockProps();
 	const bgId = useInstanceId( Edit, 'simple-graphs-bg' );
@@ -51,7 +51,7 @@ export default function Edit( { attributes, setAttributes, className } ) {
 					items={ items }
 					chartTitle={ chartTitle }
 					chartBackground={ chartBackground }
-					className={ className }
+					className={ blockProps.className }
 				/>
 			</div>
 		</>

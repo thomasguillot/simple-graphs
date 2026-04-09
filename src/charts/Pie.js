@@ -43,12 +43,24 @@ export default function Pie( { items } ) {
 				const mid = ( s.startAngle + s.endAngle ) / 2;
 				const labelPos = polarToCartesian( CX, CY, R + 24, mid );
 				const low = isLowValue( item.value );
+				const isFullCircle =
+					s.endAngle - s.startAngle >= Math.PI * 2 - 0.0001;
 				return (
 					<g key={ item.id }>
-						<path
-							d={ arcPath( CX, CY, R, s.startAngle, s.endAngle ) }
-							fill={ item.color }
-						/>
+						{ isFullCircle ? (
+							<circle cx={ CX } cy={ CY } r={ R } fill={ item.color } />
+						) : (
+							<path
+								d={ arcPath(
+									CX,
+									CY,
+									R,
+									s.startAngle,
+									s.endAngle
+								) }
+								fill={ item.color }
+							/>
+						) }
 						<text
 							x={ labelPos.x }
 							y={ labelPos.y }

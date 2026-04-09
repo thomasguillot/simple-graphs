@@ -87,13 +87,14 @@ export function polarToCartesian( cx, cy, r, angleRad ) {
 }
 
 export function arcPath( cx, cy, r, startAngle, endAngle ) {
-	const start = polarToCartesian( cx, cy, r, endAngle );
-	const end = polarToCartesian( cx, cy, r, startAngle );
+	// A full circle can't be drawn with a single arc; caller should handle that case.
+	const start = polarToCartesian( cx, cy, r, startAngle );
+	const end = polarToCartesian( cx, cy, r, endAngle );
 	const largeArc = endAngle - startAngle > Math.PI ? 1 : 0;
 	return [
 		`M ${ cx } ${ cy }`,
-		`L ${ end.x } ${ end.y }`,
-		`A ${ r } ${ r } 0 ${ largeArc } 0 ${ start.x } ${ start.y }`,
+		`L ${ start.x } ${ start.y }`,
+		`A ${ r } ${ r } 0 ${ largeArc } 1 ${ end.x } ${ end.y }`,
 		'Z',
 	].join( ' ' );
 }
