@@ -4,8 +4,6 @@ import Pie from './Pie';
 import Donut from './Donut';
 import Stacked from './Stacked';
 import Bubble from './Bubble';
-import { FONT_STACK } from './shared';
-
 const VARIATIONS = {
 	column: Column,
 	bar: Bar,
@@ -22,13 +20,13 @@ export function resolveVariation( className = '' ) {
 	return match ? match[ 1 ] : 'column';
 }
 
-export default function Chart( { items, className } ) {
+export default function Chart( { items, className, trackColor } ) {
 	const variation = resolveVariation( className );
 	const Component = VARIATIONS[ variation ] || Column;
 
 	return (
-		<div className="simple-graphs-chart" style={ { fontFamily: FONT_STACK } }>
-			<Component items={ items } />
+		<div className="simple-graphs-chart">
+			<Component items={ items } trackColor={ trackColor } />
 		</div>
 	);
 }

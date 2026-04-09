@@ -1,5 +1,5 @@
 import { Icon as IconComponent } from '@wordpress/components';
-import { BORDER_RADIUS, FONT_STACK, isLowValue } from './shared';
+import { BORDER_RADIUS, isLowValue } from './shared';
 import { getIcon } from '../icons';
 
 const WIDTH = 600;
@@ -8,7 +8,7 @@ const PADDING_X = 20;
 const PADDING_TOP = 40;
 const PADDING_BOTTOM = 60;
 
-export default function Column( { items } ) {
+export default function Column( { items, trackColor } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -21,7 +21,7 @@ export default function Column( { items } ) {
 		<svg
 			viewBox={ `0 0 ${ WIDTH } ${ HEIGHT }` }
 			preserveAspectRatio="xMidYMid meet"
-			style={ { fontFamily: FONT_STACK, width: '100%', height: 'auto' } }
+			style={ { width: '100%', height: 'auto' } }
 		>
 			{ items.map( ( item, i ) => {
 				const h = ( item.value / maxValue ) * plotHeight;
@@ -32,6 +32,16 @@ export default function Column( { items } ) {
 				const low = isLowValue( item.value );
 				return (
 					<g key={ item.id }>
+						{ trackColor && (
+							<rect
+								x={ x }
+								y={ PADDING_TOP }
+								width={ barWidth }
+								height={ plotHeight }
+								rx={ BORDER_RADIUS }
+								fill={ trackColor }
+							/>
+						) }
 						<rect
 							x={ x }
 							y={ y }

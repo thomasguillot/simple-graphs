@@ -1,5 +1,5 @@
 import { Icon as IconComponent } from '@wordpress/components';
-import { BORDER_RADIUS, FONT_STACK, isLowValue } from './shared';
+import { BORDER_RADIUS, isLowValue } from './shared';
 import { getIcon } from '../icons';
 
 const WIDTH = 600;
@@ -8,7 +8,7 @@ const ROW_HEIGHT = 44;
 const BAR_HEIGHT = 28;
 const LABEL_WIDTH = 140;
 
-export default function Bar( { items } ) {
+export default function Bar( { items, trackColor } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -20,7 +20,7 @@ export default function Bar( { items } ) {
 		<svg
 			viewBox={ `0 0 ${ WIDTH } ${ height }` }
 			preserveAspectRatio="xMidYMid meet"
-			style={ { fontFamily: FONT_STACK, width: '100%', height: 'auto' } }
+			style={ { width: '100%', height: 'auto' } }
 		>
 			{ items.map( ( item, i ) => {
 				const w = ( item.value / maxValue ) * plotWidth;
@@ -40,6 +40,16 @@ export default function Bar( { items } ) {
 						>
 							{ item.title }
 						</text>
+						{ trackColor && (
+							<rect
+								x={ x }
+								y={ y }
+								width={ plotWidth }
+								height={ BAR_HEIGHT }
+								rx={ BORDER_RADIUS }
+								fill={ trackColor }
+							/>
+						) }
 						<rect
 							x={ x }
 							y={ y }

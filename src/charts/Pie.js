@@ -1,5 +1,4 @@
 import {
-	FONT_STACK,
 	NEUTRAL_GRAY,
 	pieSlices,
 	arcPath,
@@ -25,7 +24,7 @@ export default function Pie( { items } ) {
 		<svg
 			viewBox={ `0 0 ${ WIDTH } ${ HEIGHT }` }
 			preserveAspectRatio="xMidYMid meet"
-			style={ { fontFamily: FONT_STACK, width: '100%', height: 'auto' } }
+			style={ { width: '100%', height: 'auto' } }
 		>
 			{ remainder > 0 && (
 				<circle

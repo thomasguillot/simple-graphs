@@ -1,10 +1,10 @@
 .wp-block-simple-graphs-chart {
-	.simple-graphs-chart__title {
-		font-weight: 700;
+	// The block's native background color is consumed as per-item track
+	// fills inside the SVG, not painted on the wrapper itself.
+	&.has-background {
+		background-color: transparent !important;
 	}
-	.simple-graphs-chart__plot {
-		display: block;
-	}
+
 	svg {
 		display: block;
 		max-width: 100%;

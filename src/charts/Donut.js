@@ -1,4 +1,4 @@
-import { FONT_STACK, NEUTRAL_GRAY } from './shared';
+import { NEUTRAL_GRAY } from './shared';
 
 const WIDTH = 500;
 const HEIGHT = 420;
@@ -24,7 +24,7 @@ export default function Donut( { items, chartTitle } ) {
 		<svg
 			viewBox={ `0 0 ${ WIDTH } ${ HEIGHT }` }
 			preserveAspectRatio="xMidYMid meet"
-			style={ { fontFamily: FONT_STACK, width: '100%', height: 'auto' } }
+			style={ { width: '100%', height: 'auto' } }
 		>
 			{ total < 100 && (
 				<circle

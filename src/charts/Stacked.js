@@ -1,5 +1,5 @@
 import { Icon as IconComponent } from '@wordpress/components';
-import { BORDER_RADIUS, FONT_STACK, NEUTRAL_GRAY, isLowValue } from './shared';
+import { BORDER_RADIUS, NEUTRAL_GRAY, isLowValue } from './shared';
 import { getIcon } from '../icons';
 
 const WIDTH = 600;
@@ -22,7 +22,7 @@ export default function Stacked( { items } ) {
 		<svg
 			viewBox={ `0 0 ${ WIDTH } ${ HEIGHT }` }
 			preserveAspectRatio="xMidYMid meet"
-			style={ { fontFamily: FONT_STACK, width: '100%', height: 'auto' } }
+			style={ { width: '100%', height: 'auto' } }
 		>
 			<clipPath id="stacked-clip">
 				<rect
