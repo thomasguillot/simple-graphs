@@ -4,15 +4,16 @@ import DataItemRow from './DataItemRow';
 import { computeTotal } from '../charts/shared';
 
 const MAX_ITEMS = 8;
+// Vibrant palette, all AA-contrast (≥4.5:1) against white.
 const DEFAULT_COLORS = [
-	'#1E40AF',
-	'#F59E0B',
-	'#10B981',
-	'#EF4444',
-	'#8B5CF6',
-	'#EC4899',
-	'#14B8A6',
-	'#F97316',
+	'#DB2777', // pink
+	'#0891B2', // cyan
+	'#7C3AED', // violet
+	'#D97706', // amber
+	'#059669', // emerald
+	'#DC2626', // red
+	'#2563EB', // blue
+	'#C026D3', // fuchsia
 ];
 
 function uid() {
