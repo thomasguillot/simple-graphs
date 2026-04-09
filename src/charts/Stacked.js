@@ -25,7 +25,13 @@ export default function Stacked( { items } ) {
 			style={ { fontFamily: FONT_STACK, width: '100%', height: 'auto' } }
 		>
 			<clipPath id="stacked-clip">
-				<rect x={ PADDING } y={ BAR_Y } width={ plotWidth } height={ BAR_HEIGHT } rx={ BORDER_RADIUS } />
+				<rect
+					x={ PADDING }
+					y={ BAR_Y }
+					width={ plotWidth }
+					height={ BAR_HEIGHT }
+					rx={ BORDER_RADIUS }
+				/>
 			</clipPath>
 			<g clipPath="url(#stacked-clip)">
 				{ items.map( ( item ) => {
@@ -37,13 +43,27 @@ export default function Stacked( { items } ) {
 					const centerX = x + w / 2;
 					return (
 						<g key={ item.id }>
-							<rect x={ x } y={ BAR_Y } width={ w } height={ BAR_HEIGHT } fill={ item.color } />
+							<rect
+								x={ x }
+								y={ BAR_Y }
+								width={ w }
+								height={ BAR_HEIGHT }
+								fill={ item.color }
+							/>
 							{ ! low && (
 								<>
 									{ icon && (
-										<foreignObject x={ centerX - 10 } y={ BAR_Y + 8 } width={ 20 } height={ 20 }>
+										<foreignObject
+											x={ centerX - 10 }
+											y={ BAR_Y + 8 }
+											width={ 20 }
+											height={ 20 }
+										>
 											<div style={ { color: '#fff' } }>
-												<IconComponent icon={ icon } size={ 20 } />
+												<IconComponent
+													icon={ icon }
+													size={ 20 }
+												/>
 											</div>
 										</foreignObject>
 									) }
@@ -63,7 +83,13 @@ export default function Stacked( { items } ) {
 					);
 				} ) }
 				{ remainder > 0 && (
-					<rect x={ cursor } y={ BAR_Y } width={ ( remainder / 100 ) * plotWidth } height={ BAR_HEIGHT } fill={ NEUTRAL_GRAY } />
+					<rect
+						x={ cursor }
+						y={ BAR_Y }
+						width={ ( remainder / 100 ) * plotWidth }
+						height={ BAR_HEIGHT }
+						fill={ NEUTRAL_GRAY }
+					/>
 				) }
 			</g>
 			{ items.map( ( item, i ) => {
@@ -71,7 +97,8 @@ export default function Stacked( { items } ) {
 				for ( let j = 0; j < i; j++ ) {
 					accum += items[ j ].value;
 				}
-				const x = PADDING + ( ( accum + item.value / 2 ) / 100 ) * plotWidth;
+				const x =
+					PADDING + ( ( accum + item.value / 2 ) / 100 ) * plotWidth;
 				return (
 					<text
 						key={ `t-${ item.id }` }

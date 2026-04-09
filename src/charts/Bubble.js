@@ -28,14 +28,30 @@ export default function Bubble( { items } ) {
 				const low = isLowValue( item.value );
 				const fitsInside = b.r > 40;
 				return (
-					<g key={ item.id } transform={ `translate(${ PADDING } ${ PADDING })` }>
-						<circle cx={ b.cx } cy={ b.cy } r={ b.r } fill={ item.color } />
+					<g
+						key={ item.id }
+						transform={ `translate(${ PADDING } ${ PADDING })` }
+					>
+						<circle
+							cx={ b.cx }
+							cy={ b.cy }
+							r={ b.r }
+							fill={ item.color }
+						/>
 						{ fitsInside ? (
 							<>
 								{ icon && (
-									<foreignObject x={ b.cx - 12 } y={ b.cy - 24 } width={ 24 } height={ 24 }>
+									<foreignObject
+										x={ b.cx - 12 }
+										y={ b.cy - 24 }
+										width={ 24 }
+										height={ 24 }
+									>
 										<div style={ { color: '#fff' } }>
-											<IconComponent icon={ icon } size={ 24 } />
+											<IconComponent
+												icon={ icon }
+												size={ 24 }
+											/>
 										</div>
 									</foreignObject>
 								) }
@@ -49,7 +65,13 @@ export default function Bubble( { items } ) {
 								>
 									{ item.value }%
 								</text>
-								<text x={ b.cx } y={ b.cy + 26 } textAnchor="middle" fontSize={ 11 } fill="#fff">
+								<text
+									x={ b.cx }
+									y={ b.cy + 26 }
+									textAnchor="middle"
+									fontSize={ 11 }
+									fill="#fff"
+								>
 									{ item.title }
 								</text>
 							</>

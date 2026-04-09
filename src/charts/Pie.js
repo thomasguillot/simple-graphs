@@ -1,4 +1,11 @@
-import { FONT_STACK, NEUTRAL_GRAY, pieSlices, arcPath, polarToCartesian, isLowValue } from './shared';
+import {
+	FONT_STACK,
+	NEUTRAL_GRAY,
+	pieSlices,
+	arcPath,
+	polarToCartesian,
+	isLowValue,
+} from './shared';
 
 const WIDTH = 500;
 const HEIGHT = 420;
@@ -21,7 +28,15 @@ export default function Pie( { items } ) {
 			style={ { fontFamily: FONT_STACK, width: '100%', height: 'auto' } }
 		>
 			{ remainder > 0 && (
-				<circle cx={ CX } cy={ CY } r={ R } fill="none" stroke={ NEUTRAL_GRAY } strokeWidth={ 2 } strokeDasharray="4 4" />
+				<circle
+					cx={ CX }
+					cy={ CY }
+					r={ R }
+					fill="none"
+					stroke={ NEUTRAL_GRAY }
+					strokeWidth={ 2 }
+					strokeDasharray="4 4"
+				/>
 			) }
 			{ slices.map( ( s, i ) => {
 				const item = items[ i ];
@@ -30,7 +45,10 @@ export default function Pie( { items } ) {
 				const low = isLowValue( item.value );
 				return (
 					<g key={ item.id }>
-						<path d={ arcPath( CX, CY, R, s.startAngle, s.endAngle ) } fill={ item.color } />
+						<path
+							d={ arcPath( CX, CY, R, s.startAngle, s.endAngle ) }
+							fill={ item.color }
+						/>
 						<text
 							x={ labelPos.x }
 							y={ labelPos.y }

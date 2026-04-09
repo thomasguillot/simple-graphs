@@ -31,12 +31,18 @@ export default function IconPicker( { value, onChange } ) {
 				) }
 			</Button>
 			{ isOpen && (
-				<Popover onClose={ () => setIsOpen( false ) } placement="bottom-start">
+				<Popover
+					onClose={ () => setIsOpen( false ) }
+					placement="bottom-start"
+				>
 					<div style={ { padding: 12, width: 260 } }>
 						<TextControl
 							value={ query }
 							onChange={ setQuery }
-							placeholder={ __( 'Search icons', 'simple-graphs' ) }
+							placeholder={ __(
+								'Search icons',
+								'simple-graphs'
+							) }
 							__nextHasNoMarginBottom
 						/>
 						<div
@@ -50,7 +56,9 @@ export default function IconPicker( { value, onChange } ) {
 							} }
 						>
 							<Button
-								variant={ value === null ? 'primary' : 'tertiary' }
+								variant={
+									value === null ? 'primary' : 'tertiary'
+								}
 								onClick={ () => {
 									onChange( null );
 									setIsOpen( false );
@@ -62,7 +70,9 @@ export default function IconPicker( { value, onChange } ) {
 							{ filtered.map( ( key ) => (
 								<Button
 									key={ key }
-									variant={ value === key ? 'primary' : 'tertiary' }
+									variant={
+										value === key ? 'primary' : 'tertiary'
+									}
 									onClick={ () => {
 										onChange( key );
 										setIsOpen( false );
@@ -70,7 +80,10 @@ export default function IconPicker( { value, onChange } ) {
 									style={ { height: 32, padding: 0 } }
 									aria-label={ key }
 								>
-									<IconComponent icon={ ICONS[ key ] } size={ 18 } />
+									<IconComponent
+										icon={ ICONS[ key ] }
+										size={ 18 }
+									/>
 								</Button>
 							) ) }
 						</div>

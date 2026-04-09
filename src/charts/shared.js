@@ -5,7 +5,10 @@ export const FONT_STACK =
 export const NEUTRAL_GRAY = '#E5E7EB';
 
 export function computeTotal( items ) {
-	return items.reduce( ( sum, item ) => sum + ( Number( item.value ) || 0 ), 0 );
+	return items.reduce(
+		( sum, item ) => sum + ( Number( item.value ) || 0 ),
+		0
+	);
 }
 
 export function isLowValue( value ) {
@@ -15,6 +18,7 @@ export function isLowValue( value ) {
 /**
  * Compute pie/donut slice angles. Treats 100 as a full circle.
  * Returns array of { id, value, startAngle, endAngle } in radians.
+ * @param {Array} items Data items.
  */
 export function pieSlices( items ) {
 	const slices = [];
@@ -23,7 +27,12 @@ export function pieSlices( items ) {
 		const fraction = ( Number( item.value ) || 0 ) / 100;
 		const start = cursor;
 		const end = cursor + fraction * Math.PI * 2;
-		slices.push( { id: item.id, value: item.value, startAngle: start, endAngle: end } );
+		slices.push( {
+			id: item.id,
+			value: item.value,
+			startAngle: start,
+			endAngle: end,
+		} );
 		cursor = end;
 	}
 	return slices;
@@ -31,17 +40,26 @@ export function pieSlices( items ) {
 
 /**
  * Pack circles horizontally, area proportional to value, non-overlapping.
+ * @param {Array}  items         Data items.
+ * @param {Object} root0         Layout options.
+ * @param {number} root0.width   Plot width.
+ * @param {number} root0.height  Plot height.
+ * @param {number} root0.padding Spacing between bubbles.
  */
 export function packBubbles( items, { width, height, padding = 8 } ) {
 	if ( items.length === 0 ) {
 		return [];
 	}
-	const values = items.map( ( i ) => Math.max( Number( i.value ) || 0, 0.1 ) );
+	const values = items.map( ( i ) =>
+		Math.max( Number( i.value ) || 0, 0.1 )
+	);
 	const rawRadii = values.map( ( v ) => Math.sqrt( v ) );
-	const totalDiameter = rawRadii.reduce( ( s, r ) => s + r * 2, 0 ) + padding * ( items.length - 1 );
+	const totalDiameter =
+		rawRadii.reduce( ( s, r ) => s + r * 2, 0 ) +
+		padding * ( items.length - 1 );
 	const maxRadius = Math.max( ...rawRadii );
 	const scaleX = width / totalDiameter;
-	const scaleY = ( height / 2 ) / maxRadius;
+	const scaleY = height / 2 / maxRadius;
 	const scale = Math.min( scaleX, scaleY );
 
 	const radii = rawRadii.map( ( r ) => r * scale );

@@ -25,7 +25,8 @@ export default function Column( { items } ) {
 		>
 			{ items.map( ( item, i ) => {
 				const h = ( item.value / maxValue ) * plotHeight;
-				const x = PADDING_X + slotWidth * i + ( slotWidth - barWidth ) / 2;
+				const x =
+					PADDING_X + slotWidth * i + ( slotWidth - barWidth ) / 2;
 				const y = PADDING_TOP + ( plotHeight - h );
 				const icon = getIcon( item.icon );
 				const low = isLowValue( item.value );
@@ -50,7 +51,12 @@ export default function Column( { items } ) {
 							{ item.value }%
 						</text>
 						{ icon && h > 40 && (
-							<foreignObject x={ x + barWidth / 2 - 10 } y={ y + 8 } width={ 20 } height={ 20 }>
+							<foreignObject
+								x={ x + barWidth / 2 - 10 }
+								y={ y + 8 }
+								width={ 20 }
+								height={ 20 }
+							>
 								<div style={ { color: '#fff' } }>
 									<IconComponent icon={ icon } size={ 20 } />
 								</div>

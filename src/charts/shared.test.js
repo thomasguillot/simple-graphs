@@ -14,7 +14,9 @@ describe( 'shared chart helpers', () => {
 	} );
 
 	test( 'computeTotal sums values', () => {
-		expect( computeTotal( [ { value: 10 }, { value: 20 }, { value: 5 } ] ) ).toBe( 35 );
+		expect(
+			computeTotal( [ { value: 10 }, { value: 20 }, { value: 5 } ] )
+		).toBe( 35 );
 		expect( computeTotal( [] ) ).toBe( 0 );
 	} );
 
@@ -52,11 +54,15 @@ describe( 'shared chart helpers', () => {
 			{ width: 400, height: 200 }
 		);
 		expect( bubbles ).toHaveLength( 2 );
-		const ratio = ( bubbles[ 0 ].r * bubbles[ 0 ].r ) / ( bubbles[ 1 ].r * bubbles[ 1 ].r );
+		const ratio =
+			( bubbles[ 0 ].r * bubbles[ 0 ].r ) /
+			( bubbles[ 1 ].r * bubbles[ 1 ].r );
 		expect( ratio ).toBeCloseTo( 4, 1 );
 		const dx = bubbles[ 0 ].cx - bubbles[ 1 ].cx;
 		const dy = bubbles[ 0 ].cy - bubbles[ 1 ].cy;
 		const dist = Math.sqrt( dx * dx + dy * dy );
-		expect( dist ).toBeGreaterThanOrEqual( bubbles[ 0 ].r + bubbles[ 1 ].r - 0.01 );
+		expect( dist ).toBeGreaterThanOrEqual(
+			bubbles[ 0 ].r + bubbles[ 1 ].r - 0.01
+		);
 	} );
 } );

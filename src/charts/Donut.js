@@ -14,7 +14,10 @@ export default function Donut( { items, chartTitle } ) {
 	const circumference = 2 * Math.PI * R;
 	let offset = 0;
 	const total = items.reduce( ( s, i ) => s + i.value, 0 );
-	const largest = items.reduce( ( a, b ) => ( a.value > b.value ? a : b ), items[ 0 ] );
+	const largest = items.reduce(
+		( a, b ) => ( a.value > b.value ? a : b ),
+		items[ 0 ]
+	);
 	const centerLabel = chartTitle || `${ largest.value }%`;
 
 	return (
@@ -24,7 +27,14 @@ export default function Donut( { items, chartTitle } ) {
 			style={ { fontFamily: FONT_STACK, width: '100%', height: 'auto' } }
 		>
 			{ total < 100 && (
-				<circle cx={ CX } cy={ CY } r={ R } fill="none" stroke={ NEUTRAL_GRAY } strokeWidth={ STROKE } />
+				<circle
+					cx={ CX }
+					cy={ CY }
+					r={ R }
+					fill="none"
+					stroke={ NEUTRAL_GRAY }
+					strokeWidth={ STROKE }
+				/>
 			) }
 			<g transform={ `rotate(-90 ${ CX } ${ CY })` }>
 				{ items.map( ( item ) => {
@@ -38,7 +48,9 @@ export default function Donut( { items, chartTitle } ) {
 							fill="none"
 							stroke={ item.color }
 							strokeWidth={ STROKE }
-							strokeDasharray={ `${ len } ${ circumference - len }` }
+							strokeDasharray={ `${ len } ${
+								circumference - len
+							}` }
 							strokeDashoffset={ -offset }
 						/>
 					);
@@ -46,12 +58,27 @@ export default function Donut( { items, chartTitle } ) {
 					return seg;
 				} ) }
 			</g>
-			<text x={ CX } y={ CY + 8 } textAnchor="middle" fontSize={ 24 } fontWeight="700" fill="#111">
+			<text
+				x={ CX }
+				y={ CY + 8 }
+				textAnchor="middle"
+				fontSize={ 24 }
+				fontWeight="700"
+				fill="#111"
+			>
 				{ centerLabel }
 			</text>
 			{ items.map( ( item, i ) => (
-				<g key={ `legend-${ item.id }` } transform={ `translate(${ 40 + i * 90 } ${ HEIGHT - 30 })` }>
-					<rect width={ 12 } height={ 12 } fill={ item.color } rx={ 2 } />
+				<g
+					key={ `legend-${ item.id }` }
+					transform={ `translate(${ 40 + i * 90 } ${ HEIGHT - 30 })` }
+				>
+					<rect
+						width={ 12 }
+						height={ 12 }
+						fill={ item.color }
+						rx={ 2 }
+					/>
 					<text x={ 18 } y={ 10 } fontSize={ 12 } fill="#374151">
 						{ item.title } { item.value }%
 					</text>

@@ -24,7 +24,8 @@ export default function Bar( { items } ) {
 		>
 			{ items.map( ( item, i ) => {
 				const w = ( item.value / maxValue ) * plotWidth;
-				const y = PADDING + i * ROW_HEIGHT + ( ROW_HEIGHT - BAR_HEIGHT ) / 2;
+				const y =
+					PADDING + i * ROW_HEIGHT + ( ROW_HEIGHT - BAR_HEIGHT ) / 2;
 				const x = PADDING + LABEL_WIDTH;
 				const icon = getIcon( item.icon );
 				const low = isLowValue( item.value );
@@ -39,9 +40,21 @@ export default function Bar( { items } ) {
 						>
 							{ item.title }
 						</text>
-						<rect x={ x } y={ y } width={ w } height={ BAR_HEIGHT } rx={ BORDER_RADIUS } fill={ item.color } />
+						<rect
+							x={ x }
+							y={ y }
+							width={ w }
+							height={ BAR_HEIGHT }
+							rx={ BORDER_RADIUS }
+							fill={ item.color }
+						/>
 						{ icon && w > 34 && (
-							<foreignObject x={ x + 6 } y={ y + 4 } width={ 20 } height={ 20 }>
+							<foreignObject
+								x={ x + 6 }
+								y={ y + 4 }
+								width={ 20 }
+								height={ 20 }
+							>
 								<div style={ { color: '#fff' } }>
 									<IconComponent icon={ icon } size={ 20 } />
 								</div>

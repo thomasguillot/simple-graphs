@@ -98,6 +98,6 @@ export const ICONS = {
 
 export const ICON_KEYS = Object.keys( ICONS );
 
-export function getIcon( key ) {
-	return key && ICONS[ key ] ? ICONS[ key ] : null;
+export function getIcon( iconKey ) {
+	return iconKey && ICONS[ iconKey ] ? ICONS[ iconKey ] : null;
 }

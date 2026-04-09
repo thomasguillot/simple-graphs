@@ -1,16 +1,19 @@
 import {
 	TextControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalNumberControl as NumberControl,
 	ColorPalette,
 	Button,
 	BaseControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
+import { useState, useId } from '@wordpress/element';
 import IconPicker from './IconPicker';
 
 export default function DataItemRow( { item, onChange, onRemove } ) {
 	const [ expanded, setExpanded ] = useState( false );
+	const colorId = useId();
+	const iconId = useId();
 
 	return (
 		<div
@@ -22,6 +25,8 @@ export default function DataItemRow( { item, onChange, onRemove } ) {
 			} }
 		>
 			<div
+				role="button"
+				tabIndex={ 0 }
 				style={ {
 					display: 'flex',
 					alignItems: 'center',
@@ -29,6 +34,12 @@ export default function DataItemRow( { item, onChange, onRemove } ) {
 					cursor: 'pointer',
 				} }
 				onClick={ () => setExpanded( ! expanded ) }
+				onKeyDown={ ( e ) => {
+					if ( e.key === 'Enter' || e.key === ' ' ) {
+						e.preventDefault();
+						setExpanded( ! expanded );
+					}
+				} }
 			>
 				<span
 					style={ {
@@ -43,7 +54,9 @@ export default function DataItemRow( { item, onChange, onRemove } ) {
 				<span style={ { flex: 1, fontSize: 12 } }>
 					{ item.title || __( 'Untitled', 'simple-graphs' ) }
 				</span>
-				<span style={ { fontSize: 12, fontWeight: 600 } }>{ item.value }%</span>
+				<span style={ { fontSize: 12, fontWeight: 600 } }>
+					{ item.value }%
+				</span>
 			</div>
 			{ expanded && (
 				<div style={ { marginTop: 12 } }>
@@ -57,23 +70,44 @@ export default function DataItemRow( { item, onChange, onRemove } ) {
 						label={ __( 'Value (%)', 'simple-graphs' ) }
 						value={ item.value }
 						onChange={ ( value ) =>
-							onChange( { ...item, value: Math.max( 0, Math.min( 100, Number( value ) || 0 ) ) } )
+							onChange( {
+								...item,
+								value: Math.max(
+									0,
+									Math.min( 100, Number( value ) || 0 )
+								),
+							} )
 						}
 						min={ 0 }
 						max={ 100 }
 						step={ 1 }
 					/>
-					<BaseControl label={ __( 'Color', 'simple-graphs' ) } __nextHasNoMarginBottom>
+					<BaseControl
+						id={ colorId }
+						label={ __( 'Color', 'simple-graphs' ) }
+						__nextHasNoMarginBottom
+					>
 						<ColorPalette
 							value={ item.color }
-							onChange={ ( color ) => onChange( { ...item, color: color || item.color } ) }
+							onChange={ ( color ) =>
+								onChange( {
+									...item,
+									color: color || item.color,
+								} )
+							}
 							clearable={ false }
 						/>
 					</BaseControl>
-					<BaseControl label={ __( 'Icon', 'simple-graphs' ) } __nextHasNoMarginBottom>
+					<BaseControl
+						id={ iconId }
+						label={ __( 'Icon', 'simple-graphs' ) }
+						__nextHasNoMarginBottom
+					>
 						<IconPicker
 							value={ item.icon }
-							onChange={ ( icon ) => onChange( { ...item, icon } ) }
+							onChange={ ( icon ) =>
+								onChange( { ...item, icon } )
+							}
 						/>
 					</BaseControl>
 					<Button

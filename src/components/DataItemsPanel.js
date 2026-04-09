@@ -4,7 +4,16 @@ import DataItemRow from './DataItemRow';
 import { computeTotal } from '../charts/shared';
 
 const MAX_ITEMS = 8;
-const DEFAULT_COLORS = [ '#1E40AF', '#F59E0B', '#10B981', '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316' ];
+const DEFAULT_COLORS = [
+	'#1E40AF',
+	'#F59E0B',
+	'#10B981',
+	'#EF4444',
+	'#8B5CF6',
+	'#EC4899',
+	'#14B8A6',
+	'#F97316',
+];
 
 function uid() {
 	return Math.random().toString( 36 ).slice( 2, 10 );
