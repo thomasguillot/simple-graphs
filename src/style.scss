@@ -1,0 +1,12 @@
+.wp-block-simple-graphs-chart {
+	.simple-graphs-chart__title {
+		font-weight: 700;
+	}
+	.simple-graphs-chart__plot {
+		display: block;
+	}
+	svg {
+		display: block;
+		max-width: 100%;
+	}
+}
