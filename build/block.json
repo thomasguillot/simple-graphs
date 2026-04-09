@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "simple-graphs/chart",
+  "title": "Simple Graph",
+  "category": "widgets",
+  "description": "A visually-striking percentage chart.",
+  "textdomain": "simple-graphs",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "attributes": {
+    "items": {
+      "type": "array",
+      "default": [
+        {
+          "id": "a",
+          "title": "Item A",
+          "value": 40,
+          "color": "#1E40AF",
+          "icon": null
+        },
+        {
+          "id": "b",
+          "title": "Item B",
+          "value": 30,
+          "color": "#F59E0B",
+          "icon": null
+        },
+        {
+          "id": "c",
+          "title": "Item C",
+          "value": 30,
+          "color": "#10B981",
+          "icon": null
+        }
+      ]
+    },
+    "chartTitle": {
+      "type": "string",
+      "default": ""
+    },
+    "chartBackground": {
+      "type": "string",
+      "default": ""
+    }
+  }
+}
