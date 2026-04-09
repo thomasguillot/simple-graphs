@@ -1,0 +1,70 @@
+.wp-block-simple-graphs-chart {
+	&.has-background {
+		background-color: transparent !important;
+	}
+
+	.simple-graphs-chart__body {
+		display: grid;
+		grid-template-columns: 5fr 1fr;
+		grid-template-rows: 1fr;
+		gap: 32px;
+		align-items: end;
+
+		&--no-legend {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.simple-graphs-chart__plot {
+		min-width: 0;
+		// Override grid align-items: end so plot fills full height.
+		align-self: stretch;
+	}
+
+	.simple-graphs-columns,
+	.simple-graphs-bars,
+	.simple-graphs-stacked {
+		height: 100%;
+	}
+
+	// Pie/Donut/Bubble SVGs: fill the plot container height,
+	// constrain width to maintain aspect ratio.
+	.simple-graphs-chart__plot > svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.simple-graphs-legend {
+		display: flex;
+		flex-direction: column;
+		gap: var(--wp--preset--spacing--20, 0.5rem);
+
+		&__item {
+			display: flex;
+			align-items: center;
+			gap: var(--wp--preset--spacing--20, 0.5rem);
+		}
+
+		&__swatch {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 32px;
+			height: 32px;
+			border-radius: 6px;
+			flex-shrink: 0;
+		}
+
+		&__label {
+			font-size: var(--wp--preset--font-size--small, 1rem);
+			line-height: var(--wp--custom--line-height--small, 1.5);
+			color: inherit;
+		}
+	}
+
+	svg {
+		display: block;
+		max-width: 100%;
+	}
+}

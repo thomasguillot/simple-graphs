@@ -1,0 +1,69 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "simple-graphs/chart",
+  "title": "Simple Graphs",
+  "category": "widgets",
+  "description": "A visually-striking percentage chart.",
+  "textdomain": "simple-graphs",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"],
+    "spacing": { "margin": true, "padding": true, "blockGap": true },
+    "dimensions": { "minHeight": true },
+    "color": {
+      "background": true,
+      "text": true,
+      "link": false
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true,
+      "__experimentalFontFamily": true,
+      "__experimentalFontWeight": true,
+      "__experimentalFontStyle": true,
+      "__experimentalTextTransform": true,
+      "__experimentalLetterSpacing": true,
+      "__experimentalDefaultControls": {
+        "fontSize": true,
+        "fontFamily": true
+      }
+    }
+  },
+  "styles": [
+    { "name": "column", "label": "Column", "isDefault": true },
+    { "name": "bar", "label": "Bar" },
+    { "name": "pie", "label": "Pie" },
+    { "name": "donut", "label": "Donut" },
+    { "name": "stacked", "label": "Stacked" },
+    { "name": "bubble", "label": "Bubble" }
+  ],
+  "attributes": {
+    "style": {
+      "type": "object",
+      "default": {
+        "spacing": {
+          "blockGap": "var:preset|spacing|30"
+        },
+        "dimensions": {
+          "minHeight": "480px"
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "default": [
+        { "id": "a", "title": "Item A", "value": 40, "color": "#DB2777", "icon": null },
+        { "id": "b", "title": "Item B", "value": 30, "color": "#0891B2", "icon": null },
+        { "id": "c", "title": "Item C", "value": 30, "color": "#7C3AED", "icon": null }
+      ]
+    },
+    "showLegend": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}
