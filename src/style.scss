@@ -55,8 +55,9 @@
 		}
 
 		&__label {
-			font-size: 13px;
-			color: #374151;
+			font-size: var(--wp--preset--font-size--small, 1rem);
+			line-height: var(--wp--custom--line-height--small, 1.5);
+			color: inherit;
 		}
 	}
 
