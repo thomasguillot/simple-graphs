@@ -1,7 +1,5 @@
 import {
 	TextControl,
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalNumberControl as NumberControl,
 	ColorPalette,
 	ColorIndicator,
 	Button,
@@ -17,7 +15,6 @@ export default function DataItemRow( {
 	onRemove,
 	onMoveUp,
 	onMoveDown,
-	valueMode = 'percentage',
 } ) {
 	const [ expanded, setExpanded ] = useState( false );
 	const colorId = useId();
@@ -51,20 +48,13 @@ export default function DataItemRow( {
 						onChange={ ( title ) => onChange( { ...item, title } ) }
 						__nextHasNoMarginBottom
 					/>
-					<NumberControl
+					<TextControl
 						label={ __( 'Value', 'simple-graphs' ) }
 						value={ item.value }
 						onChange={ ( value ) =>
-							onChange( {
-								...item,
-								value: valueMode === 'percentage'
-									? Math.min( 100, Math.max( 0, Number( value ) || 0 ) )
-									: Math.max( 0, Number( value ) || 0 ),
-							} )
+							onChange( { ...item, value } )
 						}
-						min={ 0 }
-						max={ valueMode === 'percentage' ? 100 : undefined }
-						step="any"
+						__nextHasNoMarginBottom
 					/>
 					<BaseControl
 						id={ colorId }

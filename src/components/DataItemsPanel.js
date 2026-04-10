@@ -13,6 +13,7 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import DataItemRow from './DataItemRow';
+import { parseNumeric } from '../charts/shared';
 
 const MAX_ITEMS = 8;
 // Vibrant palette, all AA-contrast (≥4.5:1) against white.
@@ -53,11 +54,11 @@ export default function DataItemsPanel( {
 		if ( items.length >= MAX_ITEMS ) {
 			return;
 		}
-		let value = 10;
+		let value = '10';
 		if ( valueMode === 'percentage' ) {
-			const total = items.reduce( ( sum, i ) => sum + Number( i.value ), 0 );
+			const total = items.reduce( ( sum, i ) => sum + parseNumeric( i.value ), 0 );
 			const remainder = 100 - total;
-			value = remainder > 0 ? Math.min( remainder, 100 ) : 10;
+			value = String( remainder > 0 ? Math.min( remainder, 100 ) : 10 );
 		}
 		onChange( [
 			...items,
@@ -90,7 +91,6 @@ export default function DataItemsPanel( {
 						<DataItemRow
 							key={ item.id }
 							item={ item }
-							valueMode={ valueMode }
 							onChange={ ( next ) =>
 								updateItem( item.id, next )
 							}

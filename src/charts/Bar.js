@@ -1,4 +1,4 @@
-import { BORDER_RADIUS, contrastColor, isZeroGap, formatValue, resolveMaxValue } from './shared';
+import { BORDER_RADIUS, contrastColor, isZeroGap, formatValue, resolveMaxValue, parseNumeric } from './shared';
 
 export default function Bar( { items, trackColor, blockGap, valueMode = 'percentage', valueMax = 0, valuePrefix = '', valueSuffix = '', legendPosition = 'side', typographyStyle = {}, typographyClassName = '' } ) {
 	if ( items.length === 0 ) {
@@ -22,7 +22,7 @@ export default function Bar( { items, trackColor, blockGap, valueMode = 'percent
 			} }
 		>
 			{ items.map( ( item ) => {
-				const pct = ( item.value / maxValue ) * 100;
+				const pct = ( parseNumeric( item.value ) / maxValue ) * 100;
 				return (
 					<div key={ item.id }>
 						{ showBelow && item.title && (

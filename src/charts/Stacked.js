@@ -1,4 +1,4 @@
-import { BORDER_RADIUS, NEUTRAL_GRAY, computeTotal, isLowValue, contrastColor, isZeroGap, formatValue } from './shared';
+import { BORDER_RADIUS, NEUTRAL_GRAY, computeTotal, isLowValue, contrastColor, isZeroGap, formatValue, parseNumeric } from './shared';
 
 export default function Stacked( { items, blockGap, valueMode = 'percentage', valuePrefix = '', valueSuffix = '', typographyStyle = {}, typographyClassName = '' } ) {
 	if ( items.length === 0 ) {
@@ -27,7 +27,7 @@ export default function Stacked( { items, blockGap, valueMode = 'percentage', va
 					<div
 						key={ item.id }
 						style={ {
-							flex: `${ item.value } 0 0%`,
+							flex: `${ parseNumeric( item.value ) } 0 0%`,
 							borderRadius: noGap ? 0 : BORDER_RADIUS,
 							background: item.color,
 							display: 'flex',
