@@ -1,3 +1,75 @@
+@import "@wordpress/base-styles/variables";
+@import "@wordpress/base-styles/colors";
+
 .simple-graphs-icon-picker {
 	display: inline-block;
+}
+
+.simple-graphs-data-panel {
+	display: flex;
+	flex-direction: column;
+	gap: $grid-unit-10;
+}
+
+.simple-graphs-items {
+	border: 1px solid $gray-300;
+	border-radius: $radius-block-ui;
+	overflow: hidden;
+}
+
+.simple-graphs-item {
+	border-bottom: 1px solid $gray-300;
+	padding: $grid-unit-10 $grid-unit-15;
+
+	&:last-child {
+		border-bottom: 0;
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		gap: $grid-unit-10;
+		cursor: pointer;
+		min-height: calc($grid-unit-50 - $grid-unit-10 * 2);
+	}
+
+	&__title {
+		flex: 1;
+		font-size: inherit;
+	}
+
+	&__value {
+		font-size: inherit;
+		font-weight: 600;
+	}
+
+	&__body {
+		margin-top: $grid-unit-15;
+	}
+
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: $grid-unit-05;
+		margin-top: $grid-unit-10;
+	}
+
+	&__spacer {
+		flex: 1;
+	}
+}
+
+.simple-graphs-total {
+	padding: 0 $grid-unit-10;
+	background: $gray-100;
+	border-radius: $radius-block-ui;
+	font-size: inherit;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	gap: 0.25em;
+
+	&--overflow {
+		background: #fef3c7;
+	}
 }

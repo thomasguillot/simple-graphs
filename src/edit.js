@@ -22,12 +22,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		if ( ! inspector ) {
 			return;
 		}
-		// The block gap control is inside a fieldset with the "Block spacing" label.
 		const labels = inspector.querySelectorAll(
 			'label, legend, .components-base-control__label'
 		);
 		for ( const label of labels ) {
-			if ( label.textContent?.trim() === 'Block spacing' ) {
+			const text = label.textContent?.trim();
+			if ( text === 'Block spacing' ) {
 				const wrapper =
 					label.closest( '.components-base-control' ) ||
 					label.closest( 'fieldset' ) ||
@@ -36,6 +36,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					wrapper.style.display = showGapControl ? '' : 'none';
 				}
 			}
+		}
+		const minHeightControl = inspector.querySelector(
+			'.block-editor-height-control'
+		);
+		if ( minHeightControl ) {
+			minHeightControl.style.marginTop = showGapControl
+				? ''
+				: '-16px';
 		}
 	}, [ showGapControl, clientId ] );
 

@@ -62,56 +62,61 @@ export default function DataItemsPanel( { items, onChange, showLegend, onToggleL
 
 	return (
 		<PanelBody title={ __( 'Data', 'simple-graphs' ) } initialOpen={ true }>
-			{ items.map( ( item, index ) => (
-				<DataItemRow
-					key={ item.id }
-					item={ item }
-					onChange={ ( next ) => updateItem( item.id, next ) }
-					onRemove={ () => removeItem( item.id ) }
-					onMoveUp={
-						index > 0 ? () => moveItem( index, -1 ) : null
-					}
-					onMoveDown={
-						index < items.length - 1
-							? () => moveItem( index, 1 )
-							: null
-					}
-				/>
-			) ) }
-			<Button
-				variant="secondary"
-				onClick={ addItem }
-				disabled={ items.length >= MAX_ITEMS }
-				style={ { marginTop: 8 } }
-			>
-				{ __( 'Add item', 'simple-graphs' ) }
-			</Button>
-			<div
-				style={ {
-					marginTop: 12,
-					padding: 8,
-					background: overflow ? '#FEF3C7' : '#F3F4F6',
-					borderRadius: 4,
-					fontSize: 12,
-				} }
-			>
-				{ __( 'Total:', 'simple-graphs' ) } <strong>{ total }%</strong>
-				{ overflow && (
-					<Notice status="warning" isDismissible={ false }>
-						{ __( 'Total exceeds 100%.', 'simple-graphs' ) }
-					</Notice>
-				) }
+			<div className="simple-graphs-data-panel">
+				<div className="simple-graphs-items">
+					{ items.map( ( item, index ) => (
+						<DataItemRow
+							key={ item.id }
+							item={ item }
+							onChange={ ( next ) => updateItem( item.id, next ) }
+							onRemove={ () => removeItem( item.id ) }
+							onMoveUp={
+								index > 0
+									? () => moveItem( index, -1 )
+									: null
+							}
+							onMoveDown={
+								index < items.length - 1
+									? () => moveItem( index, 1 )
+									: null
+							}
+						/>
+					) ) }
+				</div>
+				<Button
+					variant="secondary"
+					onClick={ addItem }
+					disabled={ items.length >= MAX_ITEMS }
+					style={ { width: '100%', justifyContent: 'center' } }
+				>
+					{ __( 'Add item', 'simple-graphs' ) }
+				</Button>
+				<div
+					className={ `simple-graphs-total${
+						overflow ? ' simple-graphs-total--overflow' : ''
+					}` }
+				>
+					{ __( 'Total:', 'simple-graphs' ) }{ ' ' }
+					<strong>{ total }%</strong>
+					{ overflow && (
+						<Notice status="warning" isDismissible={ false }>
+							{ __( 'Total exceeds 100%.', 'simple-graphs' ) }
+						</Notice>
+					) }
+				</div>
 			</div>
-			<ToggleControl
-				label={ __( 'Show legend', 'simple-graphs' ) }
-				checked={ showLegend }
-				onChange={ onToggleLegend }
-				help={ __(
-					'Display item labels and icons next to the chart.',
-					'simple-graphs'
-				) }
-				__nextHasNoMarginBottom
-			/>
+			<div style={ { marginTop: 16 } }>
+				<ToggleControl
+					label={ __( 'Show legend', 'simple-graphs' ) }
+					checked={ showLegend }
+					onChange={ onToggleLegend }
+					help={ __(
+						'Display item labels and icons next to the chart.',
+						'simple-graphs'
+					) }
+					__nextHasNoMarginBottom
+				/>
+			</div>
 		</PanelBody>
 	);
 }
