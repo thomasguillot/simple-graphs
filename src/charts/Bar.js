@@ -1,5 +1,5 @@
 import { Icon as IconComponent } from '@wordpress/components';
-import { BORDER_RADIUS, TRACK_PADDING, TRACK_RADIUS, isLowValue } from './shared';
+import { BORDER_RADIUS, isLowValue } from './shared';
 import { getIcon } from '../icons';
 
 const WIDTH = 600;
@@ -42,11 +42,11 @@ export default function Bar( { items, trackColor } ) {
 						</text>
 						{ trackColor && (
 							<rect
-								x={ x - TRACK_PADDING }
-								y={ y - TRACK_PADDING }
-								width={ plotWidth + TRACK_PADDING * 2 }
-								height={ BAR_HEIGHT + TRACK_PADDING * 2 }
-								rx={ TRACK_RADIUS }
+								x={ x }
+								y={ y }
+								width={ plotWidth }
+								height={ BAR_HEIGHT }
+								rx={ BORDER_RADIUS }
 								fill={ trackColor }
 							/>
 						) }
