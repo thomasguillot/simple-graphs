@@ -23,7 +23,7 @@ export default function Donut( { items, trackColor } ) {
 		<svg
 			viewBox={ `0 0 ${ SIZE } ${ SIZE }` }
 			preserveAspectRatio="xMidYMid meet"
-			style={ { width: '100%', height: 'auto' } }
+			
 		>
 			{ trackColor && (
 				<circle cx={ CX } cy={ CY } r={ R + STROKE / 2 + 24 } fill={ trackColor } />

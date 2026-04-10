@@ -18,7 +18,7 @@ export default function Bubble( { items, trackColor } ) {
 		<svg
 			viewBox={ `0 0 ${ WIDTH } ${ HEIGHT }` }
 			preserveAspectRatio="xMidYMid meet"
-			style={ { width: '100%', height: 'auto' } }
+			
 		>
 			{ trackColor && (
 				<rect

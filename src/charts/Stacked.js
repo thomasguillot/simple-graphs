@@ -20,7 +20,7 @@ export default function Stacked( { items } ) {
 		<svg
 			viewBox={ `0 0 ${ WIDTH } ${ HEIGHT }` }
 			preserveAspectRatio="xMidYMid meet"
-			style={ { width: '100%', height: 'auto' } }
+			
 		>
 			<clipPath id="stacked-clip">
 				<rect

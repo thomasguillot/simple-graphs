@@ -6,6 +6,7 @@
 	.simple-graphs-chart__body {
 		display: grid;
 		grid-template-columns: 5fr 1fr;
+		grid-template-rows: 1fr;
 		gap: 32px;
 		align-items: end;
 
@@ -25,12 +26,12 @@
 		height: 100%;
 	}
 
+	// Pie/Donut/Bubble SVGs: fill the plot container height,
+	// constrain width to maintain aspect ratio.
 	.simple-graphs-chart__plot > svg {
 		display: block;
-		width: auto;
+		width: 100%;
 		height: 100%;
-		max-width: 100%;
-		margin: 0 auto;
 	}
 
 	.simple-graphs-legend {

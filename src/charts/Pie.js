@@ -23,7 +23,7 @@ export default function Pie( { items, trackColor } ) {
 		<svg
 			viewBox={ `0 0 ${ SIZE } ${ SIZE }` }
 			preserveAspectRatio="xMidYMid meet"
-			style={ { width: '100%', height: 'auto' } }
+			
 		>
 			{ trackColor && (
 				<circle cx={ CX } cy={ CY } r={ R + 24 } fill={ trackColor } />
