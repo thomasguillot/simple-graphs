@@ -1,12 +1,4 @@
-import { BORDER_RADIUS, NEUTRAL_GRAY, isLowValue, contrastColor } from './shared';
-
-function isZeroGap( gap ) {
-	if ( ! gap ) {
-		return false;
-	}
-	const s = String( gap ).trim();
-	return s === '0' || s === '0px' || s === '0rem' || s === '0em';
-}
+import { BORDER_RADIUS, NEUTRAL_GRAY, isLowValue, contrastColor, isZeroGap } from './shared';
 
 export default function Stacked( { items, blockGap } ) {
 	if ( items.length === 0 ) {

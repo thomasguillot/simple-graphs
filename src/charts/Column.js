@@ -1,10 +1,12 @@
-import { BORDER_RADIUS, isLowValue, contrastColor } from './shared';
+import { BORDER_RADIUS, isLowValue, contrastColor, isZeroGap } from './shared';
 
 export default function Column( { items, trackColor, blockGap } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
 	const maxValue = Math.max( 100, ...items.map( ( i ) => i.value ) );
+	const noGap = isZeroGap( blockGap );
+	const itemRadius = noGap ? 0 : BORDER_RADIUS;
 
 	return (
 		<div
@@ -13,6 +15,8 @@ export default function Column( { items, trackColor, blockGap } ) {
 				display: 'grid',
 				gridTemplateColumns: `repeat(${ items.length }, 1fr)`,
 				gap: blockGap || 'var(--wp--preset--spacing--30, 1rem)',
+				borderRadius: noGap ? BORDER_RADIUS : 0,
+				overflow: noGap ? 'hidden' : 'visible',
 			} }
 		>
 			{ items.map( ( item ) => {
@@ -33,7 +37,7 @@ export default function Column( { items, trackColor, blockGap } ) {
 								style={ {
 									position: 'absolute',
 									inset: 0,
-									borderRadius: BORDER_RADIUS,
+									borderRadius: itemRadius,
 									background: trackColor,
 								} }
 							/>
@@ -45,7 +49,7 @@ export default function Column( { items, trackColor, blockGap } ) {
 								left: 0,
 								right: 0,
 								height: `${ pct }%`,
-								borderRadius: BORDER_RADIUS,
+								borderRadius: itemRadius,
 								background: item.color,
 							} }
 						/>

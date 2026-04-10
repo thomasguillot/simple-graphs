@@ -23,6 +23,14 @@ export function contrastColor( hex ) {
 	return luminance > 0.5 ? '#000' : '#fff';
 }
 
+export function isZeroGap( gap ) {
+	if ( ! gap ) {
+		return false;
+	}
+	const s = String( gap ).trim();
+	return s === '0' || s === '0px' || s === '0rem' || s === '0em';
+}
+
 export function computeTotal( items ) {
 	return items.reduce(
 		( sum, item ) => sum + ( Number( item.value ) || 0 ),
