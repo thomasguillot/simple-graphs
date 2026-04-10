@@ -12,9 +12,9 @@ export default function IconPicker( { value, onChange } ) {
 	const [ isOpen, setIsOpen ] = useState( false );
 	const [ query, setQuery ] = useState( '' );
 
-	const filtered = ICON_KEYS.filter( ( k ) =>
-		k.toLowerCase().includes( query.toLowerCase() )
-	);
+	const filtered = query
+		? ICON_KEYS.filter( ( k ) => k.toLowerCase().includes( query.toLowerCase() ) )
+		: ICON_KEYS.slice( 0, 36 );
 	const current = getIcon( value );
 
 	return (

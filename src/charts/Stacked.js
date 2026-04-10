@@ -1,10 +1,10 @@
-import { BORDER_RADIUS, NEUTRAL_GRAY, isLowValue, contrastColor, isZeroGap } from './shared';
+import { BORDER_RADIUS, NEUTRAL_GRAY, computeTotal, isLowValue, contrastColor, isZeroGap } from './shared';
 
 export default function Stacked( { items, blockGap } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
-	const total = items.reduce( ( s, i ) => s + i.value, 0 );
+	const total = computeTotal( items );
 	const remainder = total < 100 ? 100 - total : 0;
 	const noGap = isZeroGap( blockGap );
 

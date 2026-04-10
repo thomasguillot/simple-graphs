@@ -1,6 +1,7 @@
 import {
 	NEUTRAL_GRAY,
 	contrastColor,
+	computeTotal,
 	pieSlices,
 	arcPath,
 	polarToCartesian,
@@ -17,13 +18,12 @@ export default function Pie( { items, trackColor } ) {
 		return null;
 	}
 	const slices = pieSlices( items );
-	const total = items.reduce( ( s, i ) => s + i.value, 0 );
+	const total = computeTotal( items );
 
 	return (
 		<svg
 			viewBox={ `0 0 ${ SIZE } ${ SIZE }` }
 			preserveAspectRatio="xMidYMid meet"
-			
 		>
 			{ trackColor && (
 				<circle cx={ CX } cy={ CY } r={ R + 24 } fill={ trackColor } />

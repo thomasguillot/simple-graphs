@@ -1,4 +1,4 @@
-import { NEUTRAL_GRAY, pieSlices, polarToCartesian, isLowValue } from './shared';
+import { NEUTRAL_GRAY, computeTotal, pieSlices, polarToCartesian, isLowValue } from './shared';
 
 const SIZE = 360;
 const CX = SIZE / 2;
@@ -12,9 +12,9 @@ export default function Donut( { items, trackColor } ) {
 	}
 	const circumference = 2 * Math.PI * R;
 	let dashOffset = 0;
-	const total = items.reduce( ( s, i ) => s + i.value, 0 );
+	const total = computeTotal( items );
 	const largest = items.reduce(
-		( a, b ) => ( a.value > b.value ? a : b ),
+		( a, b ) => ( Number( a.value ) > Number( b.value ) ? a : b ),
 		items[ 0 ]
 	);
 	const slices = pieSlices( items );
@@ -23,7 +23,6 @@ export default function Donut( { items, trackColor } ) {
 		<svg
 			viewBox={ `0 0 ${ SIZE } ${ SIZE }` }
 			preserveAspectRatio="xMidYMid meet"
-			
 		>
 			{ trackColor && (
 				<circle cx={ CX } cy={ CY } r={ R + STROKE / 2 + 24 } fill={ trackColor } />

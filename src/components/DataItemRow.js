@@ -33,6 +33,7 @@ export default function DataItemRow( {
 			<div
 				role="button"
 				tabIndex={ 0 }
+				aria-expanded={ expanded }
 				style={ {
 					display: 'flex',
 					alignItems: 'center',

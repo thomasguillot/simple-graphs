@@ -1,5 +1,5 @@
 === Simple Graphs ===
-Contributors: you
+Contributors: thomasguillot
 Tags: block, chart, gutenberg, infographic
 Requires at least: 6.4
 Tested up to: 6.7
