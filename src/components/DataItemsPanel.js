@@ -9,6 +9,8 @@ import {
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalVStack as VStack,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import DataItemRow from './DataItemRow';
@@ -84,7 +86,7 @@ export default function DataItemsPanel( {
 
 	return (
 		<PanelBody title={ __( 'Data', 'simple-graphs' ) } initialOpen={ true }>
-			<div className="simple-graphs-data-panel">
+			<VStack spacing={ 4 }>
 				<div className="simple-graphs-items">
 					{ items.map( ( item, index ) => (
 						<DataItemRow
@@ -121,6 +123,7 @@ export default function DataItemsPanel( {
 					value={ valueMode }
 					onChange={ ( v ) => onChangeAttribute( 'valueMode', v ) }
 					isBlock
+					__next40pxDefaultSize
 					__nextHasNoMarginBottom
 				>
 					<ToggleGroupControlOption
@@ -150,6 +153,7 @@ export default function DataItemsPanel( {
 								'Reference maximum for sizing. Leave empty to auto-detect.',
 								'simple-graphs'
 							) }
+							__next40pxDefaultSize
 							__nextHasNoMarginBottom
 						/>
 						<TextControl
@@ -159,6 +163,7 @@ export default function DataItemsPanel( {
 								onChangeAttribute( 'valuePrefix', v )
 							}
 							placeholder={ __( 'e.g. $', 'simple-graphs' ) }
+							__next40pxDefaultSize
 							__nextHasNoMarginBottom
 						/>
 						<TextControl
@@ -168,11 +173,12 @@ export default function DataItemsPanel( {
 								onChangeAttribute( 'valueSuffix', v )
 							}
 							placeholder={ __( 'e.g. k', 'simple-graphs' ) }
+							__next40pxDefaultSize
 							__nextHasNoMarginBottom
 						/>
 					</>
 				) }
-			</div>
+			</VStack>
 			<div style={ { marginTop: 16 } }>
 				<ToggleControl
 					label={ __( 'Show legend', 'simple-graphs' ) }
