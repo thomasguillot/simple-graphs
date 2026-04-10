@@ -1,6 +1,6 @@
 import { BORDER_RADIUS, NEUTRAL_GRAY, computeTotal, isLowValue, contrastColor, isZeroGap, formatValue } from './shared';
 
-export default function Stacked( { items, blockGap, valueMode = 'percentage', valuePrefix = '', valueSuffix = '' } ) {
+export default function Stacked( { items, blockGap, valueMode = 'percentage', valuePrefix = '', valueSuffix = '', typographyStyle = {}, typographyClassName = '' } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -34,11 +34,10 @@ export default function Stacked( { items, blockGap, valueMode = 'percentage', va
 							alignItems: 'center',
 							justifyContent: 'flex-start',
 							paddingLeft: 16,
-							fontSize: low ? 12 : 20,
 							color: contrastColor( item.color ),
 						} }
 					>
-						{ ! low && formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }
+						{ ! low && <span className={ typographyClassName || undefined } style={ typographyStyle }>{ formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }</span> }
 					</div>
 				);
 			} ) }

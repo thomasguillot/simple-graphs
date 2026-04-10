@@ -96,6 +96,9 @@ describe( 'resolveMaxValue', () => {
 	test( 'custom mode with zero/empty max falls back to data', () => {
 		expect( resolveMaxValue( [ { value: 300 } ], 'custom', 0 ) ).toBe( 300 );
 	} );
+	test( 'custom mode ignores max when data exceeds it', () => {
+		expect( resolveMaxValue( [ { value: 1500 } ], 'custom', 1000 ) ).toBe( 1500 );
+	} );
 	test( 'empty items returns 1 in custom mode', () => {
 		expect( resolveMaxValue( [], 'custom' ) ).toBe( 1 );
 	} );

@@ -8,6 +8,7 @@ import {
 	BaseControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { useSetting } from '@wordpress/block-editor';
 import { useState, useId } from '@wordpress/element';
 
 export default function DataItemRow( {
@@ -20,6 +21,7 @@ export default function DataItemRow( {
 } ) {
 	const [ expanded, setExpanded ] = useState( false );
 	const colorId = useId();
+	const colors = useSetting( 'color.palette' );
 
 	return (
 		<div className="simple-graphs-item">
@@ -70,6 +72,7 @@ export default function DataItemRow( {
 						__nextHasNoMarginBottom
 					>
 						<ColorPalette
+							colors={ colors }
 							value={ item.color }
 							onChange={ ( color ) =>
 								onChange( {
