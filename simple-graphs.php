@@ -12,7 +12,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SIMPLE_GRAPHS_VERSION', '1.0.0' );
+if ( ! defined( 'SIMPLE_GRAPHS_VERSION' ) ) {
+	define( 'SIMPLE_GRAPHS_VERSION', '1.0.0' );
+}
 
 add_action(
 	'init',
