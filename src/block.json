@@ -61,6 +61,18 @@
         { "id": "c", "title": "Item C", "value": 30, "color": "#7C3AED", "icon": null }
       ]
     },
+    "valueMode": {
+      "type": "string",
+      "default": "percentage"
+    },
+    "valuePrefix": {
+      "type": "string",
+      "default": ""
+    },
+    "valueSuffix": {
+      "type": "string",
+      "default": ""
+    },
     "showLegend": {
       "type": "boolean",
       "default": true

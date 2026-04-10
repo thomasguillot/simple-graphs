@@ -29,6 +29,9 @@ export default function Chart( {
 	showLegend = true,
 	blockGap,
 	chartHeight,
+	valueMode = 'percentage',
+	valuePrefix = '',
+	valueSuffix = '',
 } ) {
 	const variation = resolveVariation( className );
 	const Component = VARIATIONS[ variation ] || Column;
@@ -44,6 +47,9 @@ export default function Chart( {
 					items={ items }
 					trackColor={ trackColor }
 					blockGap={ blockGap }
+					valueMode={ valueMode }
+					valuePrefix={ valuePrefix }
+					valueSuffix={ valueSuffix }
 				/>
 			</div>
 			{ showLegend && <Legend items={ items } /> }

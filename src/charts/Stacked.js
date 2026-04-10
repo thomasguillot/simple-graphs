@@ -1,6 +1,6 @@
-import { BORDER_RADIUS, NEUTRAL_GRAY, computeTotal, isLowValue, contrastColor, isZeroGap } from './shared';
+import { BORDER_RADIUS, NEUTRAL_GRAY, computeTotal, isLowValue, contrastColor, isZeroGap, formatValue } from './shared';
 
-export default function Stacked( { items, blockGap } ) {
+export default function Stacked( { items, blockGap, valueMode = 'percentage', valuePrefix = '', valueSuffix = '' } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -37,7 +37,7 @@ export default function Stacked( { items, blockGap } ) {
 							color: contrastColor( item.color ),
 						} }
 					>
-						{ ! low && `${ item.value }%` }
+						{ ! low && formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }
 					</div>
 				);
 			} ) }

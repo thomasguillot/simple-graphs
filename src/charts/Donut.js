@@ -1,4 +1,4 @@
-import { NEUTRAL_GRAY, computeTotal, pieSlices, polarToCartesian, isLowValue } from './shared';
+import { NEUTRAL_GRAY, computeTotal, pieSlices, polarToCartesian, isLowValue, formatValue } from './shared';
 
 const SIZE = 360;
 const CX = SIZE / 2;
@@ -6,7 +6,7 @@ const CY = SIZE / 2;
 const R = 120;
 const STROKE = 40;
 
-export default function Donut( { items, trackColor } ) {
+export default function Donut( { items, trackColor, valueMode = 'percentage', valuePrefix = '', valueSuffix = '' } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -66,7 +66,7 @@ export default function Donut( { items, trackColor } ) {
 				fontSize={ 28 }
 				fill="#000"
 			>
-				{ largest.value }%
+				{ formatValue( largest.value, { valueMode, valuePrefix, valueSuffix } ) }
 			</text>
 			{ /* Value labels outside the ring */ }
 			{ slices.map( ( s, i ) => {
@@ -88,7 +88,7 @@ export default function Donut( { items, trackColor } ) {
 						fontWeight="600"
 						fill="#000"
 					>
-						{ item.value }%
+						{ formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }
 					</text>
 				);
 			} ) }

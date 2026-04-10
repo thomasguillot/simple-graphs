@@ -1,7 +1,15 @@
-import { PanelBody, Button, ToggleControl } from '@wordpress/components';
+import {
+	PanelBody,
+	Button,
+	ToggleControl,
+	TextControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import DataItemRow from './DataItemRow';
-import { computeTotal } from '../charts/shared';
 
 const MAX_ITEMS = 8;
 // Vibrant palette, all AA-contrast (≥4.5:1) against white.
@@ -20,10 +28,16 @@ function uid() {
 	return Math.random().toString( 36 ).slice( 2, 10 );
 }
 
-export default function DataItemsPanel( { items, onChange, showLegend, onToggleLegend } ) {
-	const total = computeTotal( items );
-	const overflow = total > 100;
-
+export default function DataItemsPanel( {
+	items,
+	onChange,
+	valueMode,
+	valuePrefix,
+	valueSuffix,
+	onChangeAttribute,
+	showLegend,
+	onToggleLegend,
+} ) {
 	const updateItem = ( id, next ) => {
 		onChange( items.map( ( i ) => ( i.id === id ? next : i ) ) );
 	};
@@ -36,6 +50,10 @@ export default function DataItemsPanel( { items, onChange, showLegend, onToggleL
 		if ( items.length >= MAX_ITEMS ) {
 			return;
 		}
+		const total = items.reduce(
+			( sum, i ) => sum + Number( i.value ),
+			0
+		);
 		const remainder = 100 - total;
 		const value = remainder > 0 ? Math.min( remainder, 100 ) : 10;
 		onChange( [
@@ -60,6 +78,8 @@ export default function DataItemsPanel( { items, onChange, showLegend, onToggleL
 		onChange( next );
 	};
 
+	const isCustom = valueMode === 'custom';
+
 	return (
 		<PanelBody title={ __( 'Data', 'simple-graphs' ) } initialOpen={ true }>
 			<div className="simple-graphs-data-panel">
@@ -68,7 +88,9 @@ export default function DataItemsPanel( { items, onChange, showLegend, onToggleL
 						<DataItemRow
 							key={ item.id }
 							item={ item }
-							onChange={ ( next ) => updateItem( item.id, next ) }
+							onChange={ ( next ) =>
+								updateItem( item.id, next )
+							}
 							onRemove={ () => removeItem( item.id ) }
 							onMoveUp={
 								index > 0
@@ -91,14 +113,44 @@ export default function DataItemsPanel( { items, onChange, showLegend, onToggleL
 				>
 					{ __( 'Add item', 'simple-graphs' ) }
 				</Button>
-				<div
-					className={ `simple-graphs-total${
-						overflow ? ' simple-graphs-total--overflow' : ''
-					}` }
+				<ToggleGroupControl
+					label={ __( 'Value format', 'simple-graphs' ) }
+					value={ valueMode }
+					onChange={ ( v ) => onChangeAttribute( 'valueMode', v ) }
+					isBlock
+					__nextHasNoMarginBottom
 				>
-					{ __( 'Total:', 'simple-graphs' ) }{ ' ' }
-					<strong>{ total }%</strong>
-				</div>
+					<ToggleGroupControlOption
+						value="percentage"
+						label={ __( 'Percentage', 'simple-graphs' ) }
+					/>
+					<ToggleGroupControlOption
+						value="custom"
+						label={ __( 'Custom', 'simple-graphs' ) }
+					/>
+				</ToggleGroupControl>
+				{ isCustom && (
+					<>
+						<TextControl
+							label={ __( 'Prefix', 'simple-graphs' ) }
+							value={ valuePrefix }
+							onChange={ ( v ) =>
+								onChangeAttribute( 'valuePrefix', v )
+							}
+							placeholder={ __( 'e.g. $', 'simple-graphs' ) }
+							__nextHasNoMarginBottom
+						/>
+						<TextControl
+							label={ __( 'Suffix', 'simple-graphs' ) }
+							value={ valueSuffix }
+							onChange={ ( v ) =>
+								onChangeAttribute( 'valueSuffix', v )
+							}
+							placeholder={ __( 'e.g. k', 'simple-graphs' ) }
+							__nextHasNoMarginBottom
+						/>
+					</>
+				) }
 			</div>
 			<div style={ { marginTop: 16 } }>
 				<ToggleControl

@@ -3,7 +3,7 @@ import Chart from './charts/Chart';
 import { resolveTrackColor, resolveBlockGap, resolveMinHeight } from './track-color';
 
 export default function save( { attributes } ) {
-	const { items, showLegend } = attributes;
+	const { items, showLegend, valueMode, valuePrefix, valueSuffix } = attributes;
 	const blockProps = useBlockProps.save();
 	const trackColor = resolveTrackColor( attributes );
 	const blockGap = resolveBlockGap( attributes );
@@ -17,6 +17,9 @@ export default function save( { attributes } ) {
 				showLegend={ showLegend }
 				blockGap={ blockGap }
 				chartHeight={ chartHeight }
+				valueMode={ valueMode }
+				valuePrefix={ valuePrefix }
+				valueSuffix={ valueSuffix }
 			/>
 		</div>
 	);
