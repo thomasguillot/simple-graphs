@@ -1,13 +1,12 @@
 import {
 	TextControl,
-	ColorPalette,
 	ColorIndicator,
 	Button,
 	BaseControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useSetting } from '@wordpress/block-editor';
 import { useState, useId } from '@wordpress/element';
+import ColorControl from './ColorControl';
 
 export default function DataItemRow( {
 	item,
@@ -18,7 +17,6 @@ export default function DataItemRow( {
 } ) {
 	const [ expanded, setExpanded ] = useState( false );
 	const colorId = useId();
-	const colors = useSetting( 'color.palette' );
 
 	return (
 		<div className="simple-graphs-item">
@@ -61,8 +59,7 @@ export default function DataItemRow( {
 						label={ __( 'Color', 'simple-graphs' ) }
 						__nextHasNoMarginBottom
 					>
-						<ColorPalette
-							colors={ colors }
+						<ColorControl
 							value={ item.color }
 							onChange={ ( color ) =>
 								onChange( {
@@ -70,7 +67,6 @@ export default function DataItemRow( {
 									color: color || item.color,
 								} )
 							}
-							clearable={ false }
 						/>
 					</BaseControl>
 					<div className="simple-graphs-item__actions">
