@@ -1,6 +1,6 @@
 import { BORDER_RADIUS, NEUTRAL_GRAY, isLowValue, contrastColor } from './shared';
 
-export default function Stacked( { items } ) {
+export default function Stacked( { items, blockGap } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -13,6 +13,7 @@ export default function Stacked( { items } ) {
 			style={ {
 				display: 'flex',
 				flexDirection: 'column',
+				gap: blockGap || 'var(--wp--preset--spacing--30, 1rem)',
 				borderRadius: BORDER_RADIUS,
 				overflow: 'hidden',
 				height: '100%',
@@ -25,6 +26,7 @@ export default function Stacked( { items } ) {
 						key={ item.id }
 						style={ {
 							flex: `${ item.value } 0 0%`,
+							borderRadius: BORDER_RADIUS,
 							background: item.color,
 							display: 'flex',
 							alignItems: 'center',

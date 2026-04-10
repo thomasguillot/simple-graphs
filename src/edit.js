@@ -12,7 +12,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const blockGap = resolveBlockGap( attributes );
 	const chartHeight = resolveMinHeight( attributes );
 	const variation = resolveVariation( blockProps.className );
-	const showGapControl = variation === 'column' || variation === 'bar';
+	const showGapControl = variation === 'column' || variation === 'bar' || variation === 'stacked';
 
 	// Hide/show the native block gap control based on style variation.
 	useEffect( () => {
