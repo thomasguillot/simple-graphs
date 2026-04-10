@@ -1,4 +1,6 @@
 export const BORDER_RADIUS = 6;
+export const TRACK_PADDING = 2; // track is 2px wider than bar on each side
+export const TRACK_RADIUS = 8; // slightly larger radius for the track
 export const LOW_VALUE_THRESHOLD = 4;
 export const FONT_STACK =
 	'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif';
