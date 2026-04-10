@@ -3,6 +3,7 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalNumberControl as NumberControl,
 	ColorPalette,
+	ColorIndicator,
 	Button,
 	BaseControl,
 } from '@wordpress/components';
@@ -22,24 +23,12 @@ export default function DataItemRow( {
 	const iconId = useId();
 
 	return (
-		<div
-			style={ {
-				border: '1px solid #ddd',
-				borderRadius: 4,
-				marginBottom: 8,
-				padding: 8,
-			} }
-		>
+		<div className="simple-graphs-item">
 			<div
+				className="simple-graphs-item__header"
 				role="button"
 				tabIndex={ 0 }
 				aria-expanded={ expanded }
-				style={ {
-					display: 'flex',
-					alignItems: 'center',
-					gap: 8,
-					cursor: 'pointer',
-				} }
 				onClick={ () => setExpanded( ! expanded ) }
 				onKeyDown={ ( e ) => {
 					if ( e.key === 'Enter' || e.key === ' ' ) {
@@ -48,25 +37,16 @@ export default function DataItemRow( {
 					}
 				} }
 			>
-				<span
-					style={ {
-						display: 'inline-block',
-						width: 16,
-						height: 16,
-						borderRadius: 3,
-						background: item.color,
-						flexShrink: 0,
-					} }
-				/>
-				<span style={ { flex: 1, fontSize: 12 } }>
+				<ColorIndicator colorValue={ item.color } />
+				<span className="simple-graphs-item__title">
 					{ item.title || __( 'Untitled', 'simple-graphs' ) }
 				</span>
-				<span style={ { fontSize: 12, fontWeight: 600 } }>
+				<span className="simple-graphs-item__value">
 					{ item.value }%
 				</span>
 			</div>
 			{ expanded && (
-				<div style={ { marginTop: 12 } }>
+				<div className="simple-graphs-item__body">
 					<TextControl
 						label={ __( 'Title', 'simple-graphs' ) }
 						value={ item.title }
@@ -117,14 +97,7 @@ export default function DataItemRow( {
 							}
 						/>
 					</BaseControl>
-					<div
-						style={ {
-							display: 'flex',
-							alignItems: 'center',
-							gap: 4,
-							marginTop: 8,
-						} }
-					>
+					<div className="simple-graphs-item__actions">
 						<Button
 							icon="arrow-up-alt2"
 							label={ __( 'Move up', 'simple-graphs' ) }
@@ -139,7 +112,7 @@ export default function DataItemRow( {
 							disabled={ ! onMoveDown }
 							size="small"
 						/>
-						<span style={ { flex: 1 } } />
+						<span className="simple-graphs-item__spacer" />
 						<Button
 							variant="link"
 							isDestructive
