@@ -6,10 +6,9 @@ import {
 	isLowValue,
 } from './shared';
 
-const WIDTH = 500;
-const HEIGHT = 420;
-const CX = WIDTH / 2;
-const CY = 200;
+const SIZE = 360;
+const CX = SIZE / 2;
+const CY = SIZE / 2;
 const R = 150;
 
 export default function Pie( { items } ) {
@@ -18,15 +17,14 @@ export default function Pie( { items } ) {
 	}
 	const slices = pieSlices( items );
 	const total = items.reduce( ( s, i ) => s + i.value, 0 );
-	const remainder = total < 100 ? 100 - total : 0;
 
 	return (
 		<svg
-			viewBox={ `0 0 ${ WIDTH } ${ HEIGHT }` }
+			viewBox={ `0 0 ${ SIZE } ${ SIZE }` }
 			preserveAspectRatio="xMidYMid meet"
 			style={ { width: '100%', height: 'auto' } }
 		>
-			{ remainder > 0 && (
+			{ total < 100 && (
 				<circle
 					cx={ CX }
 					cy={ CY }
@@ -39,15 +37,21 @@ export default function Pie( { items } ) {
 			) }
 			{ slices.map( ( s, i ) => {
 				const item = items[ i ];
-				const mid = ( s.startAngle + s.endAngle ) / 2;
-				const labelPos = polarToCartesian( CX, CY, R + 24, mid );
-				const low = isLowValue( item.value );
 				const isFullCircle =
 					s.endAngle - s.startAngle >= Math.PI * 2 - 0.0001;
+				const mid = ( s.startAngle + s.endAngle ) / 2;
+				const labelR = R * 0.6;
+				const labelPos = polarToCartesian( CX, CY, labelR, mid );
+				const low = isLowValue( item.value );
 				return (
 					<g key={ item.id }>
 						{ isFullCircle ? (
-							<circle cx={ CX } cy={ CY } r={ R } fill={ item.color } />
+							<circle
+								cx={ CX }
+								cy={ CY }
+								r={ R }
+								fill={ item.color }
+							/>
 						) : (
 							<path
 								d={ arcPath(
@@ -60,16 +64,18 @@ export default function Pie( { items } ) {
 								fill={ item.color }
 							/>
 						) }
-						<text
-							x={ labelPos.x }
-							y={ labelPos.y }
-							textAnchor="middle"
-							fontSize={ low ? 11 : 14 }
-							fontWeight="600"
-							fill="#111"
-						>
-							{ item.title } { item.value }%
-						</text>
+						{ ! low && (
+							<text
+								x={ labelPos.x }
+								y={ labelPos.y + 5 }
+								textAnchor="middle"
+								fontSize={ 18 }
+								fontWeight="700"
+								fill="#fff"
+							>
+								{ item.value }%
+							</text>
+						) }
 					</g>
 				);
 			} ) }

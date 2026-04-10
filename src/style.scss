@@ -1,8 +1,24 @@
 .wp-block-simple-graphs-chart {
 	// The block's native background color is consumed as per-item track
-	// fills inside the SVG, not painted on the wrapper itself.
+	// fills or card backgrounds, not painted on the wrapper itself.
 	&.has-background {
 		background-color: transparent !important;
+	}
+
+	.simple-graphs-chart__body {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	.simple-graphs-chart__plot {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.simple-graphs-legend {
+		flex-shrink: 0;
+		min-width: 100px;
 	}
 
 	svg {

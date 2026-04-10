@@ -1,9 +1,7 @@
-import { Icon as IconComponent } from '@wordpress/components';
 import { packBubbles, isLowValue } from './shared';
-import { getIcon } from '../icons';
 
-const WIDTH = 600;
-const HEIGHT = 340;
+const WIDTH = 500;
+const HEIGHT = 300;
 const PADDING = 20;
 
 export default function Bubble( { items } ) {
@@ -24,9 +22,8 @@ export default function Bubble( { items } ) {
 		>
 			{ bubbles.map( ( b, i ) => {
 				const item = items[ i ];
-				const icon = getIcon( item.icon );
 				const low = isLowValue( item.value );
-				const fitsInside = b.r > 40;
+				const fitsInside = b.r > 30;
 				return (
 					<g
 						key={ item.id }
@@ -39,52 +36,29 @@ export default function Bubble( { items } ) {
 							fill={ item.color }
 						/>
 						{ fitsInside ? (
-							<>
-								{ icon && (
-									<foreignObject
-										x={ b.cx - 12 }
-										y={ b.cy - 24 }
-										width={ 24 }
-										height={ 24 }
-									>
-										<div style={ { color: '#fff' } }>
-											<IconComponent
-												icon={ icon }
-												size={ 24 }
-											/>
-										</div>
-									</foreignObject>
-								) }
+							<text
+								x={ b.cx }
+								y={ b.cy + 7 }
+								textAnchor="middle"
+								fontSize={ Math.min( b.r * 0.5, 24 ) }
+								fontWeight="700"
+								fill="#fff"
+							>
+								{ item.value }%
+							</text>
+						) : (
+							! low && (
 								<text
 									x={ b.cx }
-									y={ b.cy + 8 }
+									y={ b.cy + b.r + 16 }
 									textAnchor="middle"
-									fontSize={ 18 }
-									fontWeight="700"
-									fill="#fff"
+									fontSize={ 12 }
+									fontWeight="600"
+									fill="#111"
 								>
 									{ item.value }%
 								</text>
-								<text
-									x={ b.cx }
-									y={ b.cy + 26 }
-									textAnchor="middle"
-									fontSize={ 11 }
-									fill="#fff"
-								>
-									{ item.title }
-								</text>
-							</>
-						) : (
-							<text
-								x={ b.cx }
-								y={ b.cy + b.r + 18 }
-								textAnchor="middle"
-								fontSize={ low ? 11 : 13 }
-								fill="#374151"
-							>
-								{ item.title } { item.value }%
-							</text>
+							)
 						) }
 					</g>
 				);

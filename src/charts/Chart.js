@@ -4,6 +4,7 @@ import Pie from './Pie';
 import Donut from './Donut';
 import Stacked from './Stacked';
 import Bubble from './Bubble';
+import Legend from './Legend';
 import { BORDER_RADIUS } from './shared';
 
 const VARIATIONS = {
@@ -15,7 +16,6 @@ const VARIATIONS = {
 	bubble: Bubble,
 };
 
-// Variations that get a padded background card instead of per-item tracks.
 const CARD_VARIATIONS = new Set( [ 'pie', 'donut', 'bubble' ] );
 
 export function resolveVariation( className = '' ) {
@@ -30,30 +30,35 @@ export default function Chart( { items, className, trackColor } ) {
 	const Component = VARIATIONS[ variation ] || Column;
 	const useCard = CARD_VARIATIONS.has( variation );
 
-	// Column/Bar receive trackColor for per-item tracks.
-	// Pie/Donut/Bubble get a background card wrapper instead.
 	const chartEl = useCard ? (
 		<Component items={ items } />
 	) : (
 		<Component items={ items } trackColor={ trackColor } />
 	);
 
+	const wrappedChart = useCard && trackColor ? (
+		<div
+			className="simple-graphs-chart__card"
+			style={ {
+				background: trackColor,
+				borderRadius: BORDER_RADIUS,
+				padding: 24,
+			} }
+		>
+			{ chartEl }
+		</div>
+	) : (
+		chartEl
+	);
+
 	return (
 		<div className="simple-graphs-chart">
-			{ useCard && trackColor ? (
-				<div
-					className="simple-graphs-chart__card"
-					style={ {
-						background: trackColor,
-						borderRadius: BORDER_RADIUS,
-						padding: 24,
-					} }
-				>
-					{ chartEl }
+			<div className="simple-graphs-chart__body">
+				<div className="simple-graphs-chart__plot">
+					{ wrappedChart }
 				</div>
-			) : (
-				chartEl
-			) }
+				<Legend items={ items } />
+			</div>
 		</div>
 	);
 }

@@ -1,12 +1,10 @@
-import { Icon as IconComponent } from '@wordpress/components';
 import { BORDER_RADIUS, isLowValue } from './shared';
-import { getIcon } from '../icons';
 
 const WIDTH = 600;
-const HEIGHT = 360;
+const HEIGHT = 320;
 const PADDING_X = 20;
-const PADDING_TOP = 40;
-const PADDING_BOTTOM = 60;
+const PADDING_TOP = 10;
+const PADDING_BOTTOM = 40;
 
 export default function Column( { items, trackColor } ) {
 	if ( items.length === 0 ) {
@@ -28,7 +26,6 @@ export default function Column( { items, trackColor } ) {
 				const x =
 					PADDING_X + slotWidth * i + ( slotWidth - barWidth ) / 2;
 				const y = PADDING_TOP + ( plotHeight - h );
-				const icon = getIcon( item.icon );
 				const low = isLowValue( item.value );
 				return (
 					<g key={ item.id }>
@@ -52,34 +49,13 @@ export default function Column( { items, trackColor } ) {
 						/>
 						<text
 							x={ x + barWidth / 2 }
-							y={ y - 8 }
+							y={ HEIGHT - PADDING_BOTTOM + 24 }
 							textAnchor="middle"
-							fontSize={ low ? 14 : 20 }
+							fontSize={ low ? 12 : 16 }
 							fontWeight="700"
 							fill="#111"
 						>
 							{ item.value }%
-						</text>
-						{ icon && h > 40 && (
-							<foreignObject
-								x={ x + barWidth / 2 - 10 }
-								y={ y + 8 }
-								width={ 20 }
-								height={ 20 }
-							>
-								<div style={ { color: '#fff' } }>
-									<IconComponent icon={ icon } size={ 20 } />
-								</div>
-							</foreignObject>
-						) }
-						<text
-							x={ x + barWidth / 2 }
-							y={ HEIGHT - PADDING_BOTTOM + 24 }
-							textAnchor="middle"
-							fontSize={ 13 }
-							fill="#374151"
-						>
-							{ item.title }
 						</text>
 					</g>
 				);

@@ -1,28 +1,27 @@
-import { NEUTRAL_GRAY } from './shared';
+import { NEUTRAL_GRAY, pieSlices, polarToCartesian, isLowValue } from './shared';
 
-const WIDTH = 500;
-const HEIGHT = 420;
-const CX = WIDTH / 2;
-const CY = 200;
-const R = 130;
-const STROKE = 36;
+const SIZE = 360;
+const CX = SIZE / 2;
+const CY = SIZE / 2;
+const R = 120;
+const STROKE = 40;
 
-export default function Donut( { items, chartTitle } ) {
+export default function Donut( { items } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
 	const circumference = 2 * Math.PI * R;
-	let offset = 0;
+	let dashOffset = 0;
 	const total = items.reduce( ( s, i ) => s + i.value, 0 );
 	const largest = items.reduce(
 		( a, b ) => ( a.value > b.value ? a : b ),
 		items[ 0 ]
 	);
-	const centerLabel = chartTitle || `${ largest.value }%`;
+	const slices = pieSlices( items );
 
 	return (
 		<svg
-			viewBox={ `0 0 ${ WIDTH } ${ HEIGHT }` }
+			viewBox={ `0 0 ${ SIZE } ${ SIZE }` }
 			preserveAspectRatio="xMidYMid meet"
 			style={ { width: '100%', height: 'auto' } }
 		>
@@ -51,39 +50,47 @@ export default function Donut( { items, chartTitle } ) {
 							strokeDasharray={ `${ len } ${
 								circumference - len
 							}` }
-							strokeDashoffset={ -offset }
+							strokeDashoffset={ -dashOffset }
 						/>
 					);
-					offset += len;
+					dashOffset += len;
 					return seg;
 				} ) }
 			</g>
 			<text
 				x={ CX }
-				y={ CY + 8 }
+				y={ CY + 10 }
 				textAnchor="middle"
-				fontSize={ 24 }
+				fontSize={ 28 }
 				fontWeight="700"
 				fill="#111"
 			>
-				{ centerLabel }
+				{ largest.value }%
 			</text>
-			{ items.map( ( item, i ) => (
-				<g
-					key={ `legend-${ item.id }` }
-					transform={ `translate(${ 40 + i * 90 } ${ HEIGHT - 30 })` }
-				>
-					<rect
-						width={ 12 }
-						height={ 12 }
-						fill={ item.color }
-						rx={ 2 }
-					/>
-					<text x={ 18 } y={ 10 } fontSize={ 12 } fill="#374151">
-						{ item.title } { item.value }%
+			{ /* Value labels outside the ring */ }
+			{ slices.map( ( s, i ) => {
+				const item = items[ i ];
+				const mid = ( s.startAngle + s.endAngle ) / 2;
+				const labelR = R + STROKE / 2 + 20;
+				const pos = polarToCartesian( CX, CY, labelR, mid );
+				const low = isLowValue( item.value );
+				if ( low ) {
+					return null;
+				}
+				return (
+					<text
+						key={ `label-${ item.id }` }
+						x={ pos.x }
+						y={ pos.y + 5 }
+						textAnchor="middle"
+						fontSize={ 14 }
+						fontWeight="600"
+						fill="#111"
+					>
+						{ item.value }%
 					</text>
-				</g>
-			) ) }
+				);
+			} ) }
 		</svg>
 	);
 }

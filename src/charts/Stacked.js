@@ -1,12 +1,10 @@
-import { Icon as IconComponent } from '@wordpress/components';
 import { BORDER_RADIUS, NEUTRAL_GRAY, isLowValue } from './shared';
-import { getIcon } from '../icons';
 
 const WIDTH = 600;
-const HEIGHT = 180;
+const HEIGHT = 120;
 const PADDING = 20;
-const BAR_HEIGHT = 56;
-const BAR_Y = 60;
+const BAR_HEIGHT = 80;
+const BAR_Y = 20;
 
 export default function Stacked( { items } ) {
 	if ( items.length === 0 ) {
@@ -38,7 +36,6 @@ export default function Stacked( { items } ) {
 					const w = ( item.value / 100 ) * plotWidth;
 					const x = cursor;
 					cursor += w;
-					const icon = getIcon( item.icon );
 					const low = isLowValue( item.value );
 					const centerX = x + w / 2;
 					return (
@@ -51,33 +48,16 @@ export default function Stacked( { items } ) {
 								fill={ item.color }
 							/>
 							{ ! low && (
-								<>
-									{ icon && (
-										<foreignObject
-											x={ centerX - 10 }
-											y={ BAR_Y + 8 }
-											width={ 20 }
-											height={ 20 }
-										>
-											<div style={ { color: '#fff' } }>
-												<IconComponent
-													icon={ icon }
-													size={ 20 }
-												/>
-											</div>
-										</foreignObject>
-									) }
-									<text
-										x={ centerX }
-										y={ BAR_Y + BAR_HEIGHT / 2 + 14 }
-										textAnchor="middle"
-										fontSize={ 14 }
-										fontWeight="700"
-										fill="#fff"
-									>
-										{ item.value }%
-									</text>
-								</>
+								<text
+									x={ centerX }
+									y={ BAR_Y + BAR_HEIGHT / 2 + 8 }
+									textAnchor="middle"
+									fontSize={ 20 }
+									fontWeight="700"
+									fill="#fff"
+								>
+									{ item.value }%
+								</text>
 							) }
 						</g>
 					);
@@ -92,26 +72,6 @@ export default function Stacked( { items } ) {
 					/>
 				) }
 			</g>
-			{ items.map( ( item, i ) => {
-				let accum = 0;
-				for ( let j = 0; j < i; j++ ) {
-					accum += items[ j ].value;
-				}
-				const x =
-					PADDING + ( ( accum + item.value / 2 ) / 100 ) * plotWidth;
-				return (
-					<text
-						key={ `t-${ item.id }` }
-						x={ x }
-						y={ BAR_Y + BAR_HEIGHT + 22 }
-						textAnchor="middle"
-						fontSize={ 12 }
-						fill="#374151"
-					>
-						{ item.title }
-					</text>
-				);
-			} ) }
 		</svg>
 	);
 }
