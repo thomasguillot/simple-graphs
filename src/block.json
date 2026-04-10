@@ -40,6 +40,10 @@
         { "id": "b", "title": "Item B", "value": 30, "color": "#0891B2", "icon": null },
         { "id": "c", "title": "Item C", "value": 30, "color": "#7C3AED", "icon": null }
       ]
+    },
+    "showLegend": {
+      "type": "boolean",
+      "default": true
     }
   }
 }

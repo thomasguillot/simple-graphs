@@ -4,7 +4,7 @@ import Chart from './charts/Chart';
 import { resolveTrackColor } from './track-color';
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { items } = attributes;
+	const { items, showLegend } = attributes;
 	const blockProps = useBlockProps();
 	const trackColor = resolveTrackColor( attributes );
 
@@ -14,6 +14,10 @@ export default function Edit( { attributes, setAttributes } ) {
 				<DataItemsPanel
 					items={ items }
 					onChange={ ( next ) => setAttributes( { items: next } ) }
+					showLegend={ showLegend }
+					onToggleLegend={ ( v ) =>
+						setAttributes( { showLegend: v } )
+					}
 				/>
 			</InspectorControls>
 			<div { ...blockProps }>
@@ -21,6 +25,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					items={ items }
 					className={ blockProps.className }
 					trackColor={ trackColor }
+					showLegend={ showLegend }
 				/>
 			</div>
 		</>

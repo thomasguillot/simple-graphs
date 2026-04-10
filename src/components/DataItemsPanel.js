@@ -1,4 +1,4 @@
-import { PanelBody, Button, Notice } from '@wordpress/components';
+import { PanelBody, Button, Notice, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import DataItemRow from './DataItemRow';
 import { computeTotal } from '../charts/shared';
@@ -20,7 +20,7 @@ function uid() {
 	return Math.random().toString( 36 ).slice( 2, 10 );
 }
 
-export default function DataItemsPanel( { items, onChange } ) {
+export default function DataItemsPanel( { items, onChange, showLegend, onToggleLegend } ) {
 	const total = computeTotal( items );
 	const overflow = total > 100;
 
@@ -102,6 +102,16 @@ export default function DataItemsPanel( { items, onChange } ) {
 					</Notice>
 				) }
 			</div>
+			<ToggleControl
+				label={ __( 'Show legend', 'simple-graphs' ) }
+				checked={ showLegend }
+				onChange={ onToggleLegend }
+				help={ __(
+					'Display item labels and icons next to the chart.',
+					'simple-graphs'
+				) }
+				__nextHasNoMarginBottom
+			/>
 		</PanelBody>
 	);
 }

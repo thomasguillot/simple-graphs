@@ -3,7 +3,7 @@ import Chart from './charts/Chart';
 import { resolveTrackColor } from './track-color';
 
 export default function save( { attributes } ) {
-	const { items } = attributes;
+	const { items, showLegend } = attributes;
 	const blockProps = useBlockProps.save();
 	const trackColor = resolveTrackColor( attributes );
 	return (
@@ -12,6 +12,7 @@ export default function save( { attributes } ) {
 				items={ items }
 				className={ blockProps.className }
 				trackColor={ trackColor }
+				showLegend={ showLegend }
 			/>
 		</div>
 	);

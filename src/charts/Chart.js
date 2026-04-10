@@ -25,7 +25,12 @@ export function resolveVariation( className = '' ) {
 	return match ? match[ 1 ] : 'column';
 }
 
-export default function Chart( { items, className, trackColor } ) {
+export default function Chart( {
+	items,
+	className,
+	trackColor,
+	showLegend = true,
+} ) {
 	const variation = resolveVariation( className );
 	const Component = VARIATIONS[ variation ] || Column;
 	const useCard = CARD_VARIATIONS.has( variation );
@@ -36,28 +41,33 @@ export default function Chart( { items, className, trackColor } ) {
 		<Component items={ items } trackColor={ trackColor } />
 	);
 
-	const wrappedChart = useCard && trackColor ? (
-		<div
-			className="simple-graphs-chart__card"
-			style={ {
-				background: trackColor,
-				borderRadius: BORDER_RADIUS,
-				padding: 24,
-			} }
-		>
-			{ chartEl }
-		</div>
-	) : (
-		chartEl
-	);
+	const wrappedChart =
+		useCard && trackColor ? (
+			<div
+				className="simple-graphs-chart__card"
+				style={ {
+					background: trackColor,
+					borderRadius: BORDER_RADIUS,
+					padding: 24,
+				} }
+			>
+				{ chartEl }
+			</div>
+		) : (
+			chartEl
+		);
+
+	const bodyClass = showLegend
+		? 'simple-graphs-chart__body'
+		: 'simple-graphs-chart__body simple-graphs-chart__body--no-legend';
 
 	return (
 		<div className="simple-graphs-chart">
-			<div className="simple-graphs-chart__body">
+			<div className={ bodyClass }>
 				<div className="simple-graphs-chart__plot">
 					{ wrappedChart }
 				</div>
-				<Legend items={ items } />
+				{ showLegend && <Legend items={ items } /> }
 			</div>
 		</div>
 	);
