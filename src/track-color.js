@@ -9,17 +9,7 @@
  * Handles both preset slugs ("var:preset|spacing|30") and raw values ("16px").
  */
 export function resolveBlockGap( attributes ) {
-	const gap = attributes?.style?.spacing?.blockGap;
-	if ( ! gap ) {
-		return undefined;
-	}
-	// Gutenberg stores presets as "var:preset|spacing|30"
-	const presetMatch =
-		typeof gap === 'string' && gap.match( /^var:preset\|spacing\|(.+)$/ );
-	if ( presetMatch ) {
-		return `var(--wp--preset--spacing--${ presetMatch[ 1 ] })`;
-	}
-	return gap;
+	return attributes?.blockGap || 'var(--wp--preset--spacing--30, 1rem)';
 }
 
 export function resolveMinHeight( attributes ) {
