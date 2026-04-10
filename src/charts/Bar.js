@@ -1,7 +1,7 @@
 import { BORDER_RADIUS, isLowValue, contrastColor } from './shared';
 
 const WIDTH = 600;
-const GAP = 8;
+const GAP = 12;
 const BAR_HEIGHT = 40;
 
 export default function Bar( { items, trackColor } ) {
