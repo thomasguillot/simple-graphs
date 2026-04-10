@@ -86,7 +86,7 @@ export default function DataItemsPanel( {
 
 	return (
 		<PanelBody title={ __( 'Data', 'simple-graphs' ) } initialOpen={ true }>
-			<VStack spacing={ 4 }>
+			<VStack spacing={ 2 } style={ { marginBottom: 16 } }>
 				<div className="simple-graphs-items">
 					{ items.map( ( item, index ) => (
 						<DataItemRow
@@ -115,82 +115,81 @@ export default function DataItemsPanel( {
 					onClick={ addItem }
 					disabled={ items.length >= MAX_ITEMS }
 					style={ { width: '100%', justifyContent: 'center' } }
+					size="compact"
 				>
 					{ __( 'Add item', 'simple-graphs' ) }
 				</Button>
-				<ToggleGroupControl
-					label={ __( 'Value format', 'simple-graphs' ) }
-					value={ valueMode }
-					onChange={ ( v ) => onChangeAttribute( 'valueMode', v ) }
-					isBlock
-					__next40pxDefaultSize
-					__nextHasNoMarginBottom
-				>
-					<ToggleGroupControlOption
-						value="percentage"
-						label={ __( 'Percentage', 'simple-graphs' ) }
-					/>
-					<ToggleGroupControlOption
-						value="custom"
-						label={ __( 'Custom', 'simple-graphs' ) }
-					/>
-				</ToggleGroupControl>
-				{ isCustom && (
-					<>
-						<NumberControl
-							label={ __( 'Max value', 'simple-graphs' ) }
-							value={ valueMax || '' }
-							onChange={ ( v ) =>
-								onChangeAttribute(
-									'valueMax',
-									Math.max( 0, Number( v ) || 0 )
-								)
-							}
-							min={ 0 }
-							step={ 1 }
-							placeholder={ __( 'Auto', 'simple-graphs' ) }
-							help={ __(
-								'Reference maximum for sizing. Leave empty to auto-detect.',
-								'simple-graphs'
-							) }
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-						/>
-						<TextControl
-							label={ __( 'Prefix', 'simple-graphs' ) }
-							value={ valuePrefix }
-							onChange={ ( v ) =>
-								onChangeAttribute( 'valuePrefix', v )
-							}
-							placeholder={ __( 'e.g. $', 'simple-graphs' ) }
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-						/>
-						<TextControl
-							label={ __( 'Suffix', 'simple-graphs' ) }
-							value={ valueSuffix }
-							onChange={ ( v ) =>
-								onChangeAttribute( 'valueSuffix', v )
-							}
-							placeholder={ __( 'e.g. k', 'simple-graphs' ) }
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-						/>
-					</>
-				) }
 			</VStack>
-			<div style={ { marginTop: 16 } }>
-				<ToggleControl
-					label={ __( 'Show legend', 'simple-graphs' ) }
-					checked={ showLegend }
-					onChange={ onToggleLegend }
-					help={ __(
-						'Display item labels next to the chart.',
-						'simple-graphs'
-					) }
-					__nextHasNoMarginBottom
+			<ToggleGroupControl
+				label={ __( 'Value format', 'simple-graphs' ) }
+				value={ valueMode }
+				onChange={ ( v ) => onChangeAttribute( 'valueMode', v ) }
+				isBlock
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			>
+				<ToggleGroupControlOption
+					value="percentage"
+					label={ __( 'Percentage', 'simple-graphs' ) }
 				/>
-			</div>
+				<ToggleGroupControlOption
+					value="custom"
+					label={ __( 'Custom', 'simple-graphs' ) }
+				/>
+			</ToggleGroupControl>
+			{ isCustom && (
+				<>
+					<NumberControl
+						label={ __( 'Max value', 'simple-graphs' ) }
+						value={ valueMax || '' }
+						onChange={ ( v ) =>
+							onChangeAttribute(
+								'valueMax',
+								Math.max( 0, Number( v ) || 0 )
+							)
+						}
+						min={ 0 }
+						step={ 1 }
+						placeholder={ __( 'Auto', 'simple-graphs' ) }
+						help={ __(
+							'Reference maximum for sizing. Leave empty to auto-detect.',
+							'simple-graphs'
+						) }
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+					<TextControl
+						label={ __( 'Prefix', 'simple-graphs' ) }
+						value={ valuePrefix }
+						onChange={ ( v ) =>
+							onChangeAttribute( 'valuePrefix', v )
+						}
+						placeholder={ __( 'e.g. $', 'simple-graphs' ) }
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+					<TextControl
+						label={ __( 'Suffix', 'simple-graphs' ) }
+						value={ valueSuffix }
+						onChange={ ( v ) =>
+							onChangeAttribute( 'valueSuffix', v )
+						}
+						placeholder={ __( 'e.g. k', 'simple-graphs' ) }
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+				</>
+			) }
+			<ToggleControl
+				label={ __( 'Show legend', 'simple-graphs' ) }
+				checked={ showLegend }
+				onChange={ onToggleLegend }
+				help={ __(
+					'Display item labels next to the chart.',
+					'simple-graphs'
+				) }
+				__nextHasNoMarginBottom
+			/>
 		</PanelBody>
 	);
 }
