@@ -6,27 +6,4 @@ import save from './save';
 import './style.scss';
 import './editor.scss';
 
-registerBlockType( metadata.name, {
-	icon: chartBar,
-	edit,
-	save,
-	deprecated: [
-		{
-			attributes: {
-				...metadata.attributes,
-				showLegend: { type: 'boolean', default: true },
-			},
-			isEligible( attributes ) {
-				return attributes.showLegend !== undefined;
-			},
-			migrate( attributes ) {
-				const { showLegend, ...rest } = attributes;
-				return {
-					...rest,
-					legendPosition: showLegend === false ? 'none' : 'side',
-				};
-			},
-			save: () => null,
-		},
-	],
-} );
+registerBlockType( metadata.name, { icon: chartBar, edit, save } );
