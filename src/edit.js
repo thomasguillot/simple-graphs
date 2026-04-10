@@ -6,7 +6,7 @@ import { resolveVariation } from './charts/Chart';
 import { resolveTrackColor, resolveBlockGap, resolveMinHeight } from './track-color';
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { items, showLegend } = attributes;
+	const { items, showLegend, valueMode, valueMax, valuePrefix, valueSuffix } = attributes;
 	const blockProps = useBlockProps();
 	const trackColor = resolveTrackColor( attributes );
 	const blockGap = resolveBlockGap( attributes );
@@ -53,6 +53,13 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				<DataItemsPanel
 					items={ items }
 					onChange={ ( next ) => setAttributes( { items: next } ) }
+					valueMode={ valueMode }
+					valueMax={ valueMax }
+					valuePrefix={ valuePrefix }
+					valueSuffix={ valueSuffix }
+					onChangeAttribute={ ( key, v ) =>
+						setAttributes( { [ key ]: v } )
+					}
 					showLegend={ showLegend }
 					onToggleLegend={ ( v ) =>
 						setAttributes( { showLegend: v } )
@@ -67,6 +74,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					showLegend={ showLegend }
 					blockGap={ blockGap }
 					chartHeight={ chartHeight }
+					valueMode={ valueMode }
+					valueMax={ valueMax }
+					valuePrefix={ valuePrefix }
+					valueSuffix={ valueSuffix }
 				/>
 			</div>
 		</>

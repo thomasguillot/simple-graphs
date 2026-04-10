@@ -1,7 +1,19 @@
-import { PanelBody, Button, ToggleControl } from '@wordpress/components';
+import {
+	PanelBody,
+	Button,
+	ToggleControl,
+	TextControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalNumberControl as NumberControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalVStack as VStack,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import DataItemRow from './DataItemRow';
-import { computeTotal } from '../charts/shared';
 
 const MAX_ITEMS = 8;
 // Vibrant palette, all AA-contrast (≥4.5:1) against white.
@@ -20,10 +32,17 @@ function uid() {
 	return Math.random().toString( 36 ).slice( 2, 10 );
 }
 
-export default function DataItemsPanel( { items, onChange, showLegend, onToggleLegend } ) {
-	const total = computeTotal( items );
-	const overflow = total > 100;
-
+export default function DataItemsPanel( {
+	items,
+	onChange,
+	valueMode,
+	valueMax,
+	valuePrefix,
+	valueSuffix,
+	onChangeAttribute,
+	showLegend,
+	onToggleLegend,
+} ) {
 	const updateItem = ( id, next ) => {
 		onChange( items.map( ( i ) => ( i.id === id ? next : i ) ) );
 	};
@@ -36,8 +55,12 @@ export default function DataItemsPanel( { items, onChange, showLegend, onToggleL
 		if ( items.length >= MAX_ITEMS ) {
 			return;
 		}
-		const remainder = 100 - total;
-		const value = remainder > 0 ? Math.min( remainder, 100 ) : 10;
+		let value = 10;
+		if ( valueMode === 'percentage' ) {
+			const total = items.reduce( ( sum, i ) => sum + Number( i.value ), 0 );
+			const remainder = 100 - total;
+			value = remainder > 0 ? Math.min( remainder, 100 ) : 10;
+		}
 		onChange( [
 			...items,
 			{
@@ -45,7 +68,6 @@ export default function DataItemsPanel( { items, onChange, showLegend, onToggleL
 				title: '',
 				value,
 				color: DEFAULT_COLORS[ items.length % DEFAULT_COLORS.length ],
-				icon: null,
 			},
 		] );
 	};
@@ -60,15 +82,20 @@ export default function DataItemsPanel( { items, onChange, showLegend, onToggleL
 		onChange( next );
 	};
 
+	const isCustom = valueMode === 'custom';
+
 	return (
 		<PanelBody title={ __( 'Data', 'simple-graphs' ) } initialOpen={ true }>
-			<div className="simple-graphs-data-panel">
+			<VStack spacing={ 2 } style={ { marginBottom: 16 } }>
 				<div className="simple-graphs-items">
 					{ items.map( ( item, index ) => (
 						<DataItemRow
 							key={ item.id }
 							item={ item }
-							onChange={ ( next ) => updateItem( item.id, next ) }
+							valueMode={ valueMode }
+							onChange={ ( next ) =>
+								updateItem( item.id, next )
+							}
 							onRemove={ () => removeItem( item.id ) }
 							onMoveUp={
 								index > 0
@@ -88,30 +115,81 @@ export default function DataItemsPanel( { items, onChange, showLegend, onToggleL
 					onClick={ addItem }
 					disabled={ items.length >= MAX_ITEMS }
 					style={ { width: '100%', justifyContent: 'center' } }
+					size="compact"
 				>
 					{ __( 'Add item', 'simple-graphs' ) }
 				</Button>
-				<div
-					className={ `simple-graphs-total${
-						overflow ? ' simple-graphs-total--overflow' : ''
-					}` }
-				>
-					{ __( 'Total:', 'simple-graphs' ) }{ ' ' }
-					<strong>{ total }%</strong>
-				</div>
-			</div>
-			<div style={ { marginTop: 16 } }>
-				<ToggleControl
-					label={ __( 'Show legend', 'simple-graphs' ) }
-					checked={ showLegend }
-					onChange={ onToggleLegend }
-					help={ __(
-						'Display item labels and icons next to the chart.',
-						'simple-graphs'
-					) }
-					__nextHasNoMarginBottom
+			</VStack>
+			<ToggleGroupControl
+				label={ __( 'Value format', 'simple-graphs' ) }
+				value={ valueMode }
+				onChange={ ( v ) => onChangeAttribute( 'valueMode', v ) }
+				isBlock
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			>
+				<ToggleGroupControlOption
+					value="percentage"
+					label={ __( 'Percentage', 'simple-graphs' ) }
 				/>
-			</div>
+				<ToggleGroupControlOption
+					value="custom"
+					label={ __( 'Custom', 'simple-graphs' ) }
+				/>
+			</ToggleGroupControl>
+			{ isCustom && (
+				<>
+					<NumberControl
+						label={ __( 'Max value', 'simple-graphs' ) }
+						value={ valueMax || '' }
+						onChange={ ( v ) =>
+							onChangeAttribute(
+								'valueMax',
+								Math.max( 0, Number( v ) || 0 )
+							)
+						}
+						min={ 0 }
+						step={ 1 }
+						placeholder={ __( 'Auto', 'simple-graphs' ) }
+						help={ __(
+							'Reference maximum for sizing. Leave empty to auto-detect.',
+							'simple-graphs'
+						) }
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+					<TextControl
+						label={ __( 'Prefix', 'simple-graphs' ) }
+						value={ valuePrefix }
+						onChange={ ( v ) =>
+							onChangeAttribute( 'valuePrefix', v )
+						}
+						placeholder={ __( 'e.g. $', 'simple-graphs' ) }
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+					<TextControl
+						label={ __( 'Suffix', 'simple-graphs' ) }
+						value={ valueSuffix }
+						onChange={ ( v ) =>
+							onChangeAttribute( 'valueSuffix', v )
+						}
+						placeholder={ __( 'e.g. k', 'simple-graphs' ) }
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+				</>
+			) }
+			<ToggleControl
+				label={ __( 'Show legend', 'simple-graphs' ) }
+				checked={ showLegend }
+				onChange={ onToggleLegend }
+				help={ __(
+					'Display item labels next to the chart.',
+					'simple-graphs'
+				) }
+				__nextHasNoMarginBottom
+			/>
 		</PanelBody>
 	);
 }

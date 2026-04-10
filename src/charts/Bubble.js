@@ -1,10 +1,10 @@
-import { BORDER_RADIUS, packBubbles, isLowValue, contrastColor } from './shared';
+import { BORDER_RADIUS, packBubbles, isLowValue, contrastColor, formatValue } from './shared';
 
 const WIDTH = 500;
 const HEIGHT = 300;
 const PADDING = 20;
 
-export default function Bubble( { items, trackColor } ) {
+export default function Bubble( { items, trackColor, valueMode = 'percentage', valuePrefix = '', valueSuffix = '' } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -52,7 +52,7 @@ export default function Bubble( { items, trackColor } ) {
 								fontSize={ Math.min( b.r * 0.5, 24 ) }
 								fill={ contrastColor( item.color ) }
 							>
-								{ item.value }%
+								{ formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }
 							</text>
 						) : (
 							! low && (
@@ -64,7 +64,7 @@ export default function Bubble( { items, trackColor } ) {
 									fontWeight="600"
 									fill="#000"
 								>
-									{ item.value }%
+									{ formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }
 								</text>
 							)
 						) }

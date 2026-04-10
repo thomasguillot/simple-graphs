@@ -4,7 +4,7 @@
   "name": "simple-graphs/chart",
   "title": "Simple Graphs",
   "category": "widgets",
-  "description": "A visually-striking percentage chart.",
+  "description": "Create simple, visually-striking charts.",
   "textdomain": "simple-graphs",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
@@ -56,10 +56,26 @@
     "items": {
       "type": "array",
       "default": [
-        { "id": "a", "title": "Item A", "value": 40, "color": "#DB2777", "icon": null },
-        { "id": "b", "title": "Item B", "value": 30, "color": "#0891B2", "icon": null },
-        { "id": "c", "title": "Item C", "value": 30, "color": "#7C3AED", "icon": null }
+        { "id": "a", "title": "Item A", "value": 40, "color": "#DB2777" },
+        { "id": "b", "title": "Item B", "value": 30, "color": "#0891B2" },
+        { "id": "c", "title": "Item C", "value": 30, "color": "#7C3AED" }
       ]
+    },
+    "valueMode": {
+      "type": "string",
+      "default": "percentage"
+    },
+    "valuePrefix": {
+      "type": "string",
+      "default": ""
+    },
+    "valueMax": {
+      "type": "number",
+      "default": 0
+    },
+    "valueSuffix": {
+      "type": "string",
+      "default": ""
     },
     "showLegend": {
       "type": "boolean",

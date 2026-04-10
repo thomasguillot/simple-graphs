@@ -5,6 +5,8 @@ import {
 	isLowValue,
 	pieSlices,
 	packBubbles,
+	formatValue,
+	resolveMaxValue,
 } from './shared';
 
 describe( 'shared chart helpers', () => {
@@ -64,5 +66,37 @@ describe( 'shared chart helpers', () => {
 		expect( dist ).toBeGreaterThanOrEqual(
 			bubbles[ 0 ].r + bubbles[ 1 ].r - 0.01
 		);
+	} );
+} );
+
+describe( 'formatValue', () => {
+	test( 'percentage mode appends %', () => {
+		expect( formatValue( 42 ) ).toBe( '42%' );
+		expect( formatValue( 42, { valueMode: 'percentage' } ) ).toBe( '42%' );
+	} );
+	test( 'custom mode with prefix and suffix', () => {
+		expect( formatValue( 42, { valueMode: 'custom', valuePrefix: '$', valueSuffix: 'k' } ) ).toBe( '$42k' );
+	} );
+	test( 'custom mode with no prefix/suffix', () => {
+		expect( formatValue( 42, { valueMode: 'custom' } ) ).toBe( '42' );
+	} );
+} );
+
+describe( 'resolveMaxValue', () => {
+	test( 'percentage mode uses 100 as floor', () => {
+		expect( resolveMaxValue( [ { value: 30 }, { value: 50 } ] ) ).toBe( 100 );
+		expect( resolveMaxValue( [ { value: 120 } ] ) ).toBe( 120 );
+	} );
+	test( 'custom mode derives from data', () => {
+		expect( resolveMaxValue( [ { value: 300 }, { value: 500 } ], 'custom' ) ).toBe( 500 );
+	} );
+	test( 'custom mode uses explicit max when provided', () => {
+		expect( resolveMaxValue( [ { value: 300 } ], 'custom', 1000 ) ).toBe( 1000 );
+	} );
+	test( 'custom mode with zero/empty max falls back to data', () => {
+		expect( resolveMaxValue( [ { value: 300 } ], 'custom', 0 ) ).toBe( 300 );
+	} );
+	test( 'empty items returns 1 in custom mode', () => {
+		expect( resolveMaxValue( [], 'custom' ) ).toBe( 1 );
 	} );
 } );

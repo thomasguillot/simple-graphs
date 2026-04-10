@@ -4,6 +4,22 @@ export const FONT_STACK =
 	'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif';
 export const NEUTRAL_GRAY = '#E5E7EB';
 
+export function formatValue( value, { valueMode = 'percentage', valuePrefix = '', valueSuffix = '' } = {} ) {
+	if ( valueMode === 'percentage' ) {
+		return `${ value }%`;
+	}
+	return `${ valuePrefix }${ value }${ valueSuffix }`;
+}
+
+export function resolveMaxValue( items, valueMode = 'percentage', valueMax = 0 ) {
+	const values = items.map( ( i ) => Number( i.value ) || 0 );
+	if ( valueMode === 'percentage' ) {
+		return Math.max( 100, ...values );
+	}
+	// Custom mode: use explicit max if set, otherwise derive from data.
+	return valueMax > 0 ? valueMax : Math.max( ...values, 1 );
+}
+
 /**
  * Returns '#fff' or '#000' depending on which has better contrast against bg.
  * Uses relative luminance formula from WCAG.

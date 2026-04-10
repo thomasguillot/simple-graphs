@@ -9,7 +9,6 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useState, useId } from '@wordpress/element';
-import IconPicker from './IconPicker';
 
 export default function DataItemRow( {
 	item,
@@ -17,10 +16,10 @@ export default function DataItemRow( {
 	onRemove,
 	onMoveUp,
 	onMoveDown,
+	valueMode = 'percentage',
 } ) {
 	const [ expanded, setExpanded ] = useState( false );
 	const colorId = useId();
-	const iconId = useId();
 
 	return (
 		<div className="simple-graphs-item">
@@ -41,9 +40,6 @@ export default function DataItemRow( {
 				<span className="simple-graphs-item__title">
 					{ item.title || __( 'Untitled', 'simple-graphs' ) }
 				</span>
-				<span className="simple-graphs-item__value">
-					{ item.value }%
-				</span>
 			</div>
 			{ expanded && (
 				<div className="simple-graphs-item__body">
@@ -54,19 +50,18 @@ export default function DataItemRow( {
 						__nextHasNoMarginBottom
 					/>
 					<NumberControl
-						label={ __( 'Value (%)', 'simple-graphs' ) }
+						label={ __( 'Value', 'simple-graphs' ) }
 						value={ item.value }
 						onChange={ ( value ) =>
 							onChange( {
 								...item,
-								value: Math.max(
-									0,
-									Math.min( 100, Number( value ) || 0 )
-								),
+								value: valueMode === 'percentage'
+									? Math.min( 100, Math.max( 0, Number( value ) || 0 ) )
+									: Math.max( 0, Number( value ) || 0 ),
 							} )
 						}
 						min={ 0 }
-						max={ 100 }
+						max={ valueMode === 'percentage' ? 100 : undefined }
 						step={ 1 }
 					/>
 					<BaseControl
@@ -83,18 +78,6 @@ export default function DataItemRow( {
 								} )
 							}
 							clearable={ false }
-						/>
-					</BaseControl>
-					<BaseControl
-						id={ iconId }
-						label={ __( 'Icon', 'simple-graphs' ) }
-						__nextHasNoMarginBottom
-					>
-						<IconPicker
-							value={ item.icon }
-							onChange={ ( icon ) =>
-								onChange( { ...item, icon } )
-							}
 						/>
 					</BaseControl>
 					<div className="simple-graphs-item__actions">

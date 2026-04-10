@@ -1,10 +1,10 @@
-import { BORDER_RADIUS, isLowValue, contrastColor, isZeroGap } from './shared';
+import { BORDER_RADIUS, isLowValue, contrastColor, isZeroGap, formatValue, resolveMaxValue } from './shared';
 
-export default function Bar( { items, trackColor, blockGap } ) {
+export default function Bar( { items, trackColor, blockGap, valueMode = 'percentage', valueMax = 0, valuePrefix = '', valueSuffix = '' } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
-	const maxValue = Math.max( 100, ...items.map( ( i ) => i.value ) );
+	const maxValue = resolveMaxValue( items, valueMode, valueMax );
 	const noGap = isZeroGap( blockGap );
 	const itemRadius = noGap ? 0 : BORDER_RADIUS;
 
@@ -59,7 +59,7 @@ export default function Bar( { items, trackColor, blockGap } ) {
 								color: contrastColor( item.color ),
 							} }
 						>
-							{ item.value }%
+							{ formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }
 						</span>
 					</div>
 				);

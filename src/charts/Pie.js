@@ -6,6 +6,7 @@ import {
 	arcPath,
 	polarToCartesian,
 	isLowValue,
+	formatValue,
 } from './shared';
 
 const SIZE = 360;
@@ -13,7 +14,7 @@ const CX = SIZE / 2;
 const CY = SIZE / 2;
 const R = 150;
 
-export default function Pie( { items, trackColor } ) {
+export default function Pie( { items, trackColor, valueMode = 'percentage', valuePrefix = '', valueSuffix = '' } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -76,7 +77,7 @@ export default function Pie( { items, trackColor } ) {
 								fontSize={ 18 }
 								fill={ contrastColor( item.color ) }
 							>
-								{ item.value }%
+								{ formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }
 							</text>
 						) }
 					</g>

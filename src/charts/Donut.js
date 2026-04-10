@@ -1,4 +1,4 @@
-import { NEUTRAL_GRAY, computeTotal, pieSlices, polarToCartesian, isLowValue } from './shared';
+import { NEUTRAL_GRAY, computeTotal, pieSlices, polarToCartesian, isLowValue, formatValue } from './shared';
 
 const SIZE = 360;
 const CX = SIZE / 2;
@@ -6,13 +6,15 @@ const CY = SIZE / 2;
 const R = 120;
 const STROKE = 40;
 
-export default function Donut( { items, trackColor } ) {
+export default function Donut( { items, trackColor, valueMode = 'percentage', valuePrefix = '', valueSuffix = '' } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
 	const circumference = 2 * Math.PI * R;
 	let dashOffset = 0;
 	const total = computeTotal( items );
+	const isPercentage = valueMode === 'percentage';
+	const divisor = isPercentage ? 100 : total;
 	const largest = items.reduce(
 		( a, b ) => ( Number( a.value ) > Number( b.value ) ? a : b ),
 		items[ 0 ]
@@ -27,7 +29,7 @@ export default function Donut( { items, trackColor } ) {
 			{ trackColor && (
 				<circle cx={ CX } cy={ CY } r={ R + STROKE / 2 + 24 } fill={ trackColor } />
 			) }
-			{ total < 100 && (
+			{ isPercentage && total < 100 && (
 				<circle
 					cx={ CX }
 					cy={ CY }
@@ -39,7 +41,7 @@ export default function Donut( { items, trackColor } ) {
 			) }
 			<g transform={ `rotate(-90 ${ CX } ${ CY })` }>
 				{ items.map( ( item ) => {
-					const len = ( item.value / 100 ) * circumference;
+					const len = ( item.value / divisor ) * circumference;
 					const seg = (
 						<circle
 							key={ item.id }
@@ -66,7 +68,7 @@ export default function Donut( { items, trackColor } ) {
 				fontSize={ 28 }
 				fill="#000"
 			>
-				{ largest.value }%
+				{ formatValue( largest.value, { valueMode, valuePrefix, valueSuffix } ) }
 			</text>
 			{ /* Value labels outside the ring */ }
 			{ slices.map( ( s, i ) => {
@@ -88,7 +90,7 @@ export default function Donut( { items, trackColor } ) {
 						fontWeight="600"
 						fill="#000"
 					>
-						{ item.value }%
+						{ formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }
 					</text>
 				);
 			} ) }

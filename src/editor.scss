@@ -1,16 +1,6 @@
 @import "@wordpress/base-styles/variables";
 @import "@wordpress/base-styles/colors";
 
-.simple-graphs-icon-picker {
-	display: inline-block;
-}
-
-.simple-graphs-data-panel {
-	display: flex;
-	flex-direction: column;
-	gap: $grid-unit-10;
-}
-
 .simple-graphs-items {
 	border: 1px solid $gray-300;
 	border-radius: $radius-block-ui;
