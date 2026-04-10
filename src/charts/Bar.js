@@ -43,7 +43,7 @@ export default function Bar( { items, trackColor } ) {
 							fill={ item.color }
 						/>
 						<text
-							x={ 12 }
+							x={ 16 }
 							y={ y + BAR_HEIGHT / 2 + 6 }
 							fontSize={ low ? 12 : 18 }
 							fill={ contrastColor( item.color ) }
