@@ -66,7 +66,6 @@ export default function DataItemsPanel( {
 				title: '',
 				value,
 				color: DEFAULT_COLORS[ items.length % DEFAULT_COLORS.length ],
-				icon: null,
 			},
 		] );
 	};
@@ -180,7 +179,7 @@ export default function DataItemsPanel( {
 					checked={ showLegend }
 					onChange={ onToggleLegend }
 					help={ __(
-						'Display item labels and icons next to the chart.',
+						'Display item labels next to the chart.',
 						'simple-graphs'
 					) }
 					__nextHasNoMarginBottom
