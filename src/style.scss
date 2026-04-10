@@ -26,6 +26,14 @@
 
 	.simple-graphs-chart__plot {
 		min-width: 0;
+		display: flex;
+		align-items: center;
+
+		> .simple-graphs-chart > svg {
+			height: 100%;
+			width: auto;
+			max-width: 100%;
+		}
 	}
 
 	.simple-graphs-legend {
