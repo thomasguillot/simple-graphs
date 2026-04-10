@@ -1,6 +1,7 @@
 import { useBlockProps } from '@wordpress/block-editor';
 import { useSelect } from '@wordpress/data';
 import { store as blockEditorStore } from '@wordpress/block-editor';
+import { __ } from '@wordpress/i18n';
 
 export default function Edit( { clientId } ) {
 	const blockProps = useBlockProps();
@@ -22,10 +23,10 @@ export default function Edit( { clientId } ) {
 				.map( ( b ) => ( {
 					clientId: b.clientId,
 					title: b.attributes.title || '',
-					color:
-						b.attributes.style?.color?.background ||
-						b.attributes.backgroundColor ||
-						'#ccc',
+					color: b.attributes.style?.color?.background ||
+						( b.attributes.backgroundColor
+							? `var(--wp--preset--color--${ b.attributes.backgroundColor })`
+							: '#ccc' ),
 				} ) );
 		},
 		[ clientId ]
@@ -40,7 +41,7 @@ export default function Edit( { clientId } ) {
 						style={ { background: item.color } }
 					/>
 					<span className="simple-graphs-legend__label">
-						{ item.title || 'Untitled' }
+						{ item.title || __( 'Untitled', 'simple-graphs' ) }
 					</span>
 				</div>
 			) ) }

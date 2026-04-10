@@ -6,7 +6,11 @@ export default function save( { attributes } ) {
 
 	return (
 		<div { ...blockProps }>
-			<span className="simple-graphs-data-item__value">{ value }</span>
+			<RichText.Content
+				tagName="span"
+				className="simple-graphs-data-item__value"
+				value={ value }
+			/>
 			{ title && (
 				<RichText.Content
 					tagName="span"

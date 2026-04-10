@@ -4,7 +4,12 @@ import { contrastColor } from '../shared/utils';
 export default function Edit( { attributes, setAttributes, context } ) {
 	const { value, title } = attributes;
 	const blockProps = useBlockProps();
-	const bgColor = blockProps.style?.backgroundColor || '#DB2777';
+	// Resolve background color for contrast calculation.
+	let bgColor = attributes.style?.color?.background || '#DB2777';
+	// If it's a CSS var or preset token, we can't compute contrast — default to white text.
+	if ( bgColor.startsWith( 'var' ) || bgColor.startsWith( 'var:' ) ) {
+		bgColor = '#000'; // Force white text for preset colors (dark assumed)
+	}
 	const textColor = contrastColor( bgColor );
 	const valueMode = context[ 'simple-graphs/valueMode' ] || 'percentage';
 	const valuePrefix = context[ 'simple-graphs/valuePrefix' ] || '';

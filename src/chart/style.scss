@@ -2,6 +2,7 @@
 	.simple-graphs-chart__items {
 		display: grid;
 		height: 100%;
+		gap: var(--wp--style--block-gap, var(--wp--preset--spacing--30, 1rem));
 	}
 
 	// Column: vertical bars side by side.

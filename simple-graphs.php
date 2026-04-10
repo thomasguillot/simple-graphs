@@ -53,6 +53,11 @@ function simple_graphs_render_legend( $attributes, $content, $block ) {
 			$color = '#ccc';
 			if ( ! empty( $item['attrs']['style']['color']['background'] ) ) {
 				$color = $item['attrs']['style']['color']['background'];
+				// Normalize var:preset|color|slug tokens to CSS vars.
+				if ( strpos( $color, 'var:preset|color|' ) === 0 ) {
+					$slug  = str_replace( 'var:preset|color|', '', $color );
+					$color = 'var(--wp--preset--color--' . $slug . ')';
+				}
 			} elseif ( ! empty( $item['attrs']['backgroundColor'] ) ) {
 				$color = 'var(--wp--preset--color--' . $item['attrs']['backgroundColor'] . ')';
 			}

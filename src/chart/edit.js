@@ -12,9 +12,9 @@ import {
 import { __ } from '@wordpress/i18n';
 
 const TEMPLATE = [
-	[ 'simple-graphs/data-item', { value: '40', title: 'Item A', backgroundColor: '#DB2777' } ],
-	[ 'simple-graphs/data-item', { value: '30', title: 'Item B', backgroundColor: '#0891B2' } ],
-	[ 'simple-graphs/data-item', { value: '30', title: 'Item C', backgroundColor: '#7C3AED' } ],
+	[ 'simple-graphs/data-item', { value: '40', title: 'Item A', style: { color: { background: '#DB2777' } } } ],
+	[ 'simple-graphs/data-item', { value: '30', title: 'Item B', style: { color: { background: '#0891B2' } } } ],
+	[ 'simple-graphs/data-item', { value: '30', title: 'Item C', style: { color: { background: '#7C3AED' } } } ],
 	[ 'simple-graphs/legend', {} ],
 ];
 

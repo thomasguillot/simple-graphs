@@ -37,9 +37,6 @@
   "styles": [
     { "name": "column", "label": "Column", "isDefault": true },
     { "name": "bar", "label": "Bar" },
-    { "name": "pie", "label": "Pie" },
-    { "name": "donut", "label": "Donut" },
-    { "name": "stacked", "label": "Stacked" },
-    { "name": "bubble", "label": "Bubble" }
+    { "name": "stacked", "label": "Stacked" }
   ]
 }
