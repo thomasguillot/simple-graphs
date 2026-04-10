@@ -16,8 +16,9 @@ export function resolveMaxValue( items, valueMode = 'percentage', valueMax = 0 )
 	if ( valueMode === 'percentage' ) {
 		return Math.max( 100, ...values );
 	}
-	// Custom mode: use explicit max if set, otherwise derive from data.
-	return valueMax > 0 ? valueMax : Math.max( ...values, 1 );
+	// Custom mode: use explicit max if set, but never lower than the highest value.
+	const dataMax = Math.max( ...values, 1 );
+	return valueMax > 0 ? Math.max( valueMax, dataMax ) : dataMax;
 }
 
 /**
