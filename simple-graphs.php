@@ -18,9 +18,11 @@ add_action(
 	'init',
 	function () {
 		$asset_file = __DIR__ . '/build/index.asset.php';
-		$version    = file_exists( $asset_file )
-			? require( $asset_file )['version'] ?? SIMPLE_GRAPHS_VERSION
-			: SIMPLE_GRAPHS_VERSION;
+		$version    = SIMPLE_GRAPHS_VERSION;
+		if ( file_exists( $asset_file ) ) {
+			$asset   = require $asset_file;
+			$version = isset( $asset['version'] ) ? $asset['version'] : SIMPLE_GRAPHS_VERSION;
+		}
 
 		// Pre-register styles with a file-content-based version so cache busts on update.
 		wp_register_style(
