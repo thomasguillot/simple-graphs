@@ -5,6 +5,12 @@
 		background-color: transparent !important;
 	}
 
+	.simple-graphs-chart,
+	.simple-graphs-chart__body,
+	.simple-graphs-chart__plot {
+		height: 100%;
+	}
+
 	.simple-graphs-chart__body {
 		display: grid;
 		grid-template-columns: 5fr 1fr;

@@ -13,6 +13,7 @@
     "html": false,
     "align": ["wide", "full"],
     "spacing": { "margin": true, "padding": true, "blockGap": true },
+    "dimensions": { "minHeight": true },
     "color": {
       "background": true,
       "text": true,
@@ -46,6 +47,9 @@
       "default": {
         "spacing": {
           "blockGap": "var:preset|spacing|30"
+        },
+        "dimensions": {
+          "minHeight": "320px"
         }
       }
     },
