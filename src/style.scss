@@ -33,8 +33,14 @@
 		&__label {
 			display: block;
 			text-align: center;
+			// Isolate from block typography settings.
+			font-family: revert;
 			font-size: var(--wp--preset--font-size--small, 1rem);
+			font-weight: normal;
+			font-style: normal;
 			line-height: var(--wp--custom--line-height--small, 1.5);
+			letter-spacing: normal;
+			text-transform: none;
 			color: inherit;
 			padding-top: var(--wp--preset--spacing--20, 0.5rem);
 		}
