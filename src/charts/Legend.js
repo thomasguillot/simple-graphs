@@ -1,5 +1,6 @@
 import { Icon as IconComponent } from '@wordpress/components';
 import { getIcon } from '../icons';
+import { contrastColor } from './shared';
 
 const RECT_SIZE = 32;
 const ICON_SIZE = 24;
@@ -36,7 +37,7 @@ export default function Legend( { items } ) {
 								<IconComponent
 									icon={ icon }
 									size={ ICON_SIZE }
-									style={ { fill: '#fff' } }
+									style={ { fill: contrastColor( item.color ) } }
 								/>
 							) }
 						</span>
