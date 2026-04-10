@@ -36,7 +36,7 @@
 	.simple-graphs-legend {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: var(--wp--preset--spacing--20, 0.5rem);
 	}
 
 	svg {
