@@ -1,13 +1,14 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import DataItemsPanel from './components/DataItemsPanel';
 import Chart from './charts/Chart';
-import { resolveTrackColor, resolveBlockGap } from './track-color';
+import { resolveTrackColor, resolveBlockGap, resolveMinHeight } from './track-color';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { items, showLegend } = attributes;
 	const blockProps = useBlockProps();
 	const trackColor = resolveTrackColor( attributes );
 	const blockGap = resolveBlockGap( attributes );
+	const chartHeight = resolveMinHeight( attributes );
 
 	return (
 		<>
@@ -28,6 +29,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					trackColor={ trackColor }
 					showLegend={ showLegend }
 					blockGap={ blockGap }
+					chartHeight={ chartHeight }
 				/>
 			</div>
 		</>

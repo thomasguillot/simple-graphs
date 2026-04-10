@@ -3,17 +3,7 @@
 		background-color: transparent !important;
 	}
 
-	display: flex;
-	flex-direction: column;
-
-	.simple-graphs-chart {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-	}
-
 	.simple-graphs-chart__body {
-		flex: 1;
 		display: grid;
 		grid-template-columns: 5fr 1fr;
 		gap: 32px;
@@ -26,24 +16,21 @@
 
 	.simple-graphs-chart__plot {
 		min-width: 0;
-		// Override align-items: end from body so the plot stretches full height.
+		// Override grid align-items: end so plot fills full height.
 		align-self: stretch;
-		display: flex;
-		align-items: stretch;
 	}
 
-	// Column/Bar: CSS grid fills the plot height.
 	.simple-graphs-columns,
 	.simple-graphs-bars {
 		height: 100%;
 	}
 
-	// Pie/Donut/Bubble: SVG scales to fill available height.
-	// These are direct children of __plot (not inside a grid wrapper).
 	.simple-graphs-chart__plot > svg {
 		display: block;
-		max-width: 100%;
+		width: auto;
 		height: 100%;
+		max-width: 100%;
+		margin: 0 auto;
 	}
 
 	.simple-graphs-legend {

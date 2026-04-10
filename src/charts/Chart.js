@@ -28,30 +28,25 @@ export default function Chart( {
 	trackColor,
 	showLegend = true,
 	blockGap,
+	chartHeight,
 } ) {
 	const variation = resolveVariation( className );
 	const Component = VARIATIONS[ variation ] || Column;
-
-	const chartEl = (
-		<Component
-			items={ items }
-			trackColor={ trackColor }
-			blockGap={ blockGap }
-		/>
-	);
 
 	const bodyClass = showLegend
 		? 'simple-graphs-chart__body'
 		: 'simple-graphs-chart__body simple-graphs-chart__body--no-legend';
 
 	return (
-		<div className="simple-graphs-chart">
-			<div className={ bodyClass }>
-				<div className="simple-graphs-chart__plot">
-					{ chartEl }
-				</div>
-				{ showLegend && <Legend items={ items } /> }
+		<div className={ bodyClass } style={ { height: chartHeight } }>
+			<div className="simple-graphs-chart__plot">
+				<Component
+					items={ items }
+					trackColor={ trackColor }
+					blockGap={ blockGap }
+				/>
 			</div>
+			{ showLegend && <Legend items={ items } /> }
 		</div>
 	);
 }

@@ -22,6 +22,10 @@ export function resolveBlockGap( attributes ) {
 	return gap;
 }
 
+export function resolveMinHeight( attributes ) {
+	return attributes?.style?.dimensions?.minHeight || '480px';
+}
+
 export function resolveTrackColor( attributes ) {
 	const custom = attributes?.style?.color?.background;
 	if ( custom ) {
