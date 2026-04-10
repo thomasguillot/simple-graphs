@@ -1,1 +1,26 @@
-// Chart parent styles.
+.wp-block-simple-graphs-chart {
+	.simple-graphs-chart__items {
+		display: grid;
+		height: 100%;
+	}
+
+	// Column: vertical bars side by side.
+	&.is-style-column .simple-graphs-chart__items,
+	&:not([class*="is-style-"]) .simple-graphs-chart__items {
+		grid-auto-columns: 1fr;
+		grid-auto-flow: column;
+		align-items: end;
+	}
+
+	// Bar: horizontal bars stacked.
+	&.is-style-bar .simple-graphs-chart__items {
+		grid-auto-rows: 1fr;
+		grid-auto-flow: row;
+	}
+
+	// Stacked: vertical flex, items grow proportionally.
+	&.is-style-stacked .simple-graphs-chart__items {
+		display: flex;
+		flex-direction: column;
+	}
+}
