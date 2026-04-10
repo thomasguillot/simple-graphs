@@ -4,7 +4,7 @@
   "name": "simple-graphs/chart",
   "title": "Simple Graphs",
   "category": "widgets",
-  "description": "A visually-striking percentage chart.",
+  "description": "Create simple, visually-striking charts.",
   "textdomain": "simple-graphs",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",

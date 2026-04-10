@@ -2,14 +2,15 @@
 
 [![License: GPL-2.0](https://img.shields.io/badge/License-GPL--2.0-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
 
-A WordPress block plugin for creating visually-striking percentage charts. Designed for visual impact over analytical depth — think infographics, not spreadsheets.
+A WordPress block plugin for creating simple, visually-striking charts. Designed for visual impact over analytical depth — think infographics, not spreadsheets.
 
 ## Features
 
 - **Six chart styles** — Column, Bar, Pie, Donut, Stacked, and Bubble, selectable via native block styles.
-- **Per-item data** — Each item has a color, optional icon (from `@wordpress/icons`), title, and percentage value.
+- **Per-item data** — Each item has a color, optional icon (from `@wordpress/icons`), title, and value.
+- **Percentage or custom values** — Use percentage mode (values out of 100) or custom mode with configurable prefix, suffix, and max value.
 - **Legend** — Toggleable legend with colored swatches and icons, aligned to the right on a 5/1 grid.
-- **Smart defaults** — New items auto-fill the remaining percentage to reach 100%.
+- **Smart defaults** — New items auto-fill the remaining value to reach 100% in percentage mode.
 - **Native WordPress controls** — Background color, typography, block spacing, and min-height all use core block supports.
 - **Contrast-aware** — Text and icon colors automatically switch between black and white based on background luminance.
 - **Gap-aware radius** — Column, Bar, and Stacked charts adapt their border-radius behavior when block spacing is set to zero.

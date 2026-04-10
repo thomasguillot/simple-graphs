@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Simple Graphs
- * Description: A Gutenberg block for creating visually-striking percentage charts.
+ * Description: Create simple, visually-striking charts.
  * Version: 0.1.0
  * Author: Thomas Guillot
  * Author URI: https://thomasguillot.com
