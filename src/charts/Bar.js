@@ -45,7 +45,7 @@ export default function Bar( { items, trackColor, blockGap } ) {
 								left: 0,
 								bottom: 0,
 								width: `${ pct }%`,
-								borderRadius: BORDER_RADIUS,
+								borderRadius: `0 ${ BORDER_RADIUS }px ${ BORDER_RADIUS }px 0`,
 								background: item.color,
 							} }
 						/>
