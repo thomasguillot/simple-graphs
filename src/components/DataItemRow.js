@@ -41,9 +41,6 @@ export default function DataItemRow( {
 				<span className="simple-graphs-item__title">
 					{ item.title || __( 'Untitled', 'simple-graphs' ) }
 				</span>
-				<span className="simple-graphs-item__value">
-					{ item.value }%
-				</span>
 			</div>
 			{ expanded && (
 				<div className="simple-graphs-item__body">
@@ -54,7 +51,7 @@ export default function DataItemRow( {
 						__nextHasNoMarginBottom
 					/>
 					<NumberControl
-						label={ __( 'Value (%)', 'simple-graphs' ) }
+						label={ __( 'Value', 'simple-graphs' ) }
 						value={ item.value }
 						onChange={ ( value ) =>
 							onChange( {
