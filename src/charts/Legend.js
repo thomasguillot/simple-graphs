@@ -1,8 +1,9 @@
 import { Icon as IconComponent } from '@wordpress/components';
 import { getIcon } from '../icons';
 
-const CIRCLE_SIZE = 24;
-const ROW_GAP = 10;
+const RECT_SIZE = 32;
+const ICON_SIZE = 24;
+const GAP = 8;
 
 export default function Legend( { items } ) {
 	return (
@@ -16,8 +17,8 @@ export default function Legend( { items } ) {
 						style={ {
 							display: 'flex',
 							alignItems: 'center',
-							gap: 8,
-							marginBottom: ROW_GAP,
+							gap: GAP,
+							marginBottom: GAP,
 						} }
 					>
 						<span
@@ -25,9 +26,9 @@ export default function Legend( { items } ) {
 								display: 'inline-flex',
 								alignItems: 'center',
 								justifyContent: 'center',
-								width: CIRCLE_SIZE,
-								height: CIRCLE_SIZE,
-								borderRadius: '50%',
+								width: RECT_SIZE,
+								height: RECT_SIZE,
+								borderRadius: 6,
 								background: item.color,
 								flexShrink: 0,
 							} }
@@ -35,7 +36,7 @@ export default function Legend( { items } ) {
 							{ icon && (
 								<IconComponent
 									icon={ icon }
-									size={ 14 }
+									size={ ICON_SIZE }
 									style={ { fill: '#fff' } }
 								/>
 							) }

@@ -6,19 +6,20 @@
 	}
 
 	.simple-graphs-chart__body {
-		display: flex;
-		align-items: center;
-		gap: 24px;
+		display: grid;
+		grid-template-columns: 4fr 2fr;
+		gap: 32px;
+		align-items: end;
 	}
 
 	.simple-graphs-chart__plot {
-		flex: 1;
 		min-width: 0;
 	}
 
 	.simple-graphs-legend {
-		flex-shrink: 0;
-		min-width: 100px;
+		&__item:last-child {
+			margin-bottom: 0;
+		}
 	}
 
 	svg {
