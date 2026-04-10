@@ -11,12 +11,13 @@ export function formatValue( value, { valueMode = 'percentage', valuePrefix = ''
 	return `${ valuePrefix }${ value }${ valueSuffix }`;
 }
 
-export function resolveMaxValue( items, valueMode = 'percentage' ) {
+export function resolveMaxValue( items, valueMode = 'percentage', valueMax = 0 ) {
 	const values = items.map( ( i ) => Number( i.value ) || 0 );
 	if ( valueMode === 'percentage' ) {
 		return Math.max( 100, ...values );
 	}
-	return Math.max( ...values, 1 );
+	// Custom mode: use explicit max if set, otherwise derive from data.
+	return valueMax > 0 ? valueMax : Math.max( ...values, 1 );
 }
 
 /**

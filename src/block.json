@@ -69,6 +69,10 @@
       "type": "string",
       "default": ""
     },
+    "valueMax": {
+      "type": "number",
+      "default": 0
+    },
     "valueSuffix": {
       "type": "string",
       "default": ""

@@ -4,6 +4,8 @@ import {
 	ToggleControl,
 	TextControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalNumberControl as NumberControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
@@ -32,6 +34,7 @@ export default function DataItemsPanel( {
 	items,
 	onChange,
 	valueMode,
+	valueMax,
 	valuePrefix,
 	valueSuffix,
 	onChangeAttribute,
@@ -132,6 +135,24 @@ export default function DataItemsPanel( {
 				</ToggleGroupControl>
 				{ isCustom && (
 					<>
+						<NumberControl
+							label={ __( 'Max value', 'simple-graphs' ) }
+							value={ valueMax || '' }
+							onChange={ ( v ) =>
+								onChangeAttribute(
+									'valueMax',
+									Math.max( 0, Number( v ) || 0 )
+								)
+							}
+							min={ 0 }
+							step={ 1 }
+							placeholder={ __( 'Auto', 'simple-graphs' ) }
+							help={ __(
+								'Reference maximum for sizing. Leave empty to auto-detect.',
+								'simple-graphs'
+							) }
+							__nextHasNoMarginBottom
+						/>
 						<TextControl
 							label={ __( 'Prefix', 'simple-graphs' ) }
 							value={ valuePrefix }

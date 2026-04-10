@@ -6,7 +6,7 @@ import { resolveVariation } from './charts/Chart';
 import { resolveTrackColor, resolveBlockGap, resolveMinHeight } from './track-color';
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { items, showLegend, valueMode, valuePrefix, valueSuffix } = attributes;
+	const { items, showLegend, valueMode, valueMax, valuePrefix, valueSuffix } = attributes;
 	const blockProps = useBlockProps();
 	const trackColor = resolveTrackColor( attributes );
 	const blockGap = resolveBlockGap( attributes );
@@ -54,6 +54,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					items={ items }
 					onChange={ ( next ) => setAttributes( { items: next } ) }
 					valueMode={ valueMode }
+					valueMax={ valueMax }
 					valuePrefix={ valuePrefix }
 					valueSuffix={ valueSuffix }
 					onChangeAttribute={ ( key, v ) =>
@@ -74,6 +75,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					blockGap={ blockGap }
 					chartHeight={ chartHeight }
 					valueMode={ valueMode }
+					valueMax={ valueMax }
 					valuePrefix={ valuePrefix }
 					valueSuffix={ valueSuffix }
 				/>

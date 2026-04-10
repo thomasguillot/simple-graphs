@@ -30,6 +30,7 @@ export default function Chart( {
 	blockGap,
 	chartHeight,
 	valueMode = 'percentage',
+	valueMax = 0,
 	valuePrefix = '',
 	valueSuffix = '',
 } ) {
@@ -48,6 +49,7 @@ export default function Chart( {
 					trackColor={ trackColor }
 					blockGap={ blockGap }
 					valueMode={ valueMode }
+					valueMax={ valueMax }
 					valuePrefix={ valuePrefix }
 					valueSuffix={ valueSuffix }
 				/>
