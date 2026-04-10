@@ -49,7 +49,7 @@ export default function Column( { items, trackColor } ) {
 						/>
 						<text
 							x={ x + barWidth / 2 }
-							y={ HEIGHT - PADDING_BOTTOM + 24 }
+							y={ PADDING_TOP + plotHeight - 10 }
 							textAnchor="middle"
 							fontSize={ low ? 12 : 16 }
 							fontWeight="700"
