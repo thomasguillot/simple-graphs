@@ -1,4 +1,4 @@
-import { packBubbles, isLowValue } from './shared';
+import { packBubbles, isLowValue, contrastColor } from './shared';
 
 const WIDTH = 500;
 const HEIGHT = 300;
@@ -41,8 +41,7 @@ export default function Bubble( { items } ) {
 								y={ b.cy + 7 }
 								textAnchor="middle"
 								fontSize={ Math.min( b.r * 0.5, 24 ) }
-								fontWeight="700"
-								fill="#fff"
+								fill={ contrastColor( item.color ) }
 							>
 								{ item.value }%
 							</text>
@@ -54,7 +53,7 @@ export default function Bubble( { items } ) {
 									textAnchor="middle"
 									fontSize={ 12 }
 									fontWeight="600"
-									fill="#111"
+									fill="#000"
 								>
 									{ item.value }%
 								</text>

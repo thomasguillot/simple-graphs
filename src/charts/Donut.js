@@ -62,8 +62,7 @@ export default function Donut( { items } ) {
 				y={ CY + 10 }
 				textAnchor="middle"
 				fontSize={ 28 }
-				fontWeight="700"
-				fill="#111"
+				fill="#000"
 			>
 				{ largest.value }%
 			</text>
@@ -85,7 +84,7 @@ export default function Donut( { items } ) {
 						textAnchor="middle"
 						fontSize={ 14 }
 						fontWeight="600"
-						fill="#111"
+						fill="#000"
 					>
 						{ item.value }%
 					</text>

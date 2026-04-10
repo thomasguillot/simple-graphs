@@ -1,4 +1,4 @@
-import { BORDER_RADIUS, isLowValue } from './shared';
+import { BORDER_RADIUS, isLowValue, contrastColor } from './shared';
 
 const WIDTH = 600;
 const HEIGHT = 320;
@@ -23,6 +23,10 @@ export default function Column( { items, trackColor } ) {
 				const x = i * ( barWidth + GAP );
 				const y = HEIGHT - h;
 				const low = isLowValue( item.value );
+				// Text sits at bottom — it's over the bar if bar is tall enough, otherwise over the track
+				const textOverBar = HEIGHT - 16 >= y;
+				const textBg = textOverBar ? item.color : trackColor;
+				const textFill = textBg ? contrastColor( textBg ) : '#000';
 				return (
 					<g key={ item.id }>
 						{ trackColor && (
@@ -48,8 +52,7 @@ export default function Column( { items, trackColor } ) {
 							y={ HEIGHT - 16 }
 							textAnchor="middle"
 							fontSize={ low ? 12 : 16 }
-							fontWeight="700"
-							fill="#111"
+							fill={ textFill }
 						>
 							{ item.value }%
 						</text>

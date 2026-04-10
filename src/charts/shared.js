@@ -4,6 +4,25 @@ export const FONT_STACK =
 	'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif';
 export const NEUTRAL_GRAY = '#E5E7EB';
 
+/**
+ * Returns '#fff' or '#000' depending on which has better contrast against bg.
+ * Uses relative luminance formula from WCAG.
+ */
+export function contrastColor( hex ) {
+	if ( ! hex || typeof hex !== 'string' ) {
+		return '#000';
+	}
+	const c = hex.replace( '#', '' );
+	if ( c.length < 6 ) {
+		return '#000';
+	}
+	const r = parseInt( c.substring( 0, 2 ), 16 ) / 255;
+	const g = parseInt( c.substring( 2, 4 ), 16 ) / 255;
+	const b = parseInt( c.substring( 4, 6 ), 16 ) / 255;
+	const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+	return luminance > 0.5 ? '#000' : '#fff';
+}
+
 export function computeTotal( items ) {
 	return items.reduce(
 		( sum, item ) => sum + ( Number( item.value ) || 0 ),

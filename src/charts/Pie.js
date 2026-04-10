@@ -1,5 +1,6 @@
 import {
 	NEUTRAL_GRAY,
+	contrastColor,
 	pieSlices,
 	arcPath,
 	polarToCartesian,
@@ -70,8 +71,7 @@ export default function Pie( { items } ) {
 								y={ labelPos.y + 5 }
 								textAnchor="middle"
 								fontSize={ 18 }
-								fontWeight="700"
-								fill="#fff"
+								fill={ contrastColor( item.color ) }
 							>
 								{ item.value }%
 							</text>

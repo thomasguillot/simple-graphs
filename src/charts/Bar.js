@@ -1,4 +1,4 @@
-import { BORDER_RADIUS, isLowValue } from './shared';
+import { BORDER_RADIUS, isLowValue, contrastColor } from './shared';
 
 const WIDTH = 500;
 const GAP = 16;
@@ -46,8 +46,7 @@ export default function Bar( { items, trackColor } ) {
 							x={ 12 }
 							y={ y + BAR_HEIGHT / 2 + 6 }
 							fontSize={ low ? 12 : 18 }
-							fontWeight="700"
-							fill="#fff"
+							fill={ contrastColor( item.color ) }
 						>
 							{ item.value }%
 						</text>

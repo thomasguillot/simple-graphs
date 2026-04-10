@@ -1,4 +1,4 @@
-import { BORDER_RADIUS, NEUTRAL_GRAY, isLowValue } from './shared';
+import { BORDER_RADIUS, NEUTRAL_GRAY, isLowValue, contrastColor } from './shared';
 
 const WIDTH = 600;
 const HEIGHT = 120;
@@ -53,8 +53,7 @@ export default function Stacked( { items } ) {
 									y={ BAR_Y + BAR_HEIGHT / 2 + 8 }
 									textAnchor="middle"
 									fontSize={ 20 }
-									fontWeight="700"
-									fill="#fff"
+									fill={ contrastColor( item.color ) }
 								>
 									{ item.value }%
 								</text>
