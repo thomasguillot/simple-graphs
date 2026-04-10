@@ -4,6 +4,16 @@ export const FONT_STACK =
 	'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif';
 export const NEUTRAL_GRAY = '#E5E7EB';
 
+/**
+ * Parse the numeric value from a string, stripping commas and spaces.
+ */
+export function parseNumeric( value ) {
+	if ( typeof value === 'number' ) {
+		return value;
+	}
+	return parseFloat( String( value ).replace( /[, ]/g, '' ) ) || 0;
+}
+
 export function formatValue( value, { valueMode = 'percentage', valuePrefix = '', valueSuffix = '' } = {} ) {
 	if ( valueMode === 'percentage' ) {
 		return `${ value }%`;
@@ -12,7 +22,7 @@ export function formatValue( value, { valueMode = 'percentage', valuePrefix = ''
 }
 
 export function resolveMaxValue( items, valueMode = 'percentage', valueMax = 0 ) {
-	const values = items.map( ( i ) => Number( i.value ) || 0 );
+	const values = items.map( ( i ) => parseNumeric( i.value ) );
 	if ( valueMode === 'percentage' ) {
 		return Math.max( 100, ...values );
 	}
@@ -50,13 +60,13 @@ export function isZeroGap( gap ) {
 
 export function computeTotal( items ) {
 	return items.reduce(
-		( sum, item ) => sum + ( Number( item.value ) || 0 ),
+		( sum, item ) => sum + parseNumeric( item.value ),
 		0
 	);
 }
 
 export function isLowValue( value ) {
-	return Number( value ) < LOW_VALUE_THRESHOLD;
+	return parseNumeric( value ) < LOW_VALUE_THRESHOLD;
 }
 
 /**
@@ -68,7 +78,7 @@ export function pieSlices( items ) {
 	const slices = [];
 	let cursor = 0;
 	for ( const item of items ) {
-		const fraction = ( Number( item.value ) || 0 ) / 100;
+		const fraction = parseNumeric( item.value ) / 100;
 		const start = cursor;
 		const end = cursor + fraction * Math.PI * 2;
 		slices.push( {

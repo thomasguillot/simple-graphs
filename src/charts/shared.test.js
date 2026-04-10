@@ -7,6 +7,7 @@ import {
 	packBubbles,
 	formatValue,
 	resolveMaxValue,
+	parseNumeric,
 } from './shared';
 
 describe( 'shared chart helpers', () => {
@@ -101,5 +102,27 @@ describe( 'resolveMaxValue', () => {
 	} );
 	test( 'empty items returns 1 in custom mode', () => {
 		expect( resolveMaxValue( [], 'custom' ) ).toBe( 1 );
+	} );
+	test( 'handles string values with commas', () => {
+		expect( resolveMaxValue( [ { value: '2,180' }, { value: '1,500' } ], 'custom' ) ).toBe( 2180 );
+	} );
+} );
+
+describe( 'parseNumeric', () => {
+	test( 'parses plain numbers', () => {
+		expect( parseNumeric( 42 ) ).toBe( 42 );
+		expect( parseNumeric( '42' ) ).toBe( 42 );
+	} );
+	test( 'strips commas', () => {
+		expect( parseNumeric( '2,180.20' ) ).toBeCloseTo( 2180.2 );
+		expect( parseNumeric( '1,000,000' ) ).toBe( 1000000 );
+	} );
+	test( 'preserves decimals', () => {
+		expect( parseNumeric( '20.00' ) ).toBe( 20 );
+		expect( parseNumeric( '54.78' ) ).toBeCloseTo( 54.78 );
+	} );
+	test( 'handles empty/invalid', () => {
+		expect( parseNumeric( '' ) ).toBe( 0 );
+		expect( parseNumeric( 'abc' ) ).toBe( 0 );
 	} );
 } );

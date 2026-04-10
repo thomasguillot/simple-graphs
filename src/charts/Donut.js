@@ -1,4 +1,4 @@
-import { NEUTRAL_GRAY, computeTotal, pieSlices, polarToCartesian, isLowValue, formatValue } from './shared';
+import { NEUTRAL_GRAY, computeTotal, pieSlices, polarToCartesian, isLowValue, formatValue, parseNumeric } from './shared';
 
 const SIZE = 360;
 const CX = SIZE / 2;
@@ -16,7 +16,7 @@ export default function Donut( { items, trackColor, valueMode = 'percentage', va
 	const isPercentage = valueMode === 'percentage';
 	const divisor = isPercentage ? 100 : total;
 	const largest = items.reduce(
-		( a, b ) => ( Number( a.value ) > Number( b.value ) ? a : b ),
+		( a, b ) => ( parseNumeric( a.value ) > parseNumeric( b.value ) ? a : b ),
 		items[ 0 ]
 	);
 	const slices = pieSlices( items );
@@ -41,7 +41,7 @@ export default function Donut( { items, trackColor, valueMode = 'percentage', va
 			) }
 			<g transform={ `rotate(-90 ${ CX } ${ CY })` }>
 				{ items.map( ( item ) => {
-					const len = ( item.value / divisor ) * circumference;
+					const len = ( parseNumeric( item.value ) / divisor ) * circumference;
 					const seg = (
 						<circle
 							key={ item.id }

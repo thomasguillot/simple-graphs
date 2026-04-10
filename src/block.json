@@ -56,9 +56,9 @@
     "items": {
       "type": "array",
       "default": [
-        { "id": "a", "title": "Item A", "value": 40, "color": "#DB2777" },
-        { "id": "b", "title": "Item B", "value": 30, "color": "#0891B2" },
-        { "id": "c", "title": "Item C", "value": 30, "color": "#7C3AED" }
+        { "id": "a", "title": "Item A", "value": "40", "color": "#DB2777" },
+        { "id": "b", "title": "Item B", "value": "30", "color": "#0891B2" },
+        { "id": "c", "title": "Item C", "value": "30", "color": "#7C3AED" }
       ]
     },
     "valueMode": {
