@@ -9,7 +9,16 @@
  * Handles both preset slugs ("var:preset|spacing|30") and raw values ("16px").
  */
 export function resolveBlockGap( attributes ) {
-	return attributes?.blockGap || 'var(--wp--preset--spacing--30, 1rem)';
+	const gap = attributes?.style?.spacing?.blockGap;
+	if ( ! gap ) {
+		return 'var(--wp--preset--spacing--30, 1rem)';
+	}
+	const presetMatch =
+		typeof gap === 'string' && gap.match( /^var:preset\|spacing\|(.+)$/ );
+	if ( presetMatch ) {
+		return `var(--wp--preset--spacing--${ presetMatch[ 1 ] })`;
+	}
+	return gap;
 }
 
 export function resolveMinHeight( attributes ) {

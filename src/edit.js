@@ -1,19 +1,43 @@
-import { __ } from '@wordpress/i18n';
+import { useEffect } from '@wordpress/element';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
-import { PanelBody, TextControl } from '@wordpress/components';
 import DataItemsPanel from './components/DataItemsPanel';
 import Chart from './charts/Chart';
 import { resolveVariation } from './charts/Chart';
 import { resolveTrackColor, resolveBlockGap, resolveMinHeight } from './track-color';
 
-export default function Edit( { attributes, setAttributes } ) {
-	const { items, showLegend, blockGap: blockGapAttr } = attributes;
+export default function Edit( { attributes, setAttributes, clientId } ) {
+	const { items, showLegend } = attributes;
 	const blockProps = useBlockProps();
 	const trackColor = resolveTrackColor( attributes );
 	const blockGap = resolveBlockGap( attributes );
 	const chartHeight = resolveMinHeight( attributes );
 	const variation = resolveVariation( blockProps.className );
 	const showGapControl = variation === 'column' || variation === 'bar';
+
+	// Hide/show the native block gap control based on style variation.
+	useEffect( () => {
+		const inspector = document.querySelector(
+			`.block-editor-block-inspector`
+		);
+		if ( ! inspector ) {
+			return;
+		}
+		// The block gap control is inside a fieldset with the "Block spacing" label.
+		const labels = inspector.querySelectorAll(
+			'label, legend, .components-base-control__label'
+		);
+		for ( const label of labels ) {
+			if ( label.textContent?.trim() === 'Block spacing' ) {
+				const wrapper =
+					label.closest( '.components-base-control' ) ||
+					label.closest( 'fieldset' ) ||
+					label.parentElement;
+				if ( wrapper ) {
+					wrapper.style.display = showGapControl ? '' : 'none';
+				}
+			}
+		}
+	}, [ showGapControl, clientId ] );
 
 	return (
 		<>
@@ -26,25 +50,6 @@ export default function Edit( { attributes, setAttributes } ) {
 						setAttributes( { showLegend: v } )
 					}
 				/>
-				{ showGapControl && (
-					<PanelBody
-						title={ __( 'Spacing', 'simple-graphs' ) }
-						initialOpen={ false }
-					>
-						<TextControl
-							label={ __( 'Gap between items', 'simple-graphs' ) }
-							help={ __(
-								'CSS value, e.g. 16px, 1rem, or a CSS variable.',
-								'simple-graphs'
-							) }
-							value={ blockGapAttr || '' }
-							onChange={ ( v ) =>
-								setAttributes( { blockGap: v } )
-							}
-							__nextHasNoMarginBottom
-						/>
-					</PanelBody>
-				) }
 			</InspectorControls>
 			<div { ...blockProps }>
 				<Chart
