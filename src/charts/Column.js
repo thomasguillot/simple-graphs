@@ -13,7 +13,6 @@ export default function Column( { items, trackColor, blockGap } ) {
 				display: 'grid',
 				gridTemplateColumns: `repeat(${ items.length }, 1fr)`,
 				gap: blockGap || 'var(--wp--preset--spacing--30, 1rem)',
-				height: '100%',
 			} }
 		>
 			{ items.map( ( item ) => {
@@ -27,7 +26,6 @@ export default function Column( { items, trackColor, blockGap } ) {
 						key={ item.id }
 						style={ {
 							position: 'relative',
-							height: '100%',
 						} }
 					>
 						{ trackColor && (

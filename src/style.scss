@@ -7,8 +7,9 @@
 
 	.simple-graphs-chart,
 	.simple-graphs-chart__body,
-	.simple-graphs-chart__plot {
-		height: 100%;
+	.simple-graphs-chart__plot,
+	.simple-graphs-columns {
+		min-height: inherit;
 	}
 
 	.simple-graphs-chart__body {
