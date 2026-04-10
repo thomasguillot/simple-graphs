@@ -2,7 +2,7 @@ import { BORDER_RADIUS, isLowValue, contrastColor } from './shared';
 
 const HEIGHT = 320;
 
-export default function Column( { items, trackColor } ) {
+export default function Column( { items, trackColor, blockGap } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -14,7 +14,7 @@ export default function Column( { items, trackColor } ) {
 			style={ {
 				display: 'grid',
 				gridTemplateColumns: `repeat(${ items.length }, 1fr)`,
-				gap: 'var(--wp--style--block-gap, var(--wp--preset--spacing--30, 1rem))',
+				gap: blockGap || 'var(--wp--preset--spacing--30, 1rem)',
 				alignItems: 'end',
 			} }
 		>

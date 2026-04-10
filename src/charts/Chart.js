@@ -30,6 +30,7 @@ export default function Chart( {
 	className,
 	trackColor,
 	showLegend = true,
+	blockGap,
 } ) {
 	const variation = resolveVariation( className );
 	const Component = VARIATIONS[ variation ] || Column;
@@ -38,7 +39,7 @@ export default function Chart( {
 	const chartEl = useCard ? (
 		<Component items={ items } />
 	) : (
-		<Component items={ items } trackColor={ trackColor } />
+		<Component items={ items } trackColor={ trackColor } blockGap={ blockGap } />
 	);
 
 	const wrappedChart =
