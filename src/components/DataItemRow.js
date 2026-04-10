@@ -64,7 +64,7 @@ export default function DataItemRow( {
 						}
 						min={ 0 }
 						max={ valueMode === 'percentage' ? 100 : undefined }
-						step={ 1 }
+						step="any"
 					/>
 					<BaseControl
 						id={ colorId }
