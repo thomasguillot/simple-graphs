@@ -4,7 +4,7 @@ const WIDTH = 500;
 const HEIGHT = 300;
 const PADDING = 20;
 
-export default function Bubble( { items, trackColor, valueMode = 'percentage', valuePrefix = '', valueSuffix = '', typographyStyle = {}, typographyClassName = '' } ) {
+export default function Bubble( { items, trackColor, valueMode = 'percentage', valuePrefix = '', valueSuffix = '', typographyStyle = {} } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -64,7 +64,7 @@ export default function Bubble( { items, trackColor, valueMode = 'percentage', v
 									x={ b.cx }
 									y={ b.cy + b.r + 16 }
 									textAnchor="middle"
-									fontWeight={ typographyStyle.fontWeight || "600" }
+									fontWeight={ typographyStyle.fontWeight || 600 }
 									fill="#000"
 									fontFamily={ typographyStyle.fontFamily }
 									fontSize={ typographyStyle.fontSize }

@@ -1,4 +1,4 @@
-import { BORDER_RADIUS, isLowValue, contrastColor, isZeroGap, formatValue, resolveMaxValue } from './shared';
+import { BORDER_RADIUS, contrastColor, isZeroGap, formatValue, resolveMaxValue } from './shared';
 
 export default function Column( { items, trackColor, blockGap, valueMode = 'percentage', valueMax = 0, valuePrefix = '', valueSuffix = '', legendPosition = 'side', typographyStyle = {}, typographyClassName = '' } ) {
 	if ( items.length === 0 ) {
@@ -23,7 +23,6 @@ export default function Column( { items, trackColor, blockGap, valueMode = 'perc
 			>
 				{ items.map( ( item ) => {
 					const pct = ( item.value / maxValue ) * 100;
-					const low = isLowValue( item.value );
 					const textOverBar = pct >= 15;
 					const textBg = textOverBar ? item.color : trackColor;
 					const textFill = textBg ? contrastColor( textBg ) : '#000';

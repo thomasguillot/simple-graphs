@@ -6,7 +6,7 @@ const CY = SIZE / 2;
 const R = 120;
 const STROKE = 40;
 
-export default function Donut( { items, trackColor, valueMode = 'percentage', valuePrefix = '', valueSuffix = '', typographyStyle = {}, typographyClassName = '' } ) {
+export default function Donut( { items, trackColor, valueMode = 'percentage', valuePrefix = '', valueSuffix = '', typographyStyle = {} } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -90,7 +90,7 @@ export default function Donut( { items, trackColor, valueMode = 'percentage', va
 						x={ pos.x }
 						y={ pos.y + 5 }
 						textAnchor="middle"
-						fontWeight={ typographyStyle.fontWeight || "600" }
+						fontWeight={ typographyStyle.fontWeight || 600 }
 						fill="#000"
 						fontFamily={ typographyStyle.fontFamily }
 						fontSize={ typographyStyle.fontSize }
