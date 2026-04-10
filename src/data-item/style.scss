@@ -1,1 +1,21 @@
-// Data item styles.
+.wp-block-simple-graphs-data-item {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 16px;
+	line-height: 1;
+	border-radius: 6px;
+
+	.simple-graphs-data-item__value {
+		display: flex;
+		align-items: baseline;
+		gap: 0.1em;
+	}
+
+	.simple-graphs-data-item__title {
+		display: block;
+		margin-top: 4px;
+	}
+}

@@ -1,5 +1,19 @@
-import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps, RichText } from '@wordpress/block-editor';
 
 export default function save( { attributes } ) {
-	return <div { ...useBlockProps.save() }>{ attributes.value }</div>;
+	const { value, title } = attributes;
+	const blockProps = useBlockProps.save();
+
+	return (
+		<div { ...blockProps }>
+			<span className="simple-graphs-data-item__value">{ value }</span>
+			{ title && (
+				<RichText.Content
+					tagName="span"
+					className="simple-graphs-data-item__title"
+					value={ title }
+				/>
+			) }
+		</div>
+	);
 }
