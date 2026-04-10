@@ -1,7 +1,5 @@
 import { BORDER_RADIUS, isLowValue, contrastColor } from './shared';
 
-const BAR_HEIGHT = 40;
-
 export default function Bar( { items, trackColor, blockGap } ) {
 	if ( items.length === 0 ) {
 		return null;
@@ -14,6 +12,7 @@ export default function Bar( { items, trackColor, blockGap } ) {
 			style={ {
 				display: 'grid',
 				gridTemplateColumns: '1fr',
+				gridTemplateRows: `repeat(${ items.length }, 1fr)`,
 				gap: blockGap || 'var(--wp--preset--spacing--30, 1rem)',
 			} }
 		>
@@ -23,7 +22,7 @@ export default function Bar( { items, trackColor, blockGap } ) {
 				return (
 					<div
 						key={ item.id }
-						style={ { position: 'relative', height: BAR_HEIGHT } }
+						style={ { position: 'relative' } }
 					>
 						{ trackColor && (
 							<div
