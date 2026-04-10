@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "simple-graphs/chart",
-  "title": "Simple Graph",
+  "title": "Simple Graphs",
   "category": "widgets",
   "description": "A visually-striking percentage chart.",
   "textdomain": "simple-graphs",
