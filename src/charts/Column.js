@@ -31,9 +31,9 @@ export default function Column( { items, trackColor } ) {
 						{ trackColor && (
 							<rect
 								x={ x }
-								y={ PADDING_TOP }
+								y={ 0 }
 								width={ barWidth }
-								height={ plotHeight }
+								height={ HEIGHT }
 								rx={ BORDER_RADIUS }
 								fill={ trackColor }
 							/>
