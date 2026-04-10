@@ -65,7 +65,6 @@ export default function Donut( { items, trackColor, valueMode = 'percentage', va
 				x={ CX }
 				y={ CY + 10 }
 				textAnchor="middle"
-				fontSize={ 28 }
 				fill="#000"
 			>
 				{ formatValue( largest.value, { valueMode, valuePrefix, valueSuffix } ) }
@@ -86,7 +85,6 @@ export default function Donut( { items, trackColor, valueMode = 'percentage', va
 						x={ pos.x }
 						y={ pos.y + 5 }
 						textAnchor="middle"
-						fontSize={ 14 }
 						fontWeight="600"
 						fill="#000"
 					>

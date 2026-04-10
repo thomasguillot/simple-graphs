@@ -49,7 +49,6 @@ export default function Bubble( { items, trackColor, valueMode = 'percentage', v
 								x={ b.cx }
 								y={ b.cy + 7 }
 								textAnchor="middle"
-								fontSize={ Math.min( b.r * 0.5, 24 ) }
 								fill={ contrastColor( item.color ) }
 							>
 								{ formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }
@@ -60,7 +59,6 @@ export default function Bubble( { items, trackColor, valueMode = 'percentage', v
 									x={ b.cx }
 									y={ b.cy + b.r + 16 }
 									textAnchor="middle"
-									fontSize={ 12 }
 									fontWeight="600"
 									fill="#000"
 								>

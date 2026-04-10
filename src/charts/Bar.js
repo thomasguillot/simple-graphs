@@ -55,7 +55,6 @@ export default function Bar( { items, trackColor, blockGap, valueMode = 'percent
 								left: 16,
 								top: '50%',
 								transform: 'translateY(-50%)',
-								fontSize: low ? 12 : 18,
 								color: contrastColor( item.color ),
 							} }
 						>

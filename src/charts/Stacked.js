@@ -34,7 +34,6 @@ export default function Stacked( { items, blockGap, valueMode = 'percentage', va
 							alignItems: 'center',
 							justifyContent: 'flex-start',
 							paddingLeft: 16,
-							fontSize: low ? 12 : 20,
 							color: contrastColor( item.color ),
 						} }
 					>

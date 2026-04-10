@@ -74,7 +74,6 @@ export default function Pie( { items, trackColor, valueMode = 'percentage', valu
 								x={ labelPos.x }
 								y={ labelPos.y + 5 }
 								textAnchor="middle"
-								fontSize={ 18 }
 								fill={ contrastColor( item.color ) }
 							>
 								{ formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }

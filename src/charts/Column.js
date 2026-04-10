@@ -60,7 +60,6 @@ export default function Column( { items, trackColor, blockGap, valueMode = 'perc
 								left: 0,
 								right: 0,
 								textAlign: 'center',
-								fontSize: low ? 12 : 16,
 								color: textFill,
 							} }
 						>
