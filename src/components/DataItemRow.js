@@ -10,7 +10,13 @@ import { __ } from '@wordpress/i18n';
 import { useState, useId } from '@wordpress/element';
 import IconPicker from './IconPicker';
 
-export default function DataItemRow( { item, onChange, onRemove } ) {
+export default function DataItemRow( {
+	item,
+	onChange,
+	onRemove,
+	onMoveUp,
+	onMoveDown,
+} ) {
 	const [ expanded, setExpanded ] = useState( false );
 	const colorId = useId();
 	const iconId = useId();
@@ -110,14 +116,37 @@ export default function DataItemRow( { item, onChange, onRemove } ) {
 							}
 						/>
 					</BaseControl>
-					<Button
-						variant="link"
-						isDestructive
-						onClick={ onRemove }
-						style={ { marginTop: 8 } }
+					<div
+						style={ {
+							display: 'flex',
+							alignItems: 'center',
+							gap: 4,
+							marginTop: 8,
+						} }
 					>
-						{ __( 'Remove item', 'simple-graphs' ) }
-					</Button>
+						<Button
+							icon="arrow-up-alt2"
+							label={ __( 'Move up', 'simple-graphs' ) }
+							onClick={ onMoveUp }
+							disabled={ ! onMoveUp }
+							size="small"
+						/>
+						<Button
+							icon="arrow-down-alt2"
+							label={ __( 'Move down', 'simple-graphs' ) }
+							onClick={ onMoveDown }
+							disabled={ ! onMoveDown }
+							size="small"
+						/>
+						<span style={ { flex: 1 } } />
+						<Button
+							variant="link"
+							isDestructive
+							onClick={ onRemove }
+						>
+							{ __( 'Remove', 'simple-graphs' ) }
+						</Button>
+					</div>
 				</div>
 			) }
 		</div>

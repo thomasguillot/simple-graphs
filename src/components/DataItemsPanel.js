@@ -36,26 +36,46 @@ export default function DataItemsPanel( { items, onChange } ) {
 		if ( items.length >= MAX_ITEMS ) {
 			return;
 		}
+		const remainder = 100 - total;
+		const value = remainder > 0 ? Math.min( remainder, 100 ) : 10;
 		onChange( [
 			...items,
 			{
 				id: uid(),
-				title: __( 'New item', 'simple-graphs' ),
-				value: 10,
+				title: '',
+				value,
 				color: DEFAULT_COLORS[ items.length % DEFAULT_COLORS.length ],
 				icon: null,
 			},
 		] );
 	};
 
+	const moveItem = ( index, direction ) => {
+		const target = index + direction;
+		if ( target < 0 || target >= items.length ) {
+			return;
+		}
+		const next = [ ...items ];
+		[ next[ index ], next[ target ] ] = [ next[ target ], next[ index ] ];
+		onChange( next );
+	};
+
 	return (
 		<PanelBody title={ __( 'Data', 'simple-graphs' ) } initialOpen={ true }>
-			{ items.map( ( item ) => (
+			{ items.map( ( item, index ) => (
 				<DataItemRow
 					key={ item.id }
 					item={ item }
 					onChange={ ( next ) => updateItem( item.id, next ) }
 					onRemove={ () => removeItem( item.id ) }
+					onMoveUp={
+						index > 0 ? () => moveItem( index, -1 ) : null
+					}
+					onMoveDown={
+						index < items.length - 1
+							? () => moveItem( index, 1 )
+							: null
+					}
 				/>
 			) ) }
 			<Button
