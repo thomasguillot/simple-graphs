@@ -48,6 +48,19 @@ describe( 'shared chart helpers', () => {
 		expect( slices[ 1 ].endAngle ).toBeCloseTo( Math.PI * 2 );
 	} );
 
+	test( 'packBubbles handles string values with commas', () => {
+		const bubbles = packBubbles(
+			[
+				{ id: 'a', value: '1,000' },
+				{ id: 'b', value: '250' },
+			],
+			{ width: 400, height: 200 }
+		);
+		expect( bubbles ).toHaveLength( 2 );
+		const ratio = ( bubbles[ 0 ].r * bubbles[ 0 ].r ) / ( bubbles[ 1 ].r * bubbles[ 1 ].r );
+		expect( ratio ).toBeCloseTo( 4, 1 );
+	} );
+
 	test( 'packBubbles returns non-overlapping circles with areas proportional to value', () => {
 		const bubbles = packBubbles(
 			[

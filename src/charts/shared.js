@@ -9,9 +9,10 @@ export const NEUTRAL_GRAY = '#E5E7EB';
  */
 export function parseNumeric( value ) {
 	if ( typeof value === 'number' ) {
-		return value;
+		return Number.isFinite( value ) ? value : 0;
 	}
-	return parseFloat( String( value ).replace( /[, ]/g, '' ) ) || 0;
+	const parsed = parseFloat( String( value ).replace( /[, ]/g, '' ) );
+	return Number.isFinite( parsed ) ? parsed : 0;
 }
 
 export function formatValue( value, { valueMode = 'percentage', valuePrefix = '', valueSuffix = '' } = {} ) {
@@ -105,7 +106,7 @@ export function packBubbles( items, { width, height, padding = 8 } ) {
 		return [];
 	}
 	const values = items.map( ( i ) =>
-		Math.max( Number( i.value ) || 0, 0.1 )
+		Math.max( parseNumeric( i.value ), 0.1 )
 	);
 	const rawRadii = values.map( ( v ) => Math.sqrt( v ) );
 	const totalDiameter =
