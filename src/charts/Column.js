@@ -14,7 +14,7 @@ export default function Column( { items, trackColor } ) {
 			style={ {
 				display: 'grid',
 				gridTemplateColumns: `repeat(${ items.length }, 1fr)`,
-				gap: 16,
+				gap: 'var(--wp--style--block-gap, 16px)',
 				alignItems: 'end',
 			} }
 		>
