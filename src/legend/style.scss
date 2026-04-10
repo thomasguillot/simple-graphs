@@ -1,1 +1,28 @@
-// Legend styles.
+.wp-block-simple-graphs-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--wp--preset--spacing--20, 0.5rem);
+
+	&.is-style-column {
+		flex-direction: column;
+		flex-wrap: nowrap;
+	}
+
+	.simple-graphs-legend__item {
+		display: flex;
+		align-items: center;
+		gap: var(--wp--preset--spacing--20, 0.5rem);
+	}
+
+	.simple-graphs-legend__swatch {
+		width: 32px;
+		height: 32px;
+		border-radius: 6px;
+		display: inline-block;
+		flex-shrink: 0;
+	}
+
+	.simple-graphs-legend__label {
+		color: inherit;
+	}
+}
