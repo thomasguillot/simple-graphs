@@ -1,4 +1,4 @@
-import { PanelBody, Button, Notice, ToggleControl } from '@wordpress/components';
+import { PanelBody, Button, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import DataItemRow from './DataItemRow';
 import { computeTotal } from '../charts/shared';
@@ -98,11 +98,6 @@ export default function DataItemsPanel( { items, onChange, showLegend, onToggleL
 				>
 					{ __( 'Total:', 'simple-graphs' ) }{ ' ' }
 					<strong>{ total }%</strong>
-					{ overflow && (
-						<Notice status="warning" isDismissible={ false }>
-							{ __( 'Total exceeds 100%.', 'simple-graphs' ) }
-						</Notice>
-					) }
 				</div>
 			</div>
 			<div style={ { marginTop: 16 } }>
