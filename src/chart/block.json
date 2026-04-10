@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "simple-graphs/chart",
+  "title": "Simple Graphs",
+  "category": "widgets",
+  "description": "Create simple, visually-striking charts.",
+  "textdomain": "simple-graphs",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"],
+    "spacing": { "margin": true, "padding": true, "blockGap": true },
+    "dimensions": { "minHeight": true },
+    "color": { "background": true, "text": false, "link": false }
+  },
+  "attributes": {
+    "valueMode": { "type": "string", "default": "percentage" },
+    "valuePrefix": { "type": "string", "default": "" },
+    "valueSuffix": { "type": "string", "default": "" },
+    "valueMax": { "type": "number", "default": 0 },
+    "style": {
+      "type": "object",
+      "default": {
+        "spacing": { "blockGap": "var:preset|spacing|30" },
+        "dimensions": { "minHeight": "480px" }
+      }
+    }
+  },
+  "providesContext": {
+    "simple-graphs/valueMode": "valueMode",
+    "simple-graphs/valuePrefix": "valuePrefix",
+    "simple-graphs/valueSuffix": "valueSuffix"
+  },
+  "styles": [
+    { "name": "column", "label": "Column", "isDefault": true },
+    { "name": "bar", "label": "Bar" },
+    { "name": "pie", "label": "Pie" },
+    { "name": "donut", "label": "Donut" },
+    { "name": "stacked", "label": "Stacked" },
+    { "name": "bubble", "label": "Bubble" }
+  ]
+}

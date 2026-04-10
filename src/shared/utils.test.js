@@ -1,6 +1,4 @@
 import {
-	BORDER_RADIUS,
-	LOW_VALUE_THRESHOLD,
 	computeTotal,
 	isLowValue,
 	pieSlices,
@@ -8,7 +6,8 @@ import {
 	formatValue,
 	resolveMaxValue,
 	parseNumeric,
-} from './shared';
+} from './utils';
+import { BORDER_RADIUS, LOW_VALUE_THRESHOLD } from './constants';
 
 describe( 'shared chart helpers', () => {
 	test( 'constants', () => {

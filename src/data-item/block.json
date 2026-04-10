@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "simple-graphs/data-item",
+  "title": "Data Item",
+  "category": "widgets",
+  "description": "A single data point in a chart.",
+  "textdomain": "simple-graphs",
+  "parent": ["simple-graphs/chart"],
+  "supports": {
+    "html": false,
+    "color": { "background": true, "text": false, "link": false },
+    "reusable": false
+  },
+  "attributes": {
+    "value": { "type": "string", "default": "10" },
+    "title": { "type": "string", "default": "" }
+  },
+  "usesContext": [
+    "simple-graphs/valueMode",
+    "simple-graphs/valuePrefix",
+    "simple-graphs/valueSuffix"
+  ]
+}
