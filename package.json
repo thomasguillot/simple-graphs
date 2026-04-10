@@ -1,12 +1,13 @@
 {
   "name": "simple-graphs",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "wp-scripts build",
     "start": "wp-scripts start",
     "lint:js": "wp-scripts lint-js",
-    "test": "wp-scripts test-unit-js"
+    "test": "wp-scripts test-unit-js",
+    "zip": "./bin/build-zip.sh"
   },
   "devDependencies": {
     "@wordpress/scripts": "^27.0.0"

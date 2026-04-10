@@ -2,3 +2,5 @@ docs/
 .superpowers/
 node_modules/
 build/
+*.zip
+.zip-build/
