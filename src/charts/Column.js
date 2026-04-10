@@ -16,44 +16,44 @@ export default function Column( { items, trackColor, blockGap } ) {
 				gridTemplateColumns: `repeat(${ items.length }, 1fr)`,
 				gap: blockGap || 'var(--wp--preset--spacing--30, 1rem)',
 				alignItems: 'end',
+				height: HEIGHT,
 			} }
 		>
 			{ items.map( ( item ) => {
-				const h = ( item.value / maxValue ) * HEIGHT;
+				const pct = ( item.value / maxValue ) * 100;
 				const low = isLowValue( item.value );
-				const textOverBar = h >= 32;
+				const textOverBar = pct >= 15;
 				const textBg = textOverBar ? item.color : trackColor;
 				const textFill = textBg ? contrastColor( textBg ) : '#000';
 				return (
-					<div key={ item.id } style={ { position: 'relative' } }>
-						<svg
-							viewBox={ `0 0 100 ${ HEIGHT }` }
-							preserveAspectRatio="none"
-							style={ {
-								width: '100%',
-								height: HEIGHT,
-								display: 'block',
-							} }
-						>
-							{ trackColor && (
-								<rect
-									x={ 0 }
-									y={ 0 }
-									width={ 100 }
-									height={ HEIGHT }
-									rx={ BORDER_RADIUS }
-									fill={ trackColor }
-								/>
-							) }
-							<rect
-								x={ 0 }
-								y={ HEIGHT - h }
-								width={ 100 }
-								height={ h }
-								rx={ BORDER_RADIUS }
-								fill={ item.color }
+					<div
+						key={ item.id }
+						style={ {
+							position: 'relative',
+							height: '100%',
+						} }
+					>
+						{ trackColor && (
+							<div
+								style={ {
+									position: 'absolute',
+									inset: 0,
+									borderRadius: BORDER_RADIUS,
+									background: trackColor,
+								} }
 							/>
-						</svg>
+						) }
+						<div
+							style={ {
+								position: 'absolute',
+								bottom: 0,
+								left: 0,
+								right: 0,
+								height: `${ pct }%`,
+								borderRadius: BORDER_RADIUS,
+								background: item.color,
+							} }
+						/>
 						<span
 							style={ {
 								position: 'absolute',
