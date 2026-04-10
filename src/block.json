@@ -32,7 +32,23 @@
       }
     }
   },
+  "styles": [
+    { "name": "column", "label": "Column", "isDefault": true },
+    { "name": "bar", "label": "Bar" },
+    { "name": "pie", "label": "Pie" },
+    { "name": "donut", "label": "Donut" },
+    { "name": "stacked", "label": "Stacked" },
+    { "name": "bubble", "label": "Bubble" }
+  ],
   "attributes": {
+    "style": {
+      "type": "object",
+      "default": {
+        "spacing": {
+          "blockGap": "16px"
+        }
+      }
+    },
     "items": {
       "type": "array",
       "default": [
