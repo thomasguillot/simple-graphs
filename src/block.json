@@ -49,7 +49,7 @@
           "blockGap": "var:preset|spacing|30"
         },
         "dimensions": {
-          "minHeight": "320px"
+          "minHeight": "480px"
         }
       }
     },

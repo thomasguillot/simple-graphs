@@ -13,7 +13,6 @@ export default function Column( { items, trackColor, blockGap } ) {
 				display: 'grid',
 				gridTemplateColumns: `repeat(${ items.length }, 1fr)`,
 				gap: blockGap || 'var(--wp--preset--spacing--30, 1rem)',
-				alignItems: 'end',
 				height: '100%',
 			} }
 		>
