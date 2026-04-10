@@ -14,7 +14,7 @@ const CX = SIZE / 2;
 const CY = SIZE / 2;
 const R = 150;
 
-export default function Pie( { items, trackColor, valueMode = 'percentage', valuePrefix = '', valueSuffix = '' } ) {
+export default function Pie( { items, trackColor, valueMode = 'percentage', valuePrefix = '', valueSuffix = '', typographyStyle = {}, typographyClassName = '' } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -75,6 +75,11 @@ export default function Pie( { items, trackColor, valueMode = 'percentage', valu
 								y={ labelPos.y + 5 }
 								textAnchor="middle"
 								fill={ contrastColor( item.color ) }
+								fontFamily={ typographyStyle.fontFamily }
+								fontSize={ typographyStyle.fontSize }
+								fontWeight={ typographyStyle.fontWeight }
+								fontStyle={ typographyStyle.fontStyle }
+								letterSpacing={ typographyStyle.letterSpacing }
 							>
 								{ formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }
 							</text>

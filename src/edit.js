@@ -4,6 +4,7 @@ import DataItemsPanel from './components/DataItemsPanel';
 import Chart from './charts/Chart';
 import { resolveVariation } from './charts/Chart';
 import { resolveTrackColor, resolveBlockGap, resolveMinHeight } from './track-color';
+import { extractTypographyStyle, extractTypographyClasses } from './typography';
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { items, legendPosition, valueMode, valueMax, valuePrefix, valueSuffix } = attributes;
@@ -13,6 +14,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const chartHeight = resolveMinHeight( attributes );
 	const variation = resolveVariation( blockProps.className );
 	const showGapControl = variation === 'column' || variation === 'bar' || variation === 'stacked';
+
+	// Split typography from block props so it only targets value labels.
+	const { typography: typographyStyle, rest: wrapperStyle } = extractTypographyStyle( blockProps.style || {} );
+	const { typographyClassName, restClassName } = extractTypographyClasses( blockProps.className || '' );
 
 	// Hide/show the native block gap control based on style variation.
 	useEffect( () => {
@@ -63,10 +68,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					legendPosition={ legendPosition }
 				/>
 			</InspectorControls>
-			<div { ...blockProps }>
+			<div
+				{ ...blockProps }
+				className={ restClassName }
+				style={ wrapperStyle }
+			>
 				<Chart
 					items={ items }
-					className={ blockProps.className }
+					className={ restClassName }
 					trackColor={ trackColor }
 					legendPosition={ legendPosition }
 					blockGap={ blockGap }
@@ -75,6 +84,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					valueMax={ valueMax }
 					valuePrefix={ valuePrefix }
 					valueSuffix={ valueSuffix }
+					typographyStyle={ typographyStyle }
+					typographyClassName={ typographyClassName }
 				/>
 			</div>
 		</>

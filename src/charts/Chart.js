@@ -33,6 +33,8 @@ export default function Chart( {
 	valueMax = 0,
 	valuePrefix = '',
 	valueSuffix = '',
+	typographyStyle = {},
+	typographyClassName = '',
 } ) {
 	const variation = resolveVariation( className );
 	const Component = VARIATIONS[ variation ] || Column;
@@ -60,6 +62,8 @@ export default function Chart( {
 					valuePrefix={ valuePrefix }
 					valueSuffix={ valueSuffix }
 					legendPosition={ legendPosition }
+					typographyStyle={ typographyStyle }
+					typographyClassName={ typographyClassName }
 				/>
 			</div>
 			{ legendPosition === 'side' && <Legend items={ items } /> }

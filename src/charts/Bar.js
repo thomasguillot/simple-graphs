@@ -1,6 +1,6 @@
 import { BORDER_RADIUS, isLowValue, contrastColor, isZeroGap, formatValue, resolveMaxValue } from './shared';
 
-export default function Bar( { items, trackColor, blockGap, valueMode = 'percentage', valueMax = 0, valuePrefix = '', valueSuffix = '', legendPosition = 'side' } ) {
+export default function Bar( { items, trackColor, blockGap, valueMode = 'percentage', valueMax = 0, valuePrefix = '', valueSuffix = '', legendPosition = 'side', typographyStyle = {}, typographyClassName = '' } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -54,12 +54,14 @@ export default function Bar( { items, trackColor, blockGap, valueMode = 'percent
 								} }
 							/>
 							<span
+								className={ typographyClassName || undefined }
 								style={ {
 									position: 'absolute',
 									left: 16,
 									top: '50%',
 									transform: 'translateY(-50%)',
 									color: contrastColor( item.color ),
+									...typographyStyle,
 								} }
 							>
 								{ formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }

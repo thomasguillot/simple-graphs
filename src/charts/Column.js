@@ -1,6 +1,6 @@
 import { BORDER_RADIUS, isLowValue, contrastColor, isZeroGap, formatValue, resolveMaxValue } from './shared';
 
-export default function Column( { items, trackColor, blockGap, valueMode = 'percentage', valueMax = 0, valuePrefix = '', valueSuffix = '', legendPosition = 'side' } ) {
+export default function Column( { items, trackColor, blockGap, valueMode = 'percentage', valueMax = 0, valuePrefix = '', valueSuffix = '', legendPosition = 'side', typographyStyle = {}, typographyClassName = '' } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -56,6 +56,7 @@ export default function Column( { items, trackColor, blockGap, valueMode = 'perc
 								} }
 							/>
 							<span
+								className={ typographyClassName || undefined }
 								style={ {
 									position: 'absolute',
 									bottom: 16,
@@ -63,6 +64,7 @@ export default function Column( { items, trackColor, blockGap, valueMode = 'perc
 									right: 0,
 									textAlign: 'center',
 									color: textFill,
+									...typographyStyle,
 								} }
 							>
 								{ formatValue( item.value, { valueMode, valuePrefix, valueSuffix } ) }
