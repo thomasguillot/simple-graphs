@@ -1,11 +1,8 @@
 .wp-block-simple-graphs-chart {
-	// The block's native background color is consumed as per-item track
-	// fills or card backgrounds, not painted on the wrapper itself.
 	&.has-background {
 		background-color: transparent !important;
 	}
 
-	// Make the inner containers fill the block's min-height.
 	display: flex;
 	flex-direction: column;
 
@@ -29,24 +26,24 @@
 
 	.simple-graphs-chart__plot {
 		min-width: 0;
+		// Override align-items: end from body so the plot stretches full height.
+		align-self: stretch;
 		display: flex;
-		align-items: center;
-		justify-content: center;
+		align-items: stretch;
 	}
 
-	// Column and Bar grids fill the plot height.
+	// Column/Bar: CSS grid fills the plot height.
 	.simple-graphs-columns,
 	.simple-graphs-bars {
-		flex: 1;
-		align-self: stretch;
+		height: 100%;
 	}
 
-	// Pie/Donut/Bubble SVGs scale to fill available height.
-	.simple-graphs-chart__plot svg {
-		width: auto;
-		height: 100%;
+	// Pie/Donut/Bubble: SVG scales to fill available height.
+	// These are direct children of __plot (not inside a grid wrapper).
+	.simple-graphs-chart__plot > svg {
+		display: block;
 		max-width: 100%;
-		max-height: 100%;
+		height: 100%;
 	}
 
 	.simple-graphs-legend {
