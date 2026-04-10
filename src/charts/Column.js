@@ -2,15 +2,12 @@ import { BORDER_RADIUS, isLowValue } from './shared';
 
 const WIDTH = 600;
 const HEIGHT = 320;
-const PADDING_TOP = 10;
-const PADDING_BOTTOM = 40;
 const GAP = 16;
 
 export default function Column( { items, trackColor } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
-	const plotHeight = HEIGHT - PADDING_TOP - PADDING_BOTTOM;
 	const totalGap = GAP * ( items.length - 1 );
 	const barWidth = ( WIDTH - totalGap ) / items.length;
 	const maxValue = Math.max( 100, ...items.map( ( i ) => i.value ) );
@@ -22,9 +19,9 @@ export default function Column( { items, trackColor } ) {
 			style={ { width: '100%', height: 'auto' } }
 		>
 			{ items.map( ( item, i ) => {
-				const h = ( item.value / maxValue ) * plotHeight;
+				const h = ( item.value / maxValue ) * HEIGHT;
 				const x = i * ( barWidth + GAP );
-				const y = PADDING_TOP + ( plotHeight - h );
+				const y = HEIGHT - h;
 				const low = isLowValue( item.value );
 				return (
 					<g key={ item.id }>
@@ -48,7 +45,7 @@ export default function Column( { items, trackColor } ) {
 						/>
 						<text
 							x={ x + barWidth / 2 }
-							y={ PADDING_TOP + plotHeight - 10 }
+							y={ HEIGHT - 16 }
 							textAnchor="middle"
 							fontSize={ low ? 12 : 16 }
 							fontWeight="700"
