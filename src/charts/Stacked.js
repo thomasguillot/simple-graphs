@@ -4,8 +4,9 @@ export default function Stacked( { items, blockGap, valueMode = 'percentage', va
 	if ( items.length === 0 ) {
 		return null;
 	}
+	const isPercentage = valueMode === 'percentage';
 	const total = computeTotal( items );
-	const remainder = total < 100 ? 100 - total : 0;
+	const remainder = isPercentage && total < 100 ? 100 - total : 0;
 	const noGap = isZeroGap( blockGap );
 
 	return (

@@ -13,6 +13,8 @@ export default function Donut( { items, trackColor, valueMode = 'percentage', va
 	const circumference = 2 * Math.PI * R;
 	let dashOffset = 0;
 	const total = computeTotal( items );
+	const isPercentage = valueMode === 'percentage';
+	const divisor = isPercentage ? 100 : total;
 	const largest = items.reduce(
 		( a, b ) => ( Number( a.value ) > Number( b.value ) ? a : b ),
 		items[ 0 ]
@@ -27,7 +29,7 @@ export default function Donut( { items, trackColor, valueMode = 'percentage', va
 			{ trackColor && (
 				<circle cx={ CX } cy={ CY } r={ R + STROKE / 2 + 24 } fill={ trackColor } />
 			) }
-			{ total < 100 && (
+			{ isPercentage && total < 100 && (
 				<circle
 					cx={ CX }
 					cy={ CY }
@@ -39,7 +41,7 @@ export default function Donut( { items, trackColor, valueMode = 'percentage', va
 			) }
 			<g transform={ `rotate(-90 ${ CX } ${ CY })` }>
 				{ items.map( ( item ) => {
-					const len = ( item.value / 100 ) * circumference;
+					const len = ( item.value / divisor ) * circumference;
 					const seg = (
 						<circle
 							key={ item.id }

@@ -55,7 +55,9 @@ export default function DataItemRow( {
 						onChange={ ( value ) =>
 							onChange( {
 								...item,
-								value: Math.max( 0, Number( value ) || 0 ),
+								value: valueMode === 'percentage'
+									? Math.min( 100, Math.max( 0, Number( value ) || 0 ) )
+									: Math.max( 0, Number( value ) || 0 ),
 							} )
 						}
 						min={ 0 }
