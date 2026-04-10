@@ -14,7 +14,7 @@ export default function Bar( { items, trackColor } ) {
 			style={ {
 				display: 'grid',
 				gridTemplateColumns: '1fr',
-				gap: 'var(--wp--style--block-gap, 16px)',
+				gap: 'var(--wp--style--block-gap, var(--wp--preset--spacing--30, 1rem))',
 			} }
 		>
 			{ items.map( ( item ) => {

@@ -45,7 +45,7 @@
       "type": "object",
       "default": {
         "spacing": {
-          "blockGap": "16px"
+          "blockGap": "var:preset|spacing|30"
         }
       }
     },
