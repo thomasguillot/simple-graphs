@@ -31,7 +31,6 @@ export default function Chart( {
 } ) {
 	const variation = resolveVariation( className );
 	const Component = VARIATIONS[ variation ] || Column;
-	const useCard = CARD_VARIATIONS.has( variation );
 
 	const chartEl = (
 		<Component
