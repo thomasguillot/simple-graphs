@@ -6,7 +6,7 @@ const CY = SIZE / 2;
 const R = 120;
 const STROKE = 40;
 
-export default function Donut( { items } ) {
+export default function Donut( { items, trackColor } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -25,6 +25,9 @@ export default function Donut( { items } ) {
 			preserveAspectRatio="xMidYMid meet"
 			style={ { width: '100%', height: 'auto' } }
 		>
+			{ trackColor && (
+				<circle cx={ CX } cy={ CY } r={ R + STROKE / 2 + 24 } fill={ trackColor } />
+			) }
 			{ total < 100 && (
 				<circle
 					cx={ CX }

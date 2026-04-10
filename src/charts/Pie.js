@@ -12,7 +12,7 @@ const CX = SIZE / 2;
 const CY = SIZE / 2;
 const R = 150;
 
-export default function Pie( { items } ) {
+export default function Pie( { items, trackColor } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -25,6 +25,9 @@ export default function Pie( { items } ) {
 			preserveAspectRatio="xMidYMid meet"
 			style={ { width: '100%', height: 'auto' } }
 		>
+			{ trackColor && (
+				<circle cx={ CX } cy={ CY } r={ R + 24 } fill={ trackColor } />
+			) }
 			{ total < 100 && (
 				<circle
 					cx={ CX }

@@ -1,10 +1,10 @@
-import { packBubbles, isLowValue, contrastColor } from './shared';
+import { BORDER_RADIUS, packBubbles, isLowValue, contrastColor } from './shared';
 
 const WIDTH = 500;
 const HEIGHT = 300;
 const PADDING = 20;
 
-export default function Bubble( { items } ) {
+export default function Bubble( { items, trackColor } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
@@ -20,6 +20,16 @@ export default function Bubble( { items } ) {
 			preserveAspectRatio="xMidYMid meet"
 			style={ { width: '100%', height: 'auto' } }
 		>
+			{ trackColor && (
+				<rect
+					x={ 0 }
+					y={ 0 }
+					width={ WIDTH }
+					height={ HEIGHT }
+					rx={ BORDER_RADIUS }
+					fill={ trackColor }
+				/>
+			) }
 			{ bubbles.map( ( b, i ) => {
 				const item = items[ i ];
 				const low = isLowValue( item.value );
