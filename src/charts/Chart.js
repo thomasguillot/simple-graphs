@@ -38,7 +38,7 @@ export default function Chart( {
 		: 'simple-graphs-chart__body simple-graphs-chart__body--no-legend';
 
 	return (
-		<div className={ bodyClass } style={ { height: chartHeight } }>
+		<div className={ bodyClass } style={ { height: chartHeight, minHeight: 'fit-content' } }>
 			<div className="simple-graphs-chart__plot">
 				<Component
 					items={ items }
