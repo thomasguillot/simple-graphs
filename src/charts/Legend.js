@@ -18,7 +18,6 @@ export default function Legend( { items } ) {
 							display: 'flex',
 							alignItems: 'center',
 							gap: GAP,
-							marginBottom: GAP,
 						} }
 					>
 						<span
