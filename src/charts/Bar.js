@@ -1,58 +1,66 @@
 import { BORDER_RADIUS, isLowValue, contrastColor } from './shared';
 
-const WIDTH = 600;
-const GAP = 10;
 const BAR_HEIGHT = 40;
 
 export default function Bar( { items, trackColor } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
-	const totalGap = GAP * ( items.length - 1 );
-	const height = BAR_HEIGHT * items.length + totalGap;
 	const maxValue = Math.max( 100, ...items.map( ( i ) => i.value ) );
 
 	return (
-		<svg
-			viewBox={ `0 0 ${ WIDTH } ${ height }` }
-			preserveAspectRatio="xMidYMid meet"
-			style={ { width: '100%', height: 'auto' } }
+		<div
+			className="simple-graphs-bars"
+			style={ {
+				display: 'grid',
+				gridTemplateColumns: '1fr',
+				gap: 16,
+			} }
 		>
-			{ items.map( ( item, i ) => {
-				const w = ( item.value / maxValue ) * WIDTH;
-				const y = i * ( BAR_HEIGHT + GAP );
+			{ items.map( ( item ) => {
+				const pct = ( item.value / maxValue ) * 100;
 				const low = isLowValue( item.value );
 				return (
-					<g key={ item.id }>
+					<div
+						key={ item.id }
+						style={ { position: 'relative', height: BAR_HEIGHT } }
+					>
 						{ trackColor && (
-							<rect
-								x={ 0 }
-								y={ y }
-								width={ WIDTH }
-								height={ BAR_HEIGHT }
-								rx={ BORDER_RADIUS }
-								fill={ trackColor }
+							<div
+								style={ {
+									position: 'absolute',
+									inset: 0,
+									borderRadius: BORDER_RADIUS,
+									background: trackColor,
+								} }
 							/>
 						) }
-						<rect
-							x={ 0 }
-							y={ y }
-							width={ w }
-							height={ BAR_HEIGHT }
-							rx={ BORDER_RADIUS }
-							fill={ item.color }
+						<div
+							style={ {
+								position: 'absolute',
+								top: 0,
+								left: 0,
+								bottom: 0,
+								width: `${ pct }%`,
+								borderRadius: BORDER_RADIUS,
+								background: item.color,
+							} }
 						/>
-						<text
-							x={ 16 }
-							y={ y + BAR_HEIGHT / 2 + 6 }
-							fontSize={ low ? 12 : 18 }
-							fill={ contrastColor( item.color ) }
+						<span
+							style={ {
+								position: 'absolute',
+								left: 16,
+								top: '50%',
+								transform: 'translateY(-50%)',
+								fontSize: low ? 12 : 18,
+								color: contrastColor( item.color ),
+							} }
 						>
 							{ item.value }%
-						</text>
-					</g>
+						</span>
+					</div>
 				);
 			} ) }
-		</svg>
+		</div>
 	);
 }
