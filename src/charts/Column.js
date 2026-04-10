@@ -49,7 +49,7 @@ export default function Column( { items, trackColor, blockGap } ) {
 								left: 0,
 								right: 0,
 								height: `${ pct }%`,
-								borderRadius: itemRadius,
+								borderRadius: BORDER_RADIUS,
 								background: item.color,
 							} }
 						/>
