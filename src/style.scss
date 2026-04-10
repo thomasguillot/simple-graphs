@@ -13,6 +13,31 @@
 		&--no-legend {
 			grid-template-columns: 1fr;
 		}
+
+		&--below {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.simple-graphs-columns-wrapper {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+
+	.simple-graphs-columns-wrapper .simple-graphs-columns {
+		flex: 1;
+	}
+
+	.simple-graphs-labels-below {
+		&__label {
+			display: block;
+			text-align: center;
+			font-size: var(--wp--preset--font-size--small, 1rem);
+			line-height: var(--wp--custom--line-height--small, 1.5);
+			color: inherit;
+			padding-top: var(--wp--preset--spacing--20, 0.5rem);
+		}
 	}
 
 	.simple-graphs-chart__plot {
@@ -41,7 +66,7 @@
 		flex-direction: column;
 		gap: var(--wp--preset--spacing--20, 0.5rem);
 		// Isolate legend from block typography settings.
-		font-family: initial;
+		font-family: revert;
 		font-size: var(--wp--preset--font-size--small, 1rem);
 		font-weight: normal;
 		font-style: normal;

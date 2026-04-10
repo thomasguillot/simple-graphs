@@ -1,7 +1,6 @@
 import {
 	PanelBody,
 	Button,
-	ToggleControl,
 	TextControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalNumberControl as NumberControl,
@@ -40,8 +39,7 @@ export default function DataItemsPanel( {
 	valuePrefix,
 	valueSuffix,
 	onChangeAttribute,
-	showLegend,
-	onToggleLegend,
+	legendPosition,
 } ) {
 	const updateItem = ( id, next ) => {
 		onChange( items.map( ( i ) => ( i.id === id ? next : i ) ) );
@@ -180,16 +178,27 @@ export default function DataItemsPanel( {
 					/>
 				</>
 			) }
-			<ToggleControl
-				label={ __( 'Show legend', 'simple-graphs' ) }
-				checked={ showLegend }
-				onChange={ onToggleLegend }
-				help={ __(
-					'Display item labels next to the chart.',
-					'simple-graphs'
-				) }
+			<ToggleGroupControl
+				label={ __( 'Legend', 'simple-graphs' ) }
+				value={ legendPosition }
+				onChange={ ( v ) => onChangeAttribute( 'legendPosition', v ) }
+				isBlock
+				__next40pxDefaultSize
 				__nextHasNoMarginBottom
-			/>
+			>
+				<ToggleGroupControlOption
+					value="side"
+					label={ __( 'Side', 'simple-graphs' ) }
+				/>
+				<ToggleGroupControlOption
+					value="below"
+					label={ __( 'Below', 'simple-graphs' ) }
+				/>
+				<ToggleGroupControlOption
+					value="none"
+					label={ __( 'None', 'simple-graphs' ) }
+				/>
+			</ToggleGroupControl>
 		</PanelBody>
 	);
 }

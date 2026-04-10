@@ -77,9 +77,9 @@
       "type": "string",
       "default": ""
     },
-    "showLegend": {
-      "type": "boolean",
-      "default": true
+    "legendPosition": {
+      "type": "string",
+      "default": "side"
     }
   }
 }

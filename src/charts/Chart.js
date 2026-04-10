@@ -26,7 +26,7 @@ export default function Chart( {
 	items,
 	className,
 	trackColor,
-	showLegend = true,
+	legendPosition = 'side',
 	blockGap,
 	chartHeight,
 	valueMode = 'percentage',
@@ -37,12 +37,19 @@ export default function Chart( {
 	const variation = resolveVariation( className );
 	const Component = VARIATIONS[ variation ] || Column;
 
-	const bodyClass = showLegend
-		? 'simple-graphs-chart__body'
-		: 'simple-graphs-chart__body simple-graphs-chart__body--no-legend';
+	const bodyClasses = [ 'simple-graphs-chart__body' ];
+	if ( legendPosition === 'none' ) {
+		bodyClasses.push( 'simple-graphs-chart__body--no-legend' );
+	}
+	if ( legendPosition === 'below' ) {
+		bodyClasses.push( 'simple-graphs-chart__body--below' );
+	}
 
 	return (
-		<div className={ bodyClass } style={ { height: chartHeight, minHeight: 'fit-content' } }>
+		<div
+			className={ bodyClasses.join( ' ' ) }
+			style={ { height: chartHeight, minHeight: 'fit-content' } }
+		>
 			<div className="simple-graphs-chart__plot">
 				<Component
 					items={ items }
@@ -52,9 +59,10 @@ export default function Chart( {
 					valueMax={ valueMax }
 					valuePrefix={ valuePrefix }
 					valueSuffix={ valueSuffix }
+					legendPosition={ legendPosition }
 				/>
 			</div>
-			{ showLegend && <Legend items={ items } /> }
+			{ legendPosition === 'side' && <Legend items={ items } /> }
 		</div>
 	);
 }
