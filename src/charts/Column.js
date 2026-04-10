@@ -2,7 +2,7 @@ import { BORDER_RADIUS, isLowValue, contrastColor } from './shared';
 
 const WIDTH = 600;
 const HEIGHT = 320;
-const GAP = 12;
+const GAP = 10;
 
 export default function Column( { items, trackColor } ) {
 	if ( items.length === 0 ) {
