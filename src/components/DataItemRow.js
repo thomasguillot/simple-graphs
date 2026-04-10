@@ -17,6 +17,7 @@ export default function DataItemRow( {
 	onRemove,
 	onMoveUp,
 	onMoveDown,
+	valueMode = 'percentage',
 } ) {
 	const [ expanded, setExpanded ] = useState( false );
 	const colorId = useId();
@@ -56,14 +57,11 @@ export default function DataItemRow( {
 						onChange={ ( value ) =>
 							onChange( {
 								...item,
-								value: Math.max(
-									0,
-									Math.min( 100, Number( value ) || 0 )
-								),
+								value: Math.max( 0, Number( value ) || 0 ),
 							} )
 						}
 						min={ 0 }
-						max={ 100 }
+						max={ valueMode === 'percentage' ? 100 : undefined }
 						step={ 1 }
 					/>
 					<BaseControl

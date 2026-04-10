@@ -88,6 +88,7 @@ export default function DataItemsPanel( {
 						<DataItemRow
 							key={ item.id }
 							item={ item }
+							valueMode={ valueMode }
 							onChange={ ( next ) =>
 								updateItem( item.id, next )
 							}
