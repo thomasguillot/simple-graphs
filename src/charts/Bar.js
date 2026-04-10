@@ -1,16 +1,15 @@
 import { BORDER_RADIUS, isLowValue } from './shared';
 
 const WIDTH = 500;
-const PADDING = 20;
-const ROW_HEIGHT = 48;
-const BAR_HEIGHT = 32;
+const GAP = 16;
+const BAR_HEIGHT = 40;
 
 export default function Bar( { items, trackColor } ) {
 	if ( items.length === 0 ) {
 		return null;
 	}
-	const height = PADDING * 2 + ROW_HEIGHT * items.length;
-	const plotWidth = WIDTH - PADDING * 2;
+	const totalGap = GAP * ( items.length - 1 );
+	const height = BAR_HEIGHT * items.length + totalGap;
 	const maxValue = Math.max( 100, ...items.map( ( i ) => i.value ) );
 
 	return (
@@ -20,25 +19,23 @@ export default function Bar( { items, trackColor } ) {
 			style={ { width: '100%', height: 'auto' } }
 		>
 			{ items.map( ( item, i ) => {
-				const w = ( item.value / maxValue ) * plotWidth;
-				const y =
-					PADDING + i * ROW_HEIGHT + ( ROW_HEIGHT - BAR_HEIGHT ) / 2;
-				const x = PADDING;
+				const w = ( item.value / maxValue ) * WIDTH;
+				const y = i * ( BAR_HEIGHT + GAP );
 				const low = isLowValue( item.value );
 				return (
 					<g key={ item.id }>
 						{ trackColor && (
 							<rect
-								x={ x }
+								x={ 0 }
 								y={ y }
-								width={ plotWidth }
+								width={ WIDTH }
 								height={ BAR_HEIGHT }
 								rx={ BORDER_RADIUS }
 								fill={ trackColor }
 							/>
 						) }
 						<rect
-							x={ x }
+							x={ 0 }
 							y={ y }
 							width={ w }
 							height={ BAR_HEIGHT }
@@ -46,8 +43,8 @@ export default function Bar( { items, trackColor } ) {
 							fill={ item.color }
 						/>
 						<text
-							x={ x + 12 }
-							y={ y + BAR_HEIGHT / 2 + 5 }
+							x={ 12 }
+							y={ y + BAR_HEIGHT / 2 + 6 }
 							fontSize={ low ? 12 : 18 }
 							fontWeight="700"
 							fill="#fff"
