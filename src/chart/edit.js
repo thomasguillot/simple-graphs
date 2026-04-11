@@ -1,7 +1,15 @@
-import { useBlockProps, useInnerBlocksProps, InspectorControls } from '@wordpress/block-editor';
+import {
+	useBlockProps,
+	useInnerBlocksProps,
+	InspectorControls,
+	BlockControls,
+	store as blockEditorStore,
+} from '@wordpress/block-editor';
 import {
 	PanelBody,
 	TextControl,
+	ToolbarGroup,
+	ToolbarButton,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
@@ -9,7 +17,12 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalNumberControl as NumberControl,
 } from '@wordpress/components';
+import { useState } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
+import { edit as editIcon, seen } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
+import { isZeroGap } from '../shared/utils';
+import CircularChart from './CircularChart';
 
 const TEMPLATE = [
 	[ 'simple-graphs/data-item', { value: '40', title: 'Item A', style: { color: { background: '#DB2777' } } } ],
@@ -19,20 +32,28 @@ const TEMPLATE = [
 ];
 
 const ALLOWED_BLOCKS = [ 'simple-graphs/data-item', 'simple-graphs/legend' ];
+const CIRCULAR_VARIATIONS = [ 'pie', 'donut', 'bubble' ];
 
 function resolveVariation( className = '' ) {
 	const match = className.match( /is-style-(column|bar|pie|donut|stacked|bubble)/ );
 	return match ? match[ 1 ] : 'column';
 }
 
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { valueMode, valuePrefix, valueSuffix, valueMax } = attributes;
 	const blockProps = useBlockProps();
 	const variation = resolveVariation( blockProps.className );
 	const isCustom = valueMode === 'custom';
+	const isCircular = CIRCULAR_VARIATIONS.includes( variation );
+	const [ editMode, setEditMode ] = useState( false );
+	const blockGap = attributes.style?.spacing?.blockGap;
+	const noGap = isZeroGap( blockGap );
+	const itemsClassName = noGap
+		? 'simple-graphs-chart__items simple-graphs-chart__items--no-gap'
+		: 'simple-graphs-chart__items';
 
 	const innerBlocksProps = useInnerBlocksProps(
-		{ className: 'simple-graphs-chart__items' },
+		{ className: itemsClassName },
 		{
 			template: TEMPLATE,
 			allowedBlocks: ALLOWED_BLOCKS,
@@ -40,8 +61,48 @@ export default function Edit( { attributes, setAttributes } ) {
 		}
 	);
 
+	// Collect data-items for SVG rendering.
+	const items = useSelect(
+		( select ) => {
+			const { getBlock } = select( blockEditorStore );
+			const chartBlock = getBlock( clientId );
+			if ( ! chartBlock ) {
+				return [];
+			}
+			return chartBlock.innerBlocks
+				.filter( ( b ) => b.name === 'simple-graphs/data-item' )
+				.map( ( b ) => ( {
+					clientId: b.clientId,
+					value: b.attributes.value || '0',
+					title: b.attributes.title || '',
+					color:
+						b.attributes.style?.color?.background ||
+						( b.attributes.backgroundColor
+							? `var(--wp--preset--color--${ b.attributes.backgroundColor })`
+							: '#ccc' ),
+				} ) );
+		},
+		[ clientId ]
+	);
+
 	return (
 		<>
+			{ isCircular && (
+				<BlockControls>
+					<ToolbarGroup>
+						<ToolbarButton
+							icon={ editMode ? seen : editIcon }
+							label={
+								editMode
+									? __( 'Preview', 'simple-graphs' )
+									: __( 'Edit data', 'simple-graphs' )
+							}
+							onClick={ () => setEditMode( ! editMode ) }
+							isPressed={ editMode }
+						/>
+					</ToolbarGroup>
+				</BlockControls>
+			) }
 			<InspectorControls>
 				<PanelBody title={ __( 'Values', 'simple-graphs' ) }>
 					<ToggleGroupControl
@@ -97,7 +158,16 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 			</InspectorControls>
 			<div { ...blockProps }>
-				<div { ...innerBlocksProps } />
+				{ isCircular && ! editMode ? (
+					<>
+						<CircularChart variation={ variation } items={ items } />
+						<div style={ { display: 'none' } }>
+							<div { ...innerBlocksProps } />
+						</div>
+					</>
+				) : (
+					<div { ...innerBlocksProps } />
+				) }
 			</div>
 		</>
 	);
