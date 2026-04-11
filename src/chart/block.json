@@ -17,10 +17,6 @@
     "color": { "background": true, "text": false, "link": false }
   },
   "attributes": {
-    "valueMode": { "type": "string", "default": "percentage" },
-    "valuePrefix": { "type": "string", "default": "" },
-    "valueSuffix": { "type": "string", "default": "" },
-    "valueMax": { "type": "number", "default": 0 },
     "style": {
       "type": "object",
       "default": {
@@ -28,18 +24,5 @@
         "dimensions": { "minHeight": "480px" }
       }
     }
-  },
-  "providesContext": {
-    "simple-graphs/valueMode": "valueMode",
-    "simple-graphs/valuePrefix": "valuePrefix",
-    "simple-graphs/valueSuffix": "valueSuffix"
-  },
-  "styles": [
-    { "name": "column", "label": "Column", "isDefault": true },
-    { "name": "bar", "label": "Bar" },
-    { "name": "pie", "label": "Pie" },
-    { "name": "donut", "label": "Donut" },
-    { "name": "stacked", "label": "Stacked" },
-    { "name": "bubble", "label": "Bubble" }
-  ]
+  }
 }

@@ -1,0 +1,70 @@
+.wp-block-simple-graphs-data {
+	display: flex;
+	flex: 1 1 auto;
+	min-height: 0;
+}
+
+// Column: vertical bars side by side, aligned to the bottom.
+.wp-block-simple-graphs-data.is-style-column,
+.wp-block-simple-graphs-data:not([class*="is-style-"]) {
+	flex-direction: row;
+	align-items: flex-end;
+
+	.wp-block-simple-graphs-data-item {
+		flex: 1 1 0;
+		min-width: 0;
+		height: calc(
+			(var(--sg-value, 0) / var(--sg-max, 100)) *
+			(100% - var(--sg-gap, 0px))
+		);
+		min-height: fit-content;
+	}
+}
+
+// Bar: horizontal bars stacked.
+.wp-block-simple-graphs-data.is-style-bar {
+	flex-direction: column;
+	align-items: stretch;
+
+	.wp-block-simple-graphs-data-item {
+		flex: 1 1 0;
+		min-height: 0;
+		width: calc(
+			(var(--sg-value, 0) / var(--sg-max, 100)) *
+			(100% - var(--sg-gap, 0px))
+		);
+		min-width: fit-content;
+	}
+}
+
+// Stacked: vertical flex, items grow proportionally by value.
+.wp-block-simple-graphs-data.is-style-stacked {
+	flex-direction: column;
+
+	.wp-block-simple-graphs-data-item {
+		flex: var(--sg-value, 1) 1 0;
+	}
+}
+
+// Zero-gap track: outer radius on Data, items lose their own.
+.wp-block-simple-graphs-data.simple-graphs-data--no-gap {
+	border-radius: 6px;
+	overflow: hidden;
+
+	.wp-block-simple-graphs-data-item {
+		border-radius: 0 !important;
+	}
+}
+
+.wp-block-simple-graphs-data.is-style-column.simple-graphs-data--no-gap .wp-block-simple-graphs-data-item,
+.wp-block-simple-graphs-data:not([class*="is-style-"]).simple-graphs-data--no-gap .wp-block-simple-graphs-data-item {
+	border-radius: 6px 6px 0 0 !important;
+}
+
+.wp-block-simple-graphs-data.is-style-bar.simple-graphs-data--no-gap .wp-block-simple-graphs-data-item {
+	border-radius: 0 6px 6px 0 !important;
+}
+
+.wp-block-simple-graphs-data.is-style-stacked.simple-graphs-data--no-gap .wp-block-simple-graphs-data-item {
+	border-radius: 0 !important;
+}

@@ -15,13 +15,31 @@ export function formatValue( value, { valueMode = 'percentage', valuePrefix = ''
 	return `${ valuePrefix }${ value }${ valueSuffix }`;
 }
 
-export function resolveMaxValue( items, valueMode = 'percentage', valueMax = 0 ) {
+export function resolveMaxValue( items, valueMode = 'percentage' ) {
 	const values = items.map( ( i ) => parseNumeric( i.value ) );
+	const dataMax = Math.max( 1, ...values );
 	if ( valueMode === 'percentage' ) {
-		return Math.max( 100, ...values );
+		return Math.max( 100, dataMax );
 	}
-	const dataMax = Math.max( ...values, 1 );
-	return valueMax > 0 ? Math.max( valueMax, dataMax ) : dataMax;
+	return dataMax;
+}
+
+/**
+ * Resolve a WP block gap value (preset slug, token, or raw CSS) to a usable CSS value.
+ *
+ * @param {string|undefined} gap Block gap attribute value.
+ * @return {string} CSS value safe to use in gap/calc.
+ */
+export function resolveBlockGap( gap ) {
+	if ( ! gap ) {
+		return 'var(--wp--preset--spacing--30, 1rem)';
+	}
+	const s = String( gap ).trim();
+	if ( s.startsWith( 'var:preset|spacing|' ) ) {
+		const slug = s.replace( 'var:preset|spacing|', '' );
+		return `var(--wp--preset--spacing--${ slug })`;
+	}
+	return s;
 }
 
 export function contrastColor( hex ) {

@@ -6,7 +6,7 @@
   "category": "widgets",
   "description": "A single data point in a chart.",
   "textdomain": "simple-graphs",
-  "parent": ["simple-graphs/chart"],
+  "parent": ["simple-graphs/data"],
   "supports": {
     "html": false,
     "color": { "background": true, "text": false, "link": false },

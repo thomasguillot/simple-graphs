@@ -1,33 +1,63 @@
 import { useBlockProps, RichText, store as blockEditorStore } from '@wordpress/block-editor';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { contrastColor } from '../shared/utils';
+import { contrastColor, parseNumeric } from '../shared/utils';
+import { NEUTRAL_GRAY } from '../shared/constants';
 
 export default function Edit( { attributes, setAttributes, context, clientId } ) {
 	const { value, title } = attributes;
-	const blockProps = useBlockProps();
-	// Resolve background color for contrast calculation.
-	let bgColor = attributes.style?.color?.background || '#DB2777';
-	// If it's a CSS var or preset token, we can't compute contrast — default to white text.
-	if ( bgColor.startsWith( 'var' ) || bgColor.startsWith( 'var:' ) ) {
-		bgColor = '#000'; // Force white text for preset colors (dark assumed)
+	const numericValue = parseNumeric( value );
+
+	// Figure out the effective background and a matching text color.
+	// If nothing is set, fall back to a neutral gray with dark text so a new
+	// data-item is visible immediately without the user having to pick a color.
+	const presetBg = attributes.backgroundColor;
+	const customBg = attributes.style?.color?.background;
+	const hasPresetBg = !! presetBg;
+	const hasCustomBg = !! customBg;
+	const isVarBg =
+		hasCustomBg &&
+		( customBg.startsWith( 'var' ) || customBg.startsWith( 'var:' ) );
+
+	let textColor;
+	const extraStyle = { '--sg-value': numericValue };
+	if ( ! hasPresetBg && ! hasCustomBg ) {
+		extraStyle.backgroundColor = NEUTRAL_GRAY;
+		textColor = '#000';
+	} else if ( hasPresetBg || isVarBg ) {
+		textColor = '#fff';
+	} else {
+		textColor = contrastColor( customBg );
 	}
-	const textColor = contrastColor( bgColor );
+
+	const blockProps = useBlockProps( {
+		style: extraStyle,
+	} );
 	const valueMode = context[ 'simple-graphs/valueMode' ] || 'percentage';
 	const valuePrefix = context[ 'simple-graphs/valuePrefix' ] || '';
 	const valueSuffix = context[ 'simple-graphs/valueSuffix' ] || '';
 
 	const { updateBlockAttributes } = useDispatch( blockEditorStore );
-	const chartClientId = useSelect(
+	const { dataClientId, hasLegend } = useSelect(
 		( select ) => {
-			const parents = select( blockEditorStore ).getBlockParents( clientId );
-			return parents[ parents.length - 1 ] || null;
+			const { getBlockParents, getBlock } = select( blockEditorStore );
+			const parents = getBlockParents( clientId );
+			const chartId = parents[ 0 ] || null;
+			const dataId = parents[ parents.length - 1 ] || null;
+			if ( ! chartId ) {
+				return { dataClientId: dataId, hasLegend: false };
+			}
+			const chartBlock = getBlock( chartId );
+			const legendPresent = !! chartBlock?.innerBlocks?.some(
+				( b ) => b.name === 'simple-graphs/legend'
+			);
+			return { dataClientId: dataId, hasLegend: legendPresent };
 		},
 		[ clientId ]
 	);
 
 	const updateParentAttr = ( key, val ) => {
-		if ( chartClientId ) {
-			updateBlockAttributes( chartClientId, { [ key ]: val } );
+		if ( dataClientId ) {
+			updateBlockAttributes( dataClientId, { [ key ]: val } );
 		}
 	};
 
@@ -71,14 +101,16 @@ export default function Edit( { attributes, setAttributes, context, clientId } )
 					/>
 				) }
 			</div>
-			<RichText
-				tagName="span"
-				className="simple-graphs-data-item__title"
-				value={ title }
-				onChange={ ( v ) => setAttributes( { title: v } ) }
-				allowedFormats={ [] }
-				placeholder="Label"
-			/>
+			{ ! hasLegend && (
+				<RichText
+					tagName="span"
+					className="simple-graphs-data-item__title"
+					value={ title }
+					onChange={ ( v ) => setAttributes( { title: v } ) }
+					allowedFormats={ [] }
+					placeholder="Label"
+				/>
+			) }
 		</div>
 	);
 }
