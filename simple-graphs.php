@@ -121,8 +121,8 @@ function simple_graphs_render_chart( $attributes, $content, $block ) {
  * @return string
  */
 function simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suffix ) {
-	$value = isset( $attrs['value'] ) ? $attrs['value'] : '';
-	$title = isset( $attrs['title'] ) ? $attrs['title'] : '';
+	$value = $attrs['value'] ?? '';
+	$title = $attrs['title'] ?? '';
 	$color = simple_graphs_resolve_color( $attrs );
 
 	if ( 'percentage' === $value_mode ) {
@@ -131,12 +131,22 @@ function simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suf
 		$display = $prefix . $value . $suffix;
 	}
 
-	$style = $color ? sprintf( 'background-color:%s;', esc_attr( $color ) ) : '';
+	$class = 'wp-block-simple-graphs-data-item';
+	if ( ! empty( $attrs['className'] ) ) {
+		$custom_classes = preg_split( '/\s+/', $attrs['className'] );
+		$custom_classes = array_filter( array_map( 'sanitize_html_class', $custom_classes ) );
+		if ( ! empty( $custom_classes ) ) {
+			$class .= ' ' . implode( ' ', $custom_classes );
+		}
+	}
+
+	$style_attr = $color ? sprintf( ' style="%s"', esc_attr( sprintf( 'background-color:%s;', $color ) ) ) : '';
 	$title_html = $title ? sprintf( '<span class="simple-graphs-data-item__title">%s</span>', wp_kses_post( $title ) ) : '';
 
 	return sprintf(
-		'<div class="wp-block-simple-graphs-data-item" style="%s"><span class="simple-graphs-data-item__value">%s</span>%s</div>',
-		$style,
+		'<div class="%s"%s><span class="simple-graphs-data-item__value">%s</span>%s</div>',
+		esc_attr( $class ),
+		$style_attr,
 		esc_html( $display ),
 		$title_html
 	);
@@ -150,10 +160,64 @@ function simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suf
  * @return string
  */
 function simple_graphs_render_legend_html( $items, $legend_attrs ) {
-	$class = 'wp-block-simple-graphs-legend';
+	// Use WP_Block_Supports-style wrapper attributes by constructing them manually.
+	// We can't use get_block_wrapper_attributes() here because we're not inside a block's render.
+	// Instead, compute the wrapper class and style from the legend's attrs.
+
+	$classes = array( 'wp-block-simple-graphs-legend' );
 	if ( ! empty( $legend_attrs['className'] ) ) {
-		$class .= ' ' . $legend_attrs['className'];
+		$custom_classes = preg_split( '/\s+/', $legend_attrs['className'] );
+		$custom_classes = array_filter( array_map( 'sanitize_html_class', $custom_classes ) );
+		if ( ! empty( $custom_classes ) ) {
+			$classes = array_merge( $classes, $custom_classes );
+		}
 	}
+
+	// Typography: font size, font family, text color classes (preset).
+	if ( ! empty( $legend_attrs['fontSize'] ) ) {
+		$classes[] = 'has-' . sanitize_html_class( $legend_attrs['fontSize'] ) . '-font-size';
+	}
+	if ( ! empty( $legend_attrs['fontFamily'] ) ) {
+		$classes[] = 'has-' . sanitize_html_class( $legend_attrs['fontFamily'] ) . '-font-family';
+	}
+	if ( ! empty( $legend_attrs['textColor'] ) ) {
+		$classes[] = 'has-' . sanitize_html_class( $legend_attrs['textColor'] ) . '-color';
+		$classes[] = 'has-text-color';
+	}
+
+	// Inline styles: custom typography and color.
+	$styles = array();
+	if ( ! empty( $legend_attrs['style']['typography']['fontSize'] ) ) {
+		$styles[] = 'font-size:' . $legend_attrs['style']['typography']['fontSize'];
+	}
+	if ( ! empty( $legend_attrs['style']['typography']['fontWeight'] ) ) {
+		$styles[] = 'font-weight:' . $legend_attrs['style']['typography']['fontWeight'];
+	}
+	if ( ! empty( $legend_attrs['style']['typography']['fontStyle'] ) ) {
+		$styles[] = 'font-style:' . $legend_attrs['style']['typography']['fontStyle'];
+	}
+	if ( ! empty( $legend_attrs['style']['typography']['lineHeight'] ) ) {
+		$styles[] = 'line-height:' . $legend_attrs['style']['typography']['lineHeight'];
+	}
+	if ( ! empty( $legend_attrs['style']['typography']['letterSpacing'] ) ) {
+		$styles[] = 'letter-spacing:' . $legend_attrs['style']['typography']['letterSpacing'];
+	}
+	if ( ! empty( $legend_attrs['style']['typography']['textTransform'] ) ) {
+		$styles[] = 'text-transform:' . $legend_attrs['style']['typography']['textTransform'];
+	}
+	if ( ! empty( $legend_attrs['style']['color']['text'] ) ) {
+		$styles[] = 'color:' . $legend_attrs['style']['color']['text'];
+	}
+	if ( ! empty( $legend_attrs['style']['spacing']['blockGap'] ) ) {
+		$gap = $legend_attrs['style']['spacing']['blockGap'];
+		if ( strpos( $gap, 'var:preset|spacing|' ) === 0 ) {
+			$slug = str_replace( 'var:preset|spacing|', '', $gap );
+			$gap  = 'var(--wp--preset--spacing--' . $slug . ')';
+		}
+		$styles[] = 'gap:' . $gap;
+	}
+
+	$style_attr = ! empty( $styles ) ? sprintf( ' style="%s"', esc_attr( implode( ';', $styles ) ) ) : '';
 
 	$items_html = '';
 	foreach ( $items as $item ) {
@@ -164,7 +228,12 @@ function simple_graphs_render_legend_html( $items, $legend_attrs ) {
 		);
 	}
 
-	return sprintf( '<div class="%s">%s</div>', esc_attr( $class ), $items_html );
+	return sprintf(
+		'<div class="%s"%s>%s</div>',
+		esc_attr( implode( ' ', $classes ) ),
+		$style_attr,
+		$items_html
+	);
 }
 
 /**

@@ -39,12 +39,16 @@ function Donut( { items } ) {
 				const item = items[ i ];
 				const full = s.endAngle - s.startAngle >= Math.PI * 2 - 0.0001;
 				if ( full ) {
-					return (
-						<g key={ item.clientId }>
-							<circle cx={ cx } cy={ cy } r={ outer } fill={ item.color } />
-							<circle cx={ cx } cy={ cy } r={ inner } fill="#fff" />
-						</g>
-					);
+					const d = [
+						`M ${ cx + outer } ${ cy }`,
+						`A ${ outer } ${ outer } 0 1 1 ${ cx - outer } ${ cy }`,
+						`A ${ outer } ${ outer } 0 1 1 ${ cx + outer } ${ cy }`,
+						`M ${ cx + inner } ${ cy }`,
+						`A ${ inner } ${ inner } 0 1 0 ${ cx - inner } ${ cy }`,
+						`A ${ inner } ${ inner } 0 1 0 ${ cx + inner } ${ cy }`,
+						'Z',
+					].join( ' ' );
+					return <path key={ item.clientId } d={ d } fill={ item.color } fillRule="evenodd" />;
 				}
 				const outerStart = polarToCartesian( cx, cy, outer, s.startAngle );
 				const outerEnd = polarToCartesian( cx, cy, outer, s.endAngle );
