@@ -1,5 +1,6 @@
 import { useBlockProps, RichText, store as blockEditorStore } from '@wordpress/block-editor';
 import { useDispatch, useSelect } from '@wordpress/data';
+import { __ } from '@wordpress/i18n';
 import { contrastColor, parseNumeric } from '../shared/utils';
 import { NEUTRAL_GRAY } from '../shared/constants';
 
@@ -39,18 +40,26 @@ export default function Edit( { attributes, setAttributes, context, clientId } )
 	const { updateBlockAttributes } = useDispatch( blockEditorStore );
 	const { dataClientId, hasLegend } = useSelect(
 		( select ) => {
-			const { getBlockParents, getBlock } = select( blockEditorStore );
-			const parents = getBlockParents( clientId );
-			const chartId = parents[ 0 ] || null;
-			const dataId = parents[ parents.length - 1 ] || null;
+			const { getBlockParentsByBlockName, getBlock } = select( blockEditorStore );
+			const [ dataId ] = getBlockParentsByBlockName(
+				clientId,
+				'simple-graphs/data'
+			);
+			const [ chartId ] = getBlockParentsByBlockName(
+				clientId,
+				'simple-graphs/chart'
+			);
 			if ( ! chartId ) {
-				return { dataClientId: dataId, hasLegend: false };
+				return { dataClientId: dataId || null, hasLegend: false };
 			}
 			const chartBlock = getBlock( chartId );
 			const legendPresent = !! chartBlock?.innerBlocks?.some(
 				( b ) => b.name === 'simple-graphs/legend'
 			);
-			return { dataClientId: dataId, hasLegend: legendPresent };
+			return {
+				dataClientId: dataId || null,
+				hasLegend: legendPresent,
+			};
 		},
 		[ clientId ]
 	);
@@ -108,7 +117,7 @@ export default function Edit( { attributes, setAttributes, context, clientId } )
 					value={ title }
 					onChange={ ( v ) => setAttributes( { title: v } ) }
 					allowedFormats={ [] }
-					placeholder="Label"
+					placeholder={ __( 'Label', 'simple-graphs' ) }
 				/>
 			) }
 		</div>

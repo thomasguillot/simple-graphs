@@ -173,13 +173,14 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 		}
 	}
 
-	// Background: preset or custom.
+	// Background: preset or custom. Normalize preset tokens so CSS vars are
+	// emitted instead of the raw var:preset|color|slug string.
 	$bg_inline = '';
 	if ( ! empty( $attrs['backgroundColor'] ) ) {
 		$classes[] = 'has-' . sanitize_html_class( $attrs['backgroundColor'] ) . '-background-color';
 		$classes[] = 'has-background';
 	} elseif ( ! empty( $attrs['style']['color']['background'] ) ) {
-		$bg_inline = 'background-color:' . $attrs['style']['color']['background'] . ';';
+		$bg_inline = 'background-color:' . simple_graphs_resolve_color_value( $attrs['style']['color']['background'] ) . ';';
 		$classes[] = 'has-background';
 	}
 
@@ -238,7 +239,8 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
  * @return string
  */
 function simple_graphs_resolve_block_gap( $gap ) {
-	if ( empty( $gap ) ) {
+	$gap = trim( (string) $gap );
+	if ( '' === $gap ) {
 		return 'var(--wp--preset--spacing--30, 1rem)';
 	}
 	if ( strpos( $gap, 'var:preset|spacing|' ) === 0 ) {
@@ -246,6 +248,48 @@ function simple_graphs_resolve_block_gap( $gap ) {
 		return 'var(--wp--preset--spacing--' . $slug . ')';
 	}
 	return $gap;
+}
+
+/**
+ * Pick black or white text for readable contrast against a hex background.
+ * Returns null when the value can't be resolved to RGB (e.g. tokens, vars, rgb()).
+ *
+ * @param string $value Color value.
+ * @return string|null
+ */
+function simple_graphs_contrast_color( $value ) {
+	$value = trim( (string) $value );
+	if ( ! preg_match( '/^#([0-9a-f]{3}|[0-9a-f]{6})$/i', $value ) ) {
+		return null;
+	}
+	$hex = ltrim( $value, '#' );
+	if ( 3 === strlen( $hex ) ) {
+		$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+	}
+	$r = hexdec( substr( $hex, 0, 2 ) ) / 255;
+	$g = hexdec( substr( $hex, 2, 2 ) ) / 255;
+	$b = hexdec( substr( $hex, 4, 2 ) ) / 255;
+	$luminance = ( 0.2126 * $r ) + ( 0.7152 * $g ) + ( 0.0722 * $b );
+	return $luminance > 0.5 ? '#000' : '#fff';
+}
+
+/**
+ * Normalize a stored color string to a CSS value. Handles the editor's
+ * var:preset|color|slug token shape, passing raw hex/rgb/vars through as-is.
+ *
+ * @param string $value Raw color attribute value.
+ * @return string
+ */
+function simple_graphs_resolve_color_value( $value ) {
+	$value = trim( (string) $value );
+	if ( '' === $value ) {
+		return '';
+	}
+	if ( 0 === strpos( $value, 'var:preset|color|' ) ) {
+		$slug = str_replace( 'var:preset|color|', '', $value );
+		return 'var(--wp--preset--color--' . $slug . ')';
+	}
+	return $value;
 }
 
 /**
@@ -287,21 +331,22 @@ function simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suf
 		$styles[] = 'background-color:#F0F0F0';
 		$styles[] = 'color:#000';
 	} else {
+		$text_color = '#fff';
 		if ( $has_custom_bg ) {
-			$color = $attrs['style']['color']['background'];
-			if ( 0 === strpos( $color, 'var:preset|color|' ) ) {
-				$slug  = str_replace( 'var:preset|color|', '', $color );
-				$color = 'var(--wp--preset--color--' . $slug . ')';
+			$raw_bg   = $attrs['style']['color']['background'];
+			$styles[] = 'background-color:' . simple_graphs_resolve_color_value( $raw_bg );
+			// Only compute contrast for hex values. Tokens / vars / rgb(a) are
+			// resolved by the theme at runtime, so default to white and let
+			// the theme override if needed.
+			$computed = simple_graphs_contrast_color( $raw_bg );
+			if ( null !== $computed ) {
+				$text_color = $computed;
 			}
-			$styles[] = 'background-color:' . $color;
 		}
 		if ( $has_preset_bg ) {
 			$class .= ' has-' . sanitize_html_class( $attrs['backgroundColor'] ) . '-background-color has-background';
 		}
-		// Preset / var colors are assumed dark; use white text. Custom hex
-		// contrast is left to the stylesheet since we can't compute it in PHP
-		// without resolving the value.
-		$styles[] = 'color:#fff';
+		$styles[] = 'color:' . $text_color;
 	}
 	$style_attr = sprintf( ' style="%s"', esc_attr( implode( ';', $styles ) ) );
 	$title_html = ( $title && ! $has_legend ) ? sprintf( '<span class="simple-graphs-data-item__title">%s</span>', wp_kses_post( $title ) ) : '';
@@ -372,12 +417,7 @@ function simple_graphs_render_legend_html( $items, $legend_attrs ) {
 		$styles[] = 'color:' . $legend_attrs['style']['color']['text'];
 	}
 	if ( ! empty( $legend_attrs['style']['spacing']['blockGap'] ) ) {
-		$gap = $legend_attrs['style']['spacing']['blockGap'];
-		if ( strpos( $gap, 'var:preset|spacing|' ) === 0 ) {
-			$slug = str_replace( 'var:preset|spacing|', '', $gap );
-			$gap  = 'var(--wp--preset--spacing--' . $slug . ')';
-		}
-		$styles[] = 'gap:' . $gap;
+		$styles[] = 'gap:' . simple_graphs_resolve_block_gap( $legend_attrs['style']['spacing']['blockGap'] );
 	}
 
 	$style_attr = ! empty( $styles ) ? sprintf( ' style="%s"', esc_attr( implode( ';', $styles ) ) ) : '';
@@ -407,12 +447,7 @@ function simple_graphs_render_legend_html( $items, $legend_attrs ) {
  */
 function simple_graphs_resolve_color( $attrs ) {
 	if ( ! empty( $attrs['style']['color']['background'] ) ) {
-		$color = $attrs['style']['color']['background'];
-		if ( strpos( $color, 'var:preset|color|' ) === 0 ) {
-			$slug = str_replace( 'var:preset|color|', '', $color );
-			return 'var(--wp--preset--color--' . $slug . ')';
-		}
-		return $color;
+		return simple_graphs_resolve_color_value( $attrs['style']['color']['background'] );
 	}
 	if ( ! empty( $attrs['backgroundColor'] ) ) {
 		return 'var(--wp--preset--color--' . $attrs['backgroundColor'] . ')';
