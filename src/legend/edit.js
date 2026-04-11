@@ -1,10 +1,18 @@
-import { useBlockProps } from '@wordpress/block-editor';
-import { useSelect } from '@wordpress/data';
-import { store as blockEditorStore } from '@wordpress/block-editor';
+import {
+	useBlockProps,
+	RichText,
+	store as blockEditorStore,
+} from '@wordpress/block-editor';
+import { useSelect, useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
+import { resolveBlockGap } from '../shared/utils';
 
-export default function Edit( { clientId } ) {
-	const blockProps = useBlockProps();
+export default function Edit( { attributes, clientId } ) {
+	const resolvedGap = resolveBlockGap( attributes.style?.spacing?.blockGap );
+	const blockProps = useBlockProps( {
+		style: { gap: resolvedGap },
+	} );
+	const { updateBlockAttributes } = useDispatch( blockEditorStore );
 
 	const items = useSelect(
 		( select ) => {
@@ -18,15 +26,22 @@ export default function Edit( { clientId } ) {
 			if ( ! chartBlock ) {
 				return [];
 			}
-			return chartBlock.innerBlocks
+			const dataBlock = chartBlock.innerBlocks.find(
+				( b ) => b.name === 'simple-graphs/data'
+			);
+			if ( ! dataBlock ) {
+				return [];
+			}
+			return dataBlock.innerBlocks
 				.filter( ( b ) => b.name === 'simple-graphs/data-item' )
 				.map( ( b ) => ( {
 					clientId: b.clientId,
 					title: b.attributes.title || '',
-					color: b.attributes.style?.color?.background ||
+					color:
+						b.attributes.style?.color?.background ||
 						( b.attributes.backgroundColor
 							? `var(--wp--preset--color--${ b.attributes.backgroundColor })`
-							: '#ccc' ),
+							: '#F0F0F0' ),
 				} ) );
 		},
 		[ clientId ]
@@ -40,9 +55,16 @@ export default function Edit( { clientId } ) {
 						className="simple-graphs-legend__swatch"
 						style={ { background: item.color } }
 					/>
-					<span className="simple-graphs-legend__label">
-						{ item.title || __( 'Untitled', 'simple-graphs' ) }
-					</span>
+					<RichText
+						tagName="span"
+						className="simple-graphs-legend__label"
+						value={ item.title }
+						onChange={ ( v ) =>
+							updateBlockAttributes( item.clientId, { title: v } )
+						}
+						allowedFormats={ [] }
+						placeholder={ __( 'Label', 'simple-graphs' ) }
+					/>
 				</div>
 			) ) }
 		</div>

@@ -1,54 +1,13 @@
 .wp-block-simple-graphs-chart {
-	.simple-graphs-chart__items {
-		display: grid;
-		height: 100%;
-		gap: var(--wp--style--block-gap, var(--wp--preset--spacing--30, 1rem));
-	}
+	display: flex;
+	flex-direction: row;
 
-	// Column: vertical bars side by side.
-	&.is-style-column .simple-graphs-chart__items,
-	&:not([class*="is-style-"]) .simple-graphs-chart__items {
-		grid-auto-columns: 1fr;
-		grid-auto-flow: column;
-		align-items: end;
-	}
-
-	// Bar: horizontal bars stacked.
-	&.is-style-bar .simple-graphs-chart__items {
-		grid-auto-rows: 1fr;
-		grid-auto-flow: row;
-	}
-
-	// Stacked: vertical flex, items grow proportionally.
-	&.is-style-stacked .simple-graphs-chart__items {
-		display: flex;
+	// Stack legend: chart flips to vertical so data sits above legend.
+	&:has(> .wp-block-simple-graphs-legend.is-style-stack) {
 		flex-direction: column;
 	}
-}
 
-// Gap-aware border radius: when the block gap is 0, the parent gets the
-// outer radius and individual items lose their own.
-.simple-graphs-chart__items--no-gap {
-	border-radius: 6px;
-	overflow: hidden;
-
-	.wp-block-simple-graphs-data-item {
-		border-radius: 0 !important;
+	> .wp-block-simple-graphs-legend {
+		flex: 0 0 auto;
 	}
-}
-
-// Column: top-only radius when no gap.
-.wp-block-simple-graphs-chart.is-style-column .simple-graphs-chart__items--no-gap .wp-block-simple-graphs-data-item,
-.wp-block-simple-graphs-chart:not([class*="is-style-"]) .simple-graphs-chart__items--no-gap .wp-block-simple-graphs-data-item {
-	border-radius: 6px 6px 0 0 !important;
-}
-
-// Bar: right-only radius when no gap.
-.wp-block-simple-graphs-chart.is-style-bar .simple-graphs-chart__items--no-gap .wp-block-simple-graphs-data-item {
-	border-radius: 0 6px 6px 0 !important;
-}
-
-// Stacked: items have no radius, outer radius is on the parent.
-.wp-block-simple-graphs-chart.is-style-stacked .simple-graphs-chart__items--no-gap .wp-block-simple-graphs-data-item {
-	border-radius: 0 !important;
 }

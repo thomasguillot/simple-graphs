@@ -1,23 +1,30 @@
 .wp-block-simple-graphs-legend {
 	display: flex;
-	flex-wrap: wrap;
-	gap: var(--wp--style--block-gap, var(--wp--preset--spacing--20, 0.5rem));
+	flex-direction: column;
+	gap: var(--wp--preset--spacing--30, 1rem);
 
-	&.is-style-column {
-		flex-direction: column;
-		flex-wrap: nowrap;
+	// Side (default): column of items pushed to the bottom of the legend's
+	// vertical space so they sit flush with the chart's baseline.
+	&:not(.is-style-stack) {
+		justify-content: flex-end;
+	}
+
+	// Stack: legend items laid out horizontally in a row.
+	&.is-style-stack {
+		flex-direction: row;
+		flex-wrap: wrap;
 	}
 
 	.simple-graphs-legend__item {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 0.5em;
 	}
 
 	.simple-graphs-legend__swatch {
-		width: 32px;
-		height: 32px;
-		border-radius: 6px;
+		width: 2em;
+		height: 2em;
+		border-radius: 0.375em;
 		display: inline-block;
 		flex-shrink: 0;
 	}

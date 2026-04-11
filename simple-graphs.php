@@ -25,6 +25,7 @@ add_action(
 				'render_callback' => 'simple_graphs_render_chart',
 			)
 		);
+		register_block_type( __DIR__ . '/build/data' );
 		register_block_type( __DIR__ . '/build/data-item' );
 		register_block_type( __DIR__ . '/build/legend' );
 	}
@@ -32,8 +33,11 @@ add_action(
 
 /**
  * Render the chart block on the frontend.
- * Owns rendering of its inner data-item and legend children so it can
- * propagate its own formatting attributes to them.
+ *
+ * Chart is a flex column that stacks a Data block and an optional Legend. The
+ * renderer accepts the current shape (data-items nested inside a Data block)
+ * and a legacy shape (data-items directly under the chart) by virtually
+ * wrapping stray data-items into a synthetic Data block.
  *
  * @param array    $attributes Block attributes.
  * @param string   $content    Block content.
@@ -41,74 +45,251 @@ add_action(
  * @return string
  */
 function simple_graphs_render_chart( $attributes, $content, $block ) {
-	$value_mode = isset( $attributes['valueMode'] ) ? $attributes['valueMode'] : 'percentage';
-	$prefix     = isset( $attributes['valuePrefix'] ) ? $attributes['valuePrefix'] : '';
-	$suffix     = isset( $attributes['valueSuffix'] ) ? $attributes['valueSuffix'] : '';
-
 	$inner_blocks = array();
 	if ( ! empty( $block->parsed_block['innerBlocks'] ) ) {
 		$inner_blocks = $block->parsed_block['innerBlocks'];
 	}
 
-	// Collect data-items for legend rendering.
-	$items = array();
+	// Normalize: if data-items appear directly (legacy shape), wrap them in a
+	// synthetic data block so rendering below can assume the new shape.
+	$normalized_inner = array();
+	$stray_items      = array();
 	foreach ( $inner_blocks as $inner ) {
 		if ( 'simple-graphs/data-item' === $inner['blockName'] ) {
-			$attrs   = isset( $inner['attrs'] ) ? $inner['attrs'] : array();
-			$items[] = array(
+			$stray_items[] = $inner;
+		} else {
+			$normalized_inner[] = $inner;
+		}
+	}
+	if ( ! empty( $stray_items ) ) {
+		$synthetic = array(
+			'blockName'   => 'simple-graphs/data',
+			'attrs'       => array(),
+			'innerBlocks' => $stray_items,
+		);
+		array_unshift( $normalized_inner, $synthetic );
+	}
+
+	// Find the first Data block (there should only ever be one) and detect Legend presence.
+	$data_block = null;
+	$has_legend = false;
+	foreach ( $normalized_inner as $inner ) {
+		if ( null === $data_block && 'simple-graphs/data' === $inner['blockName'] ) {
+			$data_block = $inner;
+		} elseif ( 'simple-graphs/legend' === $inner['blockName'] ) {
+			$has_legend = true;
+		}
+	}
+
+	// Value formatting now lives on the Data block.
+	$data_attrs = $data_block && isset( $data_block['attrs'] ) ? $data_block['attrs'] : array();
+	$value_mode = isset( $data_attrs['valueMode'] ) ? $data_attrs['valueMode'] : 'percentage';
+	$prefix     = isset( $data_attrs['valuePrefix'] ) ? $data_attrs['valuePrefix'] : '';
+	$suffix     = isset( $data_attrs['valueSuffix'] ) ? $data_attrs['valueSuffix'] : '';
+
+	// Collect data-items from the Data block for legend rendering and max computation.
+	$items    = array();
+	$data_max = 1.0;
+	if ( $data_block && ! empty( $data_block['innerBlocks'] ) ) {
+		foreach ( $data_block['innerBlocks'] as $child ) {
+			if ( 'simple-graphs/data-item' !== $child['blockName'] ) {
+				continue;
+			}
+			$attrs    = isset( $child['attrs'] ) ? $child['attrs'] : array();
+			$raw      = isset( $attrs['value'] ) ? $attrs['value'] : '0';
+			$numeric  = (float) str_replace( array( ',', ' ' ), '', (string) $raw );
+			$data_max = max( $data_max, $numeric );
+			$items[]  = array(
 				'title' => isset( $attrs['title'] ) ? $attrs['title'] : '',
 				'color' => simple_graphs_resolve_color( $attrs ),
 			);
 		}
 	}
+	$sg_max = ( 'percentage' === $value_mode ) ? max( 100.0, $data_max ) : $data_max;
 
-	$class_name  = isset( $attributes['className'] ) ? $attributes['className'] : '';
-	$is_circular = (bool) preg_match( '/is-style-(pie|donut|bubble)/', $class_name );
+	// Chart wrapper adds its own blockGap as flex gap. Flex direction is
+	// driven by the legend's block style via CSS :has() so it stays in sync
+	// with whichever arrangement the user picks for the legend.
+	$chart_gap_css = simple_graphs_resolve_block_gap(
+		isset( $attributes['style']['spacing']['blockGap'] ) ? $attributes['style']['spacing']['blockGap'] : ''
+	);
+	$wrapper       = get_block_wrapper_attributes(
+		array(
+			'style' => 'gap:' . $chart_gap_css . ';',
+		)
+	);
 
-	$wrapper = get_block_wrapper_attributes();
+	// Render each chart inner block in order so the Legend can appear above,
+	// below, or beside the Data block depending on the user's arrangement.
+	$inner_html = '';
+	foreach ( $normalized_inner as $inner ) {
+		if ( 'simple-graphs/data' === $inner['blockName'] ) {
+			$inner_html .= simple_graphs_render_data_html(
+				isset( $inner['attrs'] ) ? $inner['attrs'] : array(),
+				isset( $inner['innerBlocks'] ) ? $inner['innerBlocks'] : array(),
+				$sg_max,
+				$value_mode,
+				$prefix,
+				$suffix,
+				$has_legend
+			);
+		} elseif ( 'simple-graphs/legend' === $inner['blockName'] ) {
+			$inner_html .= simple_graphs_render_legend_html( $items, isset( $inner['attrs'] ) ? $inner['attrs'] : array() );
+		}
+	}
+
+	return sprintf( '<div %s>%s</div>', $wrapper, $inner_html );
+}
+
+/**
+ * Render the Data block wrapper and its data-item children.
+ *
+ * @param array  $attrs       Data block attributes.
+ * @param array  $inner_items Data block inner blocks (should be data-items).
+ * @param float  $sg_max      Computed max value for scaling.
+ * @param string $value_mode  Chart value mode.
+ * @param string $prefix      Chart value prefix.
+ * @param string $suffix      Chart value suffix.
+ * @param bool   $has_legend  Whether the chart also has a legend child.
+ * @return string
+ */
+function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_mode, $prefix, $suffix, $has_legend ) {
+	$block_gap   = isset( $attrs['style']['spacing']['blockGap'] ) ? $attrs['style']['spacing']['blockGap'] : '';
+	$normalized  = trim( str_replace( ' ', '', (string) $block_gap ) );
+	$is_zero_gap = in_array( $normalized, array( '0', '0px', '0rem', '0em' ), true );
+	$gap_css     = simple_graphs_resolve_block_gap( $block_gap );
+
+	$classes = array( 'wp-block-simple-graphs-data' );
+	if ( $is_zero_gap ) {
+		$classes[] = 'simple-graphs-data--no-gap';
+	}
+	$is_circular = false;
+	if ( ! empty( $attrs['className'] ) ) {
+		$custom_classes = preg_split( '/\s+/', $attrs['className'] );
+		$custom_classes = array_filter( array_map( 'sanitize_html_class', $custom_classes ) );
+		if ( ! empty( $custom_classes ) ) {
+			$classes = array_merge( $classes, $custom_classes );
+			$is_circular = (bool) preg_grep( '/^is-style-(pie|donut|bubble)$/', $custom_classes );
+		}
+	}
+
+	// Background: preset or custom. Normalize preset tokens so CSS vars are
+	// emitted instead of the raw var:preset|color|slug string.
+	$bg_inline = '';
+	if ( ! empty( $attrs['backgroundColor'] ) ) {
+		$classes[] = 'has-' . sanitize_html_class( $attrs['backgroundColor'] ) . '-background-color';
+		$classes[] = 'has-background';
+	} elseif ( ! empty( $attrs['style']['color']['background'] ) ) {
+		$bg_inline = 'background-color:' . simple_graphs_resolve_color_value( $attrs['style']['color']['background'] ) . ';';
+		$classes[] = 'has-background';
+	}
+
+	$style = sprintf(
+		'--sg-max:%s;--sg-gap:%s;gap:%s;%s',
+		esc_attr( (string) $sg_max ),
+		esc_attr( $gap_css ),
+		esc_attr( $gap_css ),
+		$bg_inline
+	);
 
 	if ( $is_circular ) {
 		// Simple fallback rendering for circular charts on frontend.
 		// TODO: port SVG rendering from JS to PHP for proper visualization.
-		$inner_html = '<div class="simple-graphs-chart__circular-fallback">';
-		foreach ( $items as $item ) {
-			$inner_html .= sprintf(
-				'<div class="simple-graphs-chart__circular-item"><span class="simple-graphs-legend__swatch" style="background:%s"></span><span>%s</span></div>',
-				esc_attr( $item['color'] ),
-				esc_html( $item['title'] )
+		$items_html = '<div class="simple-graphs-data__circular-fallback">';
+		foreach ( $inner_items as $inner ) {
+			if ( 'simple-graphs/data-item' !== $inner['blockName'] ) {
+				continue;
+			}
+			$child_attrs = isset( $inner['attrs'] ) ? $inner['attrs'] : array();
+			$items_html .= sprintf(
+				'<div class="simple-graphs-data__circular-item"><span class="simple-graphs-legend__swatch" style="background:%s"></span><span>%s</span></div>',
+				esc_attr( simple_graphs_resolve_color( $child_attrs ) ),
+				esc_html( isset( $child_attrs['title'] ) ? $child_attrs['title'] : '' )
 			);
 		}
-		$inner_html .= '</div>';
-		return sprintf( '<div %s>%s</div>', $wrapper, $inner_html );
-	}
-
-	// Determine zero-gap to apply the no-gap modifier class.
-	$block_gap = isset( $attributes['style']['spacing']['blockGap'] ) ? $attributes['style']['spacing']['blockGap'] : '';
-	$normalized = trim( str_replace( ' ', '', (string) $block_gap ) );
-	$is_zero_gap = in_array( $normalized, array( '0', '0px', '0rem', '0em' ), true );
-
-	$items_class = 'simple-graphs-chart__items';
-	if ( $is_zero_gap ) {
-		$items_class .= ' simple-graphs-chart__items--no-gap';
-	}
-
-	// Render each inner block.
-	$inner_html = '';
-	foreach ( $inner_blocks as $inner ) {
-		$attrs = isset( $inner['attrs'] ) ? $inner['attrs'] : array();
-		if ( 'simple-graphs/data-item' === $inner['blockName'] ) {
-			$inner_html .= simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suffix );
-		} elseif ( 'simple-graphs/legend' === $inner['blockName'] ) {
-			$inner_html .= simple_graphs_render_legend_html( $items, $attrs );
+		$items_html .= '</div>';
+	} else {
+		$items_html = '';
+		foreach ( $inner_items as $inner ) {
+			if ( 'simple-graphs/data-item' !== $inner['blockName'] ) {
+				continue;
+			}
+			$items_html .= simple_graphs_render_data_item_html(
+				isset( $inner['attrs'] ) ? $inner['attrs'] : array(),
+				$value_mode,
+				$prefix,
+				$suffix,
+				$has_legend
+			);
 		}
 	}
 
 	return sprintf(
-		'<div %s><div class="%s">%s</div></div>',
-		$wrapper,
-		esc_attr( $items_class ),
-		$inner_html
+		'<div class="%s" style="%s">%s</div>',
+		esc_attr( implode( ' ', $classes ) ),
+		esc_attr( $style ),
+		$items_html
 	);
+}
+
+/**
+ * Resolve a block gap value to a CSS value.
+ *
+ * @param string $gap Raw block gap attribute.
+ * @return string
+ */
+function simple_graphs_resolve_block_gap( $gap ) {
+	$gap = trim( (string) $gap );
+	if ( '' === $gap ) {
+		return 'var(--wp--preset--spacing--30, 1rem)';
+	}
+	if ( strpos( $gap, 'var:preset|spacing|' ) === 0 ) {
+		$slug = str_replace( 'var:preset|spacing|', '', $gap );
+		return 'var(--wp--preset--spacing--' . $slug . ')';
+	}
+	return $gap;
+}
+
+/**
+ * Pick black or white text for readable contrast against a hex background.
+ * Returns null when the value can't be resolved to RGB (e.g. tokens, vars, rgb()).
+ *
+ * @param string $value Color value.
+ * @return string|null
+ */
+function simple_graphs_contrast_color( $value ) {
+	$value = trim( (string) $value );
+	if ( ! preg_match( '/^#([0-9a-f]{3}|[0-9a-f]{6})$/i', $value ) ) {
+		return null;
+	}
+	$hex = ltrim( $value, '#' );
+	if ( 3 === strlen( $hex ) ) {
+		$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+	}
+	$r = hexdec( substr( $hex, 0, 2 ) ) / 255;
+	$g = hexdec( substr( $hex, 2, 2 ) ) / 255;
+	$b = hexdec( substr( $hex, 4, 2 ) ) / 255;
+	$luminance = ( 0.2126 * $r ) + ( 0.7152 * $g ) + ( 0.0722 * $b );
+	return $luminance > 0.5 ? '#000' : '#fff';
+}
+
+/**
+ * Normalize a stored color string to a CSS value. Handles the editor's
+ * var:preset|color|slug token shape, passing raw hex/rgb/vars through as-is.
+ *
+ * @param string $value Raw color attribute value.
+ * @return string
+ */
+function simple_graphs_resolve_color_value( $value ) {
+	$value = trim( (string) $value );
+	if ( '' === $value ) {
+		return '';
+	}
+	if ( 0 === strpos( $value, 'var:preset|color|' ) ) {
+		$slug = str_replace( 'var:preset|color|', '', $value );
+		return 'var(--wp--preset--color--' . $slug . ')';
+	}
+	return $value;
 }
 
 /**
@@ -118,12 +299,13 @@ function simple_graphs_render_chart( $attributes, $content, $block ) {
  * @param string $value_mode Chart's value mode (percentage|custom).
  * @param string $prefix     Chart's value prefix.
  * @param string $suffix     Chart's value suffix.
+ * @param bool   $has_legend Whether the parent chart has a legend child.
  * @return string
  */
-function simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suffix ) {
-	$value = $attrs['value'] ?? '';
-	$title = $attrs['title'] ?? '';
-	$color = simple_graphs_resolve_color( $attrs );
+function simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suffix, $has_legend = false ) {
+	$value   = $attrs['value'] ?? '';
+	$title   = $attrs['title'] ?? '';
+	$numeric = (float) str_replace( array( ',', ' ' ), '', (string) $value );
 
 	if ( 'percentage' === $value_mode ) {
 		$display = $value . '%';
@@ -140,8 +322,34 @@ function simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suf
 		}
 	}
 
-	$style_attr = $color ? sprintf( ' style="%s"', esc_attr( sprintf( 'background-color:%s;', $color ) ) ) : '';
-	$title_html = $title ? sprintf( '<span class="simple-graphs-data-item__title">%s</span>', wp_kses_post( $title ) ) : '';
+	$has_preset_bg = ! empty( $attrs['backgroundColor'] );
+	$has_custom_bg = ! empty( $attrs['style']['color']['background'] );
+
+	$styles = array( sprintf( '--sg-value:%s', $numeric ) );
+	if ( ! $has_preset_bg && ! $has_custom_bg ) {
+		// No background set — neutral default with dark text.
+		$styles[] = 'background-color:#F0F0F0';
+		$styles[] = 'color:#000';
+	} else {
+		$text_color = '#fff';
+		if ( $has_custom_bg ) {
+			$raw_bg   = $attrs['style']['color']['background'];
+			$styles[] = 'background-color:' . simple_graphs_resolve_color_value( $raw_bg );
+			// Only compute contrast for hex values. Tokens / vars / rgb(a) are
+			// resolved by the theme at runtime, so default to white and let
+			// the theme override if needed.
+			$computed = simple_graphs_contrast_color( $raw_bg );
+			if ( null !== $computed ) {
+				$text_color = $computed;
+			}
+		}
+		if ( $has_preset_bg ) {
+			$class .= ' has-' . sanitize_html_class( $attrs['backgroundColor'] ) . '-background-color has-background';
+		}
+		$styles[] = 'color:' . $text_color;
+	}
+	$style_attr = sprintf( ' style="%s"', esc_attr( implode( ';', $styles ) ) );
+	$title_html = ( $title && ! $has_legend ) ? sprintf( '<span class="simple-graphs-data-item__title">%s</span>', wp_kses_post( $title ) ) : '';
 
 	return sprintf(
 		'<div class="%s"%s><span class="simple-graphs-data-item__value">%s</span>%s</div>',
@@ -209,12 +417,7 @@ function simple_graphs_render_legend_html( $items, $legend_attrs ) {
 		$styles[] = 'color:' . $legend_attrs['style']['color']['text'];
 	}
 	if ( ! empty( $legend_attrs['style']['spacing']['blockGap'] ) ) {
-		$gap = $legend_attrs['style']['spacing']['blockGap'];
-		if ( strpos( $gap, 'var:preset|spacing|' ) === 0 ) {
-			$slug = str_replace( 'var:preset|spacing|', '', $gap );
-			$gap  = 'var(--wp--preset--spacing--' . $slug . ')';
-		}
-		$styles[] = 'gap:' . $gap;
+		$styles[] = 'gap:' . simple_graphs_resolve_block_gap( $legend_attrs['style']['spacing']['blockGap'] );
 	}
 
 	$style_attr = ! empty( $styles ) ? sprintf( ' style="%s"', esc_attr( implode( ';', $styles ) ) ) : '';
@@ -244,15 +447,10 @@ function simple_graphs_render_legend_html( $items, $legend_attrs ) {
  */
 function simple_graphs_resolve_color( $attrs ) {
 	if ( ! empty( $attrs['style']['color']['background'] ) ) {
-		$color = $attrs['style']['color']['background'];
-		if ( strpos( $color, 'var:preset|color|' ) === 0 ) {
-			$slug = str_replace( 'var:preset|color|', '', $color );
-			return 'var(--wp--preset--color--' . $slug . ')';
-		}
-		return $color;
+		return simple_graphs_resolve_color_value( $attrs['style']['color']['background'] );
 	}
 	if ( ! empty( $attrs['backgroundColor'] ) ) {
 		return 'var(--wp--preset--color--' . $attrs['backgroundColor'] . ')';
 	}
-	return '#ccc';
+	return '#F0F0F0';
 }

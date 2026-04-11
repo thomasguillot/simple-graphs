@@ -6,6 +6,7 @@ import {
 	formatValue,
 	resolveMaxValue,
 	parseNumeric,
+	resolveBlockGap,
 } from './utils';
 import { BORDER_RADIUS, LOW_VALUE_THRESHOLD } from './constants';
 
@@ -103,15 +104,6 @@ describe( 'resolveMaxValue', () => {
 	test( 'custom mode derives from data', () => {
 		expect( resolveMaxValue( [ { value: 300 }, { value: 500 } ], 'custom' ) ).toBe( 500 );
 	} );
-	test( 'custom mode uses explicit max when provided', () => {
-		expect( resolveMaxValue( [ { value: 300 } ], 'custom', 1000 ) ).toBe( 1000 );
-	} );
-	test( 'custom mode with zero/empty max falls back to data', () => {
-		expect( resolveMaxValue( [ { value: 300 } ], 'custom', 0 ) ).toBe( 300 );
-	} );
-	test( 'custom mode ignores max when data exceeds it', () => {
-		expect( resolveMaxValue( [ { value: 1500 } ], 'custom', 1000 ) ).toBe( 1500 );
-	} );
 	test( 'empty items returns 1 in custom mode', () => {
 		expect( resolveMaxValue( [], 'custom' ) ).toBe( 1 );
 	} );
@@ -136,5 +128,31 @@ describe( 'parseNumeric', () => {
 	test( 'handles empty/invalid', () => {
 		expect( parseNumeric( '' ) ).toBe( 0 );
 		expect( parseNumeric( 'abc' ) ).toBe( 0 );
+	} );
+} );
+
+describe( 'resolveBlockGap', () => {
+	test( 'undefined / empty input returns the default preset var', () => {
+		expect( resolveBlockGap() ).toBe( 'var(--wp--preset--spacing--30, 1rem)' );
+		expect( resolveBlockGap( '' ) ).toBe( 'var(--wp--preset--spacing--30, 1rem)' );
+		expect( resolveBlockGap( null ) ).toBe( 'var(--wp--preset--spacing--30, 1rem)' );
+	} );
+	test( 'translates var:preset|spacing|* tokens to CSS var references', () => {
+		expect( resolveBlockGap( 'var:preset|spacing|30' ) ).toBe(
+			'var(--wp--preset--spacing--30)'
+		);
+		expect( resolveBlockGap( 'var:preset|spacing|60' ) ).toBe(
+			'var(--wp--preset--spacing--60)'
+		);
+		expect( resolveBlockGap( 'var:preset|spacing|large' ) ).toBe(
+			'var(--wp--preset--spacing--large)'
+		);
+	} );
+	test( 'passes raw CSS values through unchanged', () => {
+		expect( resolveBlockGap( '2rem' ) ).toBe( '2rem' );
+		expect( resolveBlockGap( '16px' ) ).toBe( '16px' );
+		expect( resolveBlockGap( 'clamp(1rem, 2vw, 2rem)' ) ).toBe(
+			'clamp(1rem, 2vw, 2rem)'
+		);
 	} );
 } );

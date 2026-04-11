@@ -22,8 +22,16 @@
     "color": { "text": true, "background": false, "link": false },
     "reusable": false
   },
+  "attributes": {
+    "style": {
+      "type": "object",
+      "default": {
+        "spacing": { "blockGap": "var:preset|spacing|30" }
+      }
+    }
+  },
   "styles": [
-    { "name": "row", "label": "Row", "isDefault": true },
-    { "name": "column", "label": "Column" }
+    { "name": "side", "label": "Side", "isDefault": true },
+    { "name": "stack", "label": "Stack" }
   ]
 }

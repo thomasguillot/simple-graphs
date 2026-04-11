@@ -1,3 +1,3 @@
 export const BORDER_RADIUS = 6;
 export const LOW_VALUE_THRESHOLD = 4;
-export const NEUTRAL_GRAY = '#E5E7EB';
+export const NEUTRAL_GRAY = '#F0F0F0';

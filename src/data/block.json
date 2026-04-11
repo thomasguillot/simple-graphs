@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "simple-graphs/data",
+  "title": "Data",
+  "category": "widgets",
+  "description": "Holds the chart's data items and renders the track.",
+  "textdomain": "simple-graphs",
+  "parent": ["simple-graphs/chart"],
+  "supports": {
+    "html": false,
+    "spacing": { "blockGap": true },
+    "color": { "background": true, "text": false, "link": false },
+    "reusable": false,
+    "inserter": false
+  },
+  "attributes": {
+    "valueMode": { "type": "string", "default": "percentage" },
+    "valuePrefix": { "type": "string", "default": "" },
+    "valueSuffix": { "type": "string", "default": "" },
+    "style": {
+      "type": "object",
+      "default": {
+        "spacing": { "blockGap": "var:preset|spacing|30" }
+      }
+    }
+  },
+  "providesContext": {
+    "simple-graphs/valueMode": "valueMode",
+    "simple-graphs/valuePrefix": "valuePrefix",
+    "simple-graphs/valueSuffix": "valueSuffix"
+  },
+  "styles": [
+    { "name": "column", "label": "Column", "isDefault": true },
+    { "name": "bar", "label": "Bar" },
+    { "name": "pie", "label": "Pie" },
+    { "name": "donut", "label": "Donut" },
+    { "name": "stacked", "label": "Stacked" },
+    { "name": "bubble", "label": "Bubble" }
+  ]
+}
