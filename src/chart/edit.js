@@ -10,6 +10,7 @@ import {
 	__experimentalNumberControl as NumberControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { isZeroGap } from '../shared/utils';
 
 const TEMPLATE = [
 	[ 'simple-graphs/data-item', { value: '40', title: 'Item A', style: { color: { background: '#DB2777' } } } ],
@@ -30,9 +31,14 @@ export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
 	const variation = resolveVariation( blockProps.className );
 	const isCustom = valueMode === 'custom';
+	const blockGap = attributes.style?.spacing?.blockGap;
+	const noGap = isZeroGap( blockGap );
+	const itemsClassName = noGap
+		? 'simple-graphs-chart__items simple-graphs-chart__items--no-gap'
+		: 'simple-graphs-chart__items';
 
 	const innerBlocksProps = useInnerBlocksProps(
-		{ className: 'simple-graphs-chart__items' },
+		{ className: itemsClassName },
 		{
 			template: TEMPLATE,
 			allowedBlocks: ALLOWED_BLOCKS,

@@ -25,3 +25,30 @@
 		flex-direction: column;
 	}
 }
+
+// Gap-aware border radius: when the block gap is 0, the parent gets the
+// outer radius and individual items lose their own.
+.simple-graphs-chart__items--no-gap {
+	border-radius: 6px;
+	overflow: hidden;
+
+	.wp-block-simple-graphs-data-item {
+		border-radius: 0 !important;
+	}
+}
+
+// Column: top-only radius when no gap.
+.wp-block-simple-graphs-chart.is-style-column .simple-graphs-chart__items--no-gap .wp-block-simple-graphs-data-item,
+.wp-block-simple-graphs-chart:not([class*="is-style-"]) .simple-graphs-chart__items--no-gap .wp-block-simple-graphs-data-item {
+	border-radius: 6px 6px 0 0 !important;
+}
+
+// Bar: right-only radius when no gap.
+.wp-block-simple-graphs-chart.is-style-bar .simple-graphs-chart__items--no-gap .wp-block-simple-graphs-data-item {
+	border-radius: 0 6px 6px 0 !important;
+}
+
+// Stacked: items have no radius, outer radius is on the parent.
+.wp-block-simple-graphs-chart.is-style-stacked .simple-graphs-chart__items--no-gap .wp-block-simple-graphs-data-item {
+	border-radius: 0 !important;
+}
