@@ -557,11 +557,11 @@ function simple_graphs_render_legend_html( $items, $legend_attrs ) {
 	if ( ! empty( $legend_attrs['style']['color']['text'] ) ) {
 		$styles[] = 'color:' . $legend_attrs['style']['color']['text'];
 	}
-	if ( ! empty( $legend_attrs['style']['spacing']['blockGap'] ) ) {
-		$legend_gap = simple_graphs_resolve_block_gap( $legend_attrs['style']['spacing']['blockGap'] );
-		$styles[]   = 'gap:' . $legend_gap;
-		$styles[]   = '--sg-legend-gap:' . $legend_gap;
-	}
+	$legend_gap = simple_graphs_resolve_block_gap(
+		isset( $legend_attrs['style']['spacing']['blockGap'] ) ? $legend_attrs['style']['spacing']['blockGap'] : ''
+	);
+	$styles[] = 'gap:' . $legend_gap;
+	$styles[] = '--sg-legend-gap:' . $legend_gap;
 
 	// Padding.
 	if ( ! empty( $legend_attrs['style']['spacing']['padding'] ) ) {
