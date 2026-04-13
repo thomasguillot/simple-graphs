@@ -3,13 +3,19 @@
 	flex-direction: row;
 	min-height: 480px;
 
+	// Data block fills available space in flex mode.
+	> .wp-block-simple-graphs-data {
+		flex: 1 1 0;
+		min-width: 0;
+	}
+
 	// Side legend on desktop: switch to a 5-column grid so Data gets 4
 	// columns and Legend gets 1, with gutters matching the block spacing.
 	@media (min-width: 601px) {
 		&:has(> .wp-block-simple-graphs-legend:not(.is-style-stack)) {
 			display: grid;
 			grid-template-columns: repeat(5, 1fr);
-			align-items: end;
+			align-items: stretch;
 
 			> .wp-block-simple-graphs-data {
 				grid-column: span 4;
