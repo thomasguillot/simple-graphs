@@ -7,6 +7,7 @@ import {
 } from '@wordpress/block-editor';
 import {
 	PanelBody,
+	ToggleControl,
 	ToolbarGroup,
 	ToolbarButton,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
@@ -36,7 +37,7 @@ function resolveVariation( className = '' ) {
 }
 
 export default function Edit( { clientId, attributes, setAttributes } ) {
-	const { valueMode } = attributes;
+	const { valueMode, compensateGap } = attributes;
 	const blockGap = attributes.style?.spacing?.blockGap;
 	const resolvedGap = resolveBlockGap( blockGap );
 	const noGap = isZeroGap( blockGap );
@@ -69,12 +70,25 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 	const dataMax = Math.max( 1, ...items.map( ( i ) => parseNumeric( i.value ) ) );
 	const sgMax = valueMode === 'percentage' ? Math.max( 100, dataMax ) : dataMax;
 
+	const trackColor =
+		attributes.style?.color?.background ||
+		( attributes.backgroundColor
+			? `var(--wp--preset--color--${ attributes.backgroundColor })`
+			: null );
+
+	const classNames = [
+		noGap ? 'simple-graphs-data--no-gap' : '',
+		trackColor ? 'simple-graphs-data--has-track' : '',
+		compensateGap ? 'simple-graphs-data--compensate-gap' : '',
+	].filter( Boolean ).join( ' ' ) || undefined;
+
 	const blockProps = useBlockProps( {
-		className: noGap ? 'simple-graphs-data--no-gap' : undefined,
+		className: classNames,
 		style: {
 			'--sg-max': sgMax,
 			'--sg-gap': resolvedGap,
 			'--sg-radius': radius,
+			'--sg-track': trackColor || undefined,
 			gap: resolvedGap,
 		},
 	} );
@@ -129,6 +143,13 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 							label={ __( 'Custom', 'simple-graphs' ) }
 						/>
 					</ToggleGroupControl>
+					<ToggleControl
+						label={ __( 'Compensate gap', 'simple-graphs' ) }
+						help={ __( 'Reduce bar size to account for spacing between items.', 'simple-graphs' ) }
+						checked={ compensateGap }
+						onChange={ ( v ) => setAttributes( { compensateGap: v } ) }
+						__nextHasNoMarginBottom
+					/>
 				</PanelBody>
 			</InspectorControls>
 			{ isCircular && ! editMode ? (

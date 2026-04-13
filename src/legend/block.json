@@ -9,7 +9,9 @@
   "parent": ["simple-graphs/chart"],
   "supports": {
     "html": false,
-    "spacing": { "blockGap": true },
+    "spacing": { "blockGap": true, "padding": true },
+    "shadow": true,
+    "__experimentalBorder": { "radius": true, "color": true, "style": true, "width": true },
     "typography": {
       "fontSize": true,
       "lineHeight": true,
@@ -19,14 +21,14 @@
       "__experimentalTextTransform": true,
       "__experimentalLetterSpacing": true
     },
-    "color": { "text": true, "background": false, "link": false },
+    "color": { "text": true, "background": true, "link": false },
     "reusable": false
   },
   "attributes": {
     "style": {
       "type": "object",
       "default": {
-        "spacing": { "blockGap": "var:preset|spacing|30" }
+        "spacing": { "blockGap": "var:preset|spacing|20" }
       }
     }
   },
