@@ -19,24 +19,47 @@ export default function Edit( { attributes, setAttributes, context, clientId, is
 	const hasCustomBg = !! customBg;
 	const isVarBg = hasCustomBg && customBg.startsWith( 'var(' );
 
-	let textColor;
 	let barBg;
+	let initialTextColor;
 	if ( ! hasPresetBg && ! hasCustomBg ) {
 		barBg = NEUTRAL_GRAY;
-		textColor = '#000';
+		initialTextColor = '#000';
 	} else if ( hasPresetBg ) {
 		barBg = `var(--wp--preset--color--${ presetBg })`;
-		textColor = '#fff';
+		initialTextColor = '#fff';
 	} else if ( isVarBg ) {
 		barBg = customBg;
-		textColor = '#fff';
+		initialTextColor = '#fff';
 	} else {
 		barBg = customBg;
-		textColor = contrastColor( customBg );
+		initialTextColor = contrastColor( customBg );
 	}
 
 	const barRef = useRef( null );
 	const [ needsGrow, setNeedsGrow ] = useState( false );
+	const [ resolvedTextColor, setResolvedTextColor ] = useState( initialTextColor );
+
+	// For var() backgrounds (presets, tokens), read the computed colour
+	// from the DOM and pick the right text contrast.
+	useLayoutEffect( () => {
+		if ( ! barRef.current || ( ! isVarBg && ! hasPresetBg ) ) {
+			setResolvedTextColor( initialTextColor );
+			return;
+		}
+		const computed = window.getComputedStyle( barRef.current ).backgroundColor;
+		const match = computed.match( /rgba?\(\s*(\d+),\s*(\d+),\s*(\d+)/ );
+		if ( match ) {
+			const hex = '#' +
+				( '0' + parseInt( match[ 1 ] ).toString( 16 ) ).slice( -2 ) +
+				( '0' + parseInt( match[ 2 ] ).toString( 16 ) ).slice( -2 ) +
+				( '0' + parseInt( match[ 3 ] ).toString( 16 ) ).slice( -2 );
+			setResolvedTextColor( contrastColor( hex ) );
+		} else {
+			setResolvedTextColor( initialTextColor );
+		}
+	}, [ barBg, initialTextColor, isVarBg, hasPresetBg ] );
+
+	const textColor = resolvedTextColor;
 
 	// useLayoutEffect fires after DOM update but before browser paint,
 	// so the user never sees the intermediate state.
