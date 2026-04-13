@@ -45,7 +45,7 @@ export default function Edit( { attributes, clientId } ) {
 	const hasLegend = !! legendClientId;
 
 	const blockProps = useBlockProps( {
-		style: { gap: resolvedGap, '--sg-chart-gap': resolvedGap, '--sg-radius': dataRadius },
+		style: { gap: resolvedGap, '--sg-radius': dataRadius },
 	} );
 
 	const toggleLegend = () => {

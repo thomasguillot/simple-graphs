@@ -98,7 +98,7 @@ function simple_graphs_render_chart( $attributes, $content, $block ) {
 	);
 	$wrapper       = get_block_wrapper_attributes(
 		array(
-			'style' => '--sg-radius:' . esc_attr( $chart_radius ) . ';--sg-chart-gap:' . esc_attr( $chart_gap_css ) . ';gap:' . esc_attr( $chart_gap_css ) . ';',
+			'style' => '--sg-radius:' . esc_attr( $chart_radius ) . ';gap:' . esc_attr( $chart_gap_css ) . ';',
 		)
 	);
 
@@ -187,7 +187,7 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 	if ( ! empty( $attrs['fontFamily'] ) ) {
 		$classes[] = 'has-' . sanitize_html_class( $attrs['fontFamily'] ) . '-font-family';
 	}
-	$typo_css = '';
+	$typo_parts = array();
 	$typo_props = array(
 		'fontSize'      => 'font-size',
 		'fontWeight'    => 'font-weight',
@@ -198,9 +198,10 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 	);
 	foreach ( $typo_props as $attr_key => $css_prop ) {
 		if ( ! empty( $attrs['style']['typography'][ $attr_key ] ) ) {
-			$typo_css .= $css_prop . ':' . $attrs['style']['typography'][ $attr_key ] . ';';
+			$typo_parts[] = $css_prop . ':' . $attrs['style']['typography'][ $attr_key ];
 		}
 	}
+	$typo_css = ! empty( $typo_parts ) ? safecss_filter_attr( implode( ';', $typo_parts ) ) . ';' : '';
 
 	$style = sprintf(
 		'--sg-max:%s;--sg-gap:%s;--sg-radius:%s;gap:%s;%s%s',
@@ -388,6 +389,10 @@ function simple_graphs_contrast_color( $value ) {
 function simple_graphs_resolve_color_value( $value ) {
 	$value = trim( (string) $value );
 	if ( '' === $value ) {
+		return '';
+	}
+	// Reject values containing semicolons to prevent CSS injection.
+	if ( false !== strpos( $value, ';' ) ) {
 		return '';
 	}
 	if ( 0 === strpos( $value, 'var:preset|color|' ) ) {

@@ -66,7 +66,6 @@ simple-graphs/chart          (outer container)
 | `--sg-value` | Each Data Item | Numeric value for CSS height/width calc |
 | `--sg-track` | Data wrapper | Track background colour |
 | `--sg-size-base` | Data wrapper | `100%` normally, `calc(100% - gap)` when compensateGap is on |
-| `--sg-chart-gap` | Chart wrapper | Resolved chart block gap, used for grid layout calculations |
 | `--sg-item-height` | Each Data Item | Value-based height calc, used by editing state for min-height |
 
 ## HTML structure (frontend)
