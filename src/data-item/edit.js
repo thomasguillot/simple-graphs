@@ -35,24 +35,32 @@ export default function Edit( { attributes, setAttributes, context, clientId, is
 		textColor = contrastColor( customBg );
 	}
 
-	const barRef = useRef( null );
+	const wrapperRef = useRef( null );
 	const [ needsGrow, setNeedsGrow ] = useState( false );
 
 	useEffect( () => {
-		if ( ! isSelected || ! barRef.current ) {
-			setNeedsGrow( false );
+		if ( ! isSelected || ! wrapperRef.current ) {
+			if ( needsGrow ) {
+				setNeedsGrow( false );
+			}
 			return;
 		}
-		const wrapper = barRef.current.parentElement;
-		if ( ! wrapper ) {
+		const wrapper = wrapperRef.current;
+		const bar = wrapper.querySelector( '.simple-graphs-data-item__bar' );
+		if ( ! bar ) {
 			return;
 		}
-		const barHeight = barRef.current.scrollHeight;
+		// Temporarily remove height constraint to measure natural content height.
+		const prevHeight = bar.style.height;
+		bar.style.height = 'auto';
+		const contentHeight = bar.offsetHeight;
+		bar.style.height = prevHeight;
 		const wrapperHeight = wrapper.offsetHeight;
-		setNeedsGrow( barHeight > wrapperHeight );
-	}, [ isSelected, value, title ] );
+		setNeedsGrow( contentHeight > wrapperHeight );
+	}, [ isSelected, value, title, needsGrow ] );
 
 	const blockProps = useBlockProps( {
+		ref: wrapperRef,
 		style: {
 			'--sg-value': numericValue,
 			...( needsGrow ? { height: 'auto' } : {} ),
