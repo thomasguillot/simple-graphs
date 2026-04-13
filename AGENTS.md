@@ -93,11 +93,12 @@ The outer div is the track container (full height in track mode). The inner `.ba
 ## PHP rendering
 
 All frontend rendering is in `simple-graphs.php`:
-- `simple_graphs_render_chart()` — main render callback, handles legacy block shapes
+- `simple_graphs_render_chart()` — main render callback
 - `simple_graphs_render_data_html()` — Data wrapper with track/gap/radius
 - `simple_graphs_render_data_item_html()` — each bar (outer track div + inner bar div)
-- `simple_graphs_render_legend_html()` — legend with full support for typography, colour, padding, border, shadow
-- Helper functions: `simple_graphs_resolve_block_gap()`, `simple_graphs_resolve_radius()`, `simple_graphs_resolve_color_value()`, `simple_graphs_contrast_color()`, `simple_graphs_resolve_color()`
+- `simple_graphs_render_legend_html()` — legend with full support for typography, colour, padding, border, shadow. Inline styles run through `safecss_filter_attr()`
+- Helper functions: `simple_graphs_resolve_block_gap()`, `simple_graphs_resolve_radius()`, `simple_graphs_resolve_color_value()`, `simple_graphs_contrast_color()` (APCA), `simple_graphs_resolve_color()`
+- All helpers reject values containing `;` and validate against safe CSS patterns to prevent injection
 
 ## Key patterns
 
@@ -110,7 +111,7 @@ All frontend rendering is in `simple-graphs.php`:
 ## Testing
 
 ```bash
-npm test           # 25 unit tests for shared helpers
+npm test           # 31 unit tests for shared helpers
 npm run build      # production build
 npm start          # watch mode
 ```
