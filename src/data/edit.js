@@ -16,7 +16,7 @@ import {
 } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { edit as editIcon, seen } from '@wordpress/icons';
+import { pencil as editIcon, seen } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import { parseNumeric, resolveBlockGap, isZeroGap } from '../shared/utils';
 import CircularChart from '../chart/CircularChart';

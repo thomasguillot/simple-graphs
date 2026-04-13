@@ -1,5 +1,5 @@
 import { registerBlockType } from '@wordpress/blocks';
-import { chartBar, category, home, caption } from '@wordpress/icons';
+import { chartBar, category, homeButton, caption } from '@wordpress/icons';
 
 import metadata from './block.json';
 import Edit from './edit';
@@ -37,7 +37,7 @@ registerBlockType( dataMetadata.name, {
 } );
 
 registerBlockType( dataItemMetadata.name, {
-	icon: home,
+	icon: homeButton,
 	edit: dataItemEdit,
 	save: dataItemSave,
 } );
