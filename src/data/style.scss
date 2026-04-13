@@ -113,12 +113,22 @@
 
 .wp-block-simple-graphs-data.is-style-column.simple-graphs-data--no-gap,
 .wp-block-simple-graphs-data:not([class*="is-style-"]).simple-graphs-data--no-gap {
+	.wp-block-simple-graphs-data-item {
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+
 	.wp-block-simple-graphs-data-item .simple-graphs-data-item__bar {
 		border-radius: var(--sg-radius, 6px) var(--sg-radius, 6px) 0 0 !important;
 	}
 }
 
 .wp-block-simple-graphs-data.is-style-bar.simple-graphs-data--no-gap {
+	.wp-block-simple-graphs-data-item {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
 	.wp-block-simple-graphs-data-item .simple-graphs-data-item__bar {
 		border-radius: 0 var(--sg-radius, 6px) var(--sg-radius, 6px) 0 !important;
 	}
