@@ -10,15 +10,17 @@
   "supports": {
     "html": false,
     "spacing": { "blockGap": true },
-    "color": { "background": true, "text": false, "link": false },
+    "color": { "background": true, "text": false, "link": false, "__experimentalSkipSerialization": true },
     "__experimentalBorder": { "radius": true, "color": false, "style": false, "width": false, "__experimentalSkipSerialization": true },
     "reusable": false,
-    "inserter": false
+    "inserter": false,
+    "lock": false
   },
   "attributes": {
     "valueMode": { "type": "string", "default": "percentage" },
     "valuePrefix": { "type": "string", "default": "" },
     "valueSuffix": { "type": "string", "default": "" },
+    "compensateGap": { "type": "boolean", "default": false },
     "style": {
       "type": "object",
       "default": {

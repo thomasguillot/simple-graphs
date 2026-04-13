@@ -133,9 +133,9 @@ describe( 'parseNumeric', () => {
 
 describe( 'resolveBlockGap', () => {
 	test( 'undefined / empty input returns the default preset var', () => {
-		expect( resolveBlockGap() ).toBe( 'var(--wp--preset--spacing--30, 1rem)' );
-		expect( resolveBlockGap( '' ) ).toBe( 'var(--wp--preset--spacing--30, 1rem)' );
-		expect( resolveBlockGap( null ) ).toBe( 'var(--wp--preset--spacing--30, 1rem)' );
+		expect( resolveBlockGap() ).toBe( 'var(--wp--preset--spacing--30)' );
+		expect( resolveBlockGap( '' ) ).toBe( 'var(--wp--preset--spacing--30)' );
+		expect( resolveBlockGap( null ) ).toBe( 'var(--wp--preset--spacing--30)' );
 	} );
 	test( 'translates var:preset|spacing|* tokens to CSS var references', () => {
 		expect( resolveBlockGap( 'var:preset|spacing|30' ) ).toBe(

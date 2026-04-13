@@ -1,12 +1,18 @@
 .wp-block-simple-graphs-data-item {
-	position: relative;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
 	justify-content: flex-end;
-	padding: 16px;
-	line-height: 1;
-	border-radius: var(--sg-radius, 6px);
+
+	.simple-graphs-data-item__bar {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-end;
+		padding: 16px;
+		line-height: 1;
+		border-radius: var(--sg-radius, 6px);
+		overflow: visible;
+	}
 
 	.simple-graphs-data-item__value {
 		display: flex;
@@ -16,6 +22,7 @@
 
 	.simple-graphs-data-item__title {
 		display: block;
-		margin-top: 4px;
+		margin-top: var(--wp--preset--spacing--20);
+		text-align: center;
 	}
 }

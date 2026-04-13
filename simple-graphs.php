@@ -113,11 +113,8 @@ function simple_graphs_render_chart( $attributes, $content, $block ) {
 		isset( $data_attrs['style']['border']['radius'] ) ? $data_attrs['style']['border']['radius'] : '6px'
 	);
 
-	// Chart wrapper adds its own blockGap as flex gap. Flex direction is
-	// driven by the legend's block style via CSS :has() so it stays in sync
-	// with whichever arrangement the user picks for the legend.
 	$chart_gap_css = simple_graphs_resolve_block_gap(
-		isset( $attributes['style']['spacing']['blockGap'] ) ? $attributes['style']['spacing']['blockGap'] : ''
+		isset( $attributes['style']['spacing']['blockGap'] ) ? $attributes['style']['spacing']['blockGap'] : 'var:preset|spacing|50'
 	);
 	$wrapper       = get_block_wrapper_attributes(
 		array(
@@ -172,6 +169,9 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 	if ( $is_zero_gap ) {
 		$classes[] = 'simple-graphs-data--no-gap';
 	}
+	if ( ! empty( $attrs['compensateGap'] ) ) {
+		$classes[] = 'simple-graphs-data--compensate-gap';
+	}
 	$is_circular = false;
 	if ( ! empty( $attrs['className'] ) ) {
 		$custom_classes = preg_split( '/\s+/', $attrs['className'] );
@@ -182,15 +182,22 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 		}
 	}
 
-	// Background: preset or custom. Normalize preset tokens so CSS vars are
-	// emitted instead of the raw var:preset|color|slug string.
-	$bg_inline = '';
+	// Background color becomes the track color behind each bar rather than
+	// filling the entire Data wrapper.
+	$track_css  = '';
+	$is_stacked = ! empty( $attrs['className'] ) && false !== strpos( $attrs['className'], 'is-style-stacked' );
 	if ( ! empty( $attrs['backgroundColor'] ) ) {
-		$classes[] = 'has-' . sanitize_html_class( $attrs['backgroundColor'] ) . '-background-color';
-		$classes[] = 'has-background';
+		$track_color = 'var(--wp--preset--color--' . sanitize_html_class( $attrs['backgroundColor'] ) . ')';
+		$track_css   = '--sg-track:' . esc_attr( $track_color ) . ';';
+		if ( ! $is_stacked ) {
+			$classes[] = 'simple-graphs-data--has-track';
+		}
 	} elseif ( ! empty( $attrs['style']['color']['background'] ) ) {
-		$bg_inline = 'background-color:' . simple_graphs_resolve_color_value( $attrs['style']['color']['background'] ) . ';';
-		$classes[] = 'has-background';
+		$track_color = simple_graphs_resolve_color_value( $attrs['style']['color']['background'] );
+		$track_css   = '--sg-track:' . esc_attr( $track_color ) . ';';
+		if ( ! $is_stacked ) {
+			$classes[] = 'simple-graphs-data--has-track';
+		}
 	}
 
 	$style = sprintf(
@@ -199,7 +206,7 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 		esc_attr( $gap_css ),
 		esc_attr( $radius ),
 		esc_attr( $gap_css ),
-		$bg_inline
+		$track_css
 	);
 
 	if ( $is_circular ) {
@@ -251,7 +258,7 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 function simple_graphs_resolve_block_gap( $gap ) {
 	$gap = trim( (string) $gap );
 	if ( '' === $gap ) {
-		return 'var(--wp--preset--spacing--30, 1rem)';
+		return 'var(--wp--preset--spacing--30)';
 	}
 	if ( strpos( $gap, 'var:preset|spacing|' ) === 0 ) {
 		$slug = str_replace( 'var:preset|spacing|', '', $gap );
@@ -366,36 +373,39 @@ function simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suf
 	$has_preset_bg = ! empty( $attrs['backgroundColor'] );
 	$has_custom_bg = ! empty( $attrs['style']['color']['background'] );
 
-	$styles = array( sprintf( '--sg-value:%s', $numeric ) );
+	// Outer wrapper (track) only gets --sg-value for CSS height calc.
+	$track_style = sprintf( '--sg-value:%s', $numeric );
+
+	// Inner bar gets the background color and text color.
+	$bar_class  = 'simple-graphs-data-item__bar';
+	$bar_styles = array();
 	if ( ! $has_preset_bg && ! $has_custom_bg ) {
-		// No background set — neutral default with dark text.
-		$styles[] = 'background-color:#F0F0F0';
-		$styles[] = 'color:#000';
+		$bar_styles[] = 'background-color:#F0F0F0';
+		$bar_styles[] = 'color:#000';
 	} else {
 		$text_color = '#fff';
 		if ( $has_custom_bg ) {
-			$raw_bg   = $attrs['style']['color']['background'];
-			$styles[] = 'background-color:' . simple_graphs_resolve_color_value( $raw_bg );
-			// Only compute contrast for hex values. Tokens / vars / rgb(a) are
-			// resolved by the theme at runtime, so default to white and let
-			// the theme override if needed.
-			$computed = simple_graphs_contrast_color( $raw_bg );
+			$raw_bg       = $attrs['style']['color']['background'];
+			$bar_styles[] = 'background-color:' . simple_graphs_resolve_color_value( $raw_bg );
+			$computed     = simple_graphs_contrast_color( $raw_bg );
 			if ( null !== $computed ) {
 				$text_color = $computed;
 			}
 		}
 		if ( $has_preset_bg ) {
-			$class .= ' has-' . sanitize_html_class( $attrs['backgroundColor'] ) . '-background-color has-background';
+			$bar_class .= ' has-' . sanitize_html_class( $attrs['backgroundColor'] ) . '-background-color has-background';
 		}
-		$styles[] = 'color:' . $text_color;
+		$bar_styles[] = 'color:' . $text_color;
 	}
-	$style_attr = sprintf( ' style="%s"', esc_attr( implode( ';', $styles ) ) );
-	$title_html = ( $title && ! $has_legend ) ? sprintf( '<span class="simple-graphs-data-item__title">%s</span>', wp_kses_post( $title ) ) : '';
+	$bar_style_attr = ! empty( $bar_styles ) ? sprintf( ' style="%s"', esc_attr( implode( ';', $bar_styles ) ) ) : '';
+	$title_html     = ( $title && ! $has_legend ) ? sprintf( '<span class="simple-graphs-data-item__title">%s</span>', wp_kses_post( $title ) ) : '';
 
 	return sprintf(
-		'<div class="%s"%s><span class="simple-graphs-data-item__value">%s</span>%s</div>',
+		'<div class="%s" style="%s"><div class="%s"%s><span class="simple-graphs-data-item__value">%s</span>%s</div></div>',
 		esc_attr( $class ),
-		$style_attr,
+		esc_attr( $track_style ),
+		esc_attr( $bar_class ),
+		$bar_style_attr,
 		esc_html( $display ),
 		$title_html
 	);
@@ -459,6 +469,51 @@ function simple_graphs_render_legend_html( $items, $legend_attrs ) {
 	}
 	if ( ! empty( $legend_attrs['style']['spacing']['blockGap'] ) ) {
 		$styles[] = 'gap:' . simple_graphs_resolve_block_gap( $legend_attrs['style']['spacing']['blockGap'] );
+	}
+
+	// Padding.
+	if ( ! empty( $legend_attrs['style']['spacing']['padding'] ) ) {
+		$padding = $legend_attrs['style']['spacing']['padding'];
+		foreach ( array( 'top', 'right', 'bottom', 'left' ) as $side ) {
+			if ( ! empty( $padding[ $side ] ) ) {
+				$styles[] = 'padding-' . $side . ':' . simple_graphs_resolve_block_gap( $padding[ $side ] );
+			}
+		}
+	}
+
+	// Background color.
+	if ( ! empty( $legend_attrs['backgroundColor'] ) ) {
+		$classes[] = 'has-' . sanitize_html_class( $legend_attrs['backgroundColor'] ) . '-background-color';
+		$classes[] = 'has-background';
+	} elseif ( ! empty( $legend_attrs['style']['color']['background'] ) ) {
+		$styles[] = 'background-color:' . simple_graphs_resolve_color_value( $legend_attrs['style']['color']['background'] );
+	}
+
+	// Border.
+	if ( ! empty( $legend_attrs['style']['border']['color'] ) ) {
+		$styles[] = 'border-color:' . simple_graphs_resolve_color_value( $legend_attrs['style']['border']['color'] );
+	}
+	if ( ! empty( $legend_attrs['style']['border']['width'] ) ) {
+		$styles[] = 'border-width:' . $legend_attrs['style']['border']['width'];
+	}
+	if ( ! empty( $legend_attrs['style']['border']['style'] ) ) {
+		$styles[] = 'border-style:' . $legend_attrs['style']['border']['style'];
+	}
+	if ( ! empty( $legend_attrs['style']['border']['radius'] ) ) {
+		$radius_val = simple_graphs_resolve_radius( $legend_attrs['style']['border']['radius'] );
+		$styles[]   = 'border-radius:' . $radius_val;
+	}
+	if ( ! empty( $legend_attrs['borderColor'] ) ) {
+		$classes[] = 'has-border-color';
+		$classes[] = 'has-' . sanitize_html_class( $legend_attrs['borderColor'] ) . '-border-color';
+	}
+
+	// Shadow.
+	if ( ! empty( $legend_attrs['style']['shadow'] ) ) {
+		$styles[] = 'box-shadow:' . $legend_attrs['style']['shadow'];
+	}
+	if ( ! empty( $legend_attrs['shadow'] ) ) {
+		$classes[] = 'has-shadow-' . sanitize_html_class( $legend_attrs['shadow'] );
 	}
 
 	$style_attr = ! empty( $styles ) ? sprintf( ' style="%s"', esc_attr( implode( ';', $styles ) ) ) : '';

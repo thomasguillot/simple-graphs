@@ -14,13 +14,15 @@
     "align": ["wide", "full"],
     "spacing": { "margin": true, "padding": true, "blockGap": true },
     "dimensions": { "minHeight": true },
-    "color": { "background": true, "text": false, "link": false }
+    "color": { "background": true, "text": true, "link": false },
+    "shadow": true,
+    "__experimentalBorder": { "radius": true, "color": true, "style": true, "width": true }
   },
   "attributes": {
     "style": {
       "type": "object",
       "default": {
-        "spacing": { "blockGap": "var:preset|spacing|30" },
+        "spacing": { "blockGap": "var:preset|spacing|50" },
         "dimensions": { "minHeight": "480px" }
       }
     }

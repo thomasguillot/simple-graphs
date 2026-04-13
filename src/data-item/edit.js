@@ -70,56 +70,67 @@ export default function Edit( { attributes, setAttributes, context, clientId } )
 		}
 	};
 
+	// Separate track props (outer) from bar props (inner).
+	// The outer wrapper only needs --sg-value for CSS height calc.
+	// The bar gets the background color and text color.
+	const { '--sg-value': sgValue, ...barStyle } = blockProps.style || {};
+	const trackStyle = { '--sg-value': sgValue };
+
 	return (
-		<div
-			{ ...blockProps }
-			style={ {
-				...blockProps.style,
-				color: textColor,
-			} }
-		>
-			<div className="simple-graphs-data-item__value">
-				{ valueMode === 'custom' && (
+		<div { ...blockProps } style={ trackStyle }>
+			<div
+				className="simple-graphs-data-item__bar"
+				style={ {
+					...barStyle,
+					color: textColor,
+					...( hasPresetBg
+						? { backgroundColor: `var(--wp--preset--color--${ presetBg })` }
+						: {} ),
+				} }
+			>
+				<div className="simple-graphs-data-item__value">
+					{ valueMode === 'custom' && (
+						<RichText
+							tagName="span"
+							className="simple-graphs-data-item__affix"
+							value={ valuePrefix }
+							onChange={ ( v ) => updateParentAttr( 'valuePrefix', v ) }
+							allowedFormats={ [] }
+							placeholder={ __( 'Prefix', 'simple-graphs' ) }
+						/>
+					) }
 					<RichText
 						tagName="span"
-						className="simple-graphs-data-item__affix"
-						value={ valuePrefix }
-						onChange={ ( v ) => updateParentAttr( 'valuePrefix', v ) }
+						value={ value }
+						onChange={ ( v ) => setAttributes( { value: v } ) }
 						allowedFormats={ [] }
-						placeholder="$"
+						placeholder="0"
 					/>
-				) }
-				<RichText
-					tagName="span"
-					value={ value }
-					onChange={ ( v ) => setAttributes( { value: v } ) }
-					allowedFormats={ [] }
-					placeholder="0"
-				/>
-				{ valueMode === 'percentage' && (
-					<span className="simple-graphs-data-item__affix">%</span>
-				) }
-				{ valueMode === 'custom' && (
+					{ valueMode === 'percentage' && (
+						<span className="simple-graphs-data-item__affix">%</span>
+					) }
+					{ valueMode === 'custom' && (
+						<RichText
+							tagName="span"
+							className="simple-graphs-data-item__affix"
+							value={ valueSuffix }
+							onChange={ ( v ) => updateParentAttr( 'valueSuffix', v ) }
+							allowedFormats={ [] }
+							placeholder={ __( 'Suffix', 'simple-graphs' ) }
+						/>
+					) }
+				</div>
+				{ ! hasLegend && (
 					<RichText
 						tagName="span"
-						className="simple-graphs-data-item__affix"
-						value={ valueSuffix }
-						onChange={ ( v ) => updateParentAttr( 'valueSuffix', v ) }
+						className="simple-graphs-data-item__title"
+						value={ title }
+						onChange={ ( v ) => setAttributes( { title: v } ) }
 						allowedFormats={ [] }
-						placeholder="k"
+						placeholder={ __( 'Label', 'simple-graphs' ) }
 					/>
 				) }
 			</div>
-			{ ! hasLegend && (
-				<RichText
-					tagName="span"
-					className="simple-graphs-data-item__title"
-					value={ title }
-					onChange={ ( v ) => setAttributes( { title: v } ) }
-					allowedFormats={ [] }
-					placeholder={ __( 'Label', 'simple-graphs' ) }
-				/>
-			) }
 		</div>
 	);
 }

@@ -1,7 +1,9 @@
 .wp-block-simple-graphs-legend {
 	display: flex;
 	flex-direction: column;
-	gap: var(--wp--preset--spacing--30, 1rem);
+	gap: var(--wp--preset--spacing--20);
+	font-size: var(--wp--preset--font-size--small, 1rem);
+	line-height: var(--wp--custom--line-height--small, 1.5);
 
 	// Side (default): column of items pushed to the bottom of the legend's
 	// vertical space so they sit flush with the chart's baseline.
@@ -13,11 +15,12 @@
 	&.is-style-stack {
 		flex-direction: row;
 		flex-wrap: wrap;
+		gap: var(--wp--preset--spacing--30);
 	}
 
 	.simple-graphs-legend__item {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		gap: 0.5em;
 	}
 
@@ -31,5 +34,6 @@
 
 	.simple-graphs-legend__label {
 		color: inherit;
+		padding-top: calc((2em - 1lh) / 2);
 	}
 }
