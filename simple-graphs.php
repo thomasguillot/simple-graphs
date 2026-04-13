@@ -299,7 +299,42 @@ function simple_graphs_resolve_radius( $radius ) {
 }
 
 /**
- * Pick black or white text for readable contrast against a hex background.
+ * Linearise an sRGB channel (0-255) using the sRGB transfer curve.
+ *
+ * @param int $val Channel value 0-255.
+ * @return float Linear luminance component.
+ */
+function simple_graphs_srgb_to_y( $val ) {
+	$s = $val / 255;
+	return $s <= 0.04045 ? $s / 12.92 : pow( ( $s + 0.055 ) / 1.055, 2.4 );
+}
+
+/**
+ * Compute APCA lightness contrast (Lc) for a text/background luminance pair.
+ *
+ * @param float $txt_y Text luminance (0-1).
+ * @param float $bg_y  Background luminance (0-1).
+ * @return float Lc value.
+ */
+function simple_graphs_apca_contrast( $txt_y, $bg_y ) {
+	$t_y = $txt_y > 0.022 ? $txt_y : $txt_y + pow( 0.022 - $txt_y, 1.414 );
+	$b_y = $bg_y > 0.022 ? $bg_y : $bg_y + pow( 0.022 - $bg_y, 1.414 );
+
+	if ( $b_y > $t_y ) {
+		$lc = ( pow( $b_y, 0.56 ) - pow( $t_y, 0.57 ) ) * 1.14;
+	} else {
+		$lc = ( pow( $b_y, 0.65 ) - pow( $t_y, 0.62 ) ) * 1.14;
+	}
+
+	if ( abs( $lc ) < 0.1 ) {
+		return 0;
+	}
+	return $lc > 0 ? ( $lc - 0.027 ) * 100 : ( $lc + 0.027 ) * 100;
+}
+
+/**
+ * Pick black or white text for best contrast against a hex background using
+ * APCA (Accessible Perceptual Contrast Algorithm).
  * Returns null when the value can't be resolved to RGB (e.g. tokens, vars, rgb()).
  *
  * @param string $value Color value.
@@ -314,11 +349,14 @@ function simple_graphs_contrast_color( $value ) {
 	if ( 3 === strlen( $hex ) ) {
 		$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
 	}
-	$r = hexdec( substr( $hex, 0, 2 ) ) / 255;
-	$g = hexdec( substr( $hex, 2, 2 ) ) / 255;
-	$b = hexdec( substr( $hex, 4, 2 ) ) / 255;
-	$luminance = ( 0.2126 * $r ) + ( 0.7152 * $g ) + ( 0.0722 * $b );
-	return $luminance > 0.5 ? '#000' : '#fff';
+	$bg_y = 0.2126729 * simple_graphs_srgb_to_y( hexdec( substr( $hex, 0, 2 ) ) )
+		+ 0.7151522 * simple_graphs_srgb_to_y( hexdec( substr( $hex, 2, 2 ) ) )
+		+ 0.0721750 * simple_graphs_srgb_to_y( hexdec( substr( $hex, 4, 2 ) ) );
+
+	$lc_black = simple_graphs_apca_contrast( 0, $bg_y );
+	$lc_white = simple_graphs_apca_contrast( 1, $bg_y );
+
+	return abs( $lc_black ) > abs( $lc_white ) ? '#000' : '#fff';
 }
 
 /**
