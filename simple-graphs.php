@@ -240,11 +240,22 @@ function simple_graphs_resolve_block_gap( $gap ) {
 	if ( '' === $gap ) {
 		return 'var(--wp--preset--spacing--30)';
 	}
+	// Reject values containing semicolons to prevent CSS injection.
+	if ( false !== strpos( $gap, ';' ) ) {
+		return 'var(--wp--preset--spacing--30)';
+	}
 	if ( strpos( $gap, 'var:preset|spacing|' ) === 0 ) {
 		$slug = str_replace( 'var:preset|spacing|', '', $gap );
 		return 'var(--wp--preset--spacing--' . $slug . ')';
 	}
-	return $gap;
+	// Passthrough: only allow safe CSS patterns (numeric lengths, var(), clamp(), calc()).
+	if ( preg_match( '/^[\d.]+(px|em|rem|%|vw|vh)$/', $gap )
+		|| preg_match( '/^(var|clamp|calc)\(/', $gap )
+		|| '0' === $gap
+	) {
+		return $gap;
+	}
+	return 'var(--wp--preset--spacing--30)';
 }
 
 /**
@@ -271,8 +282,12 @@ function simple_graphs_resolve_radius( $radius ) {
 		return $radius . 'px';
 	}
 	$radius = (string) $radius;
+	// Reject values containing semicolons to prevent CSS injection.
+	if ( false !== strpos( $radius, ';' ) ) {
+		return '6px';
+	}
 	// Only allow safe CSS values: lengths, percentages, var() references.
-	if ( preg_match( '/^[\d.]+(px|em|rem|%|vw|vh)$/', $radius ) || preg_match( '/^var\(--[\w-]+/', $radius ) ) {
+	if ( preg_match( '/^[\d.]+(px|em|rem|%|vw|vh)$/', $radius ) || preg_match( '/^var\(--[\w-]+\)$/', $radius ) ) {
 		return $radius;
 	}
 	return '6px';
@@ -535,7 +550,7 @@ function simple_graphs_render_legend_html( $items, $legend_attrs ) {
 		$classes[] = 'has-shadow-' . sanitize_html_class( $legend_attrs['shadow'] );
 	}
 
-	$style_attr = ! empty( $styles ) ? sprintf( ' style="%s"', esc_attr( implode( ';', $styles ) ) ) : '';
+	$style_attr = ! empty( $styles ) ? sprintf( ' style="%s"', esc_attr( safecss_filter_attr( implode( ';', $styles ) ) ) ) : '';
 
 	$items_html = '';
 	foreach ( $items as $item ) {
@@ -565,7 +580,7 @@ function simple_graphs_resolve_color( $attrs ) {
 		return simple_graphs_resolve_color_value( $attrs['style']['color']['background'] );
 	}
 	if ( ! empty( $attrs['backgroundColor'] ) ) {
-		return 'var(--wp--preset--color--' . $attrs['backgroundColor'] . ')';
+		return 'var(--wp--preset--color--' . sanitize_key( $attrs['backgroundColor'] ) . ')';
 	}
 	return SIMPLE_GRAPHS_NEUTRAL_GRAY;
 }

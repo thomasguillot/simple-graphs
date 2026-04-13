@@ -1,5 +1,6 @@
 import {
 	computeTotal,
+	contrastColor,
 	isLowValue,
 	pieSlices,
 	packBubbles,
@@ -155,6 +156,29 @@ describe( 'resolveBlockGap', () => {
 		expect( resolveBlockGap( 'clamp(1rem, 2vw, 2rem)' ) ).toBe(
 			'clamp(1rem, 2vw, 2rem)'
 		);
+	} );
+} );
+
+describe( 'contrastColor', () => {
+	test( 'white background returns black text', () => {
+		expect( contrastColor( '#FFFFFF' ) ).toBe( '#000' );
+	} );
+	test( 'black background returns white text', () => {
+		expect( contrastColor( '#000000' ) ).toBe( '#fff' );
+	} );
+	test( 'mid-grey background returns white text (APCA)', () => {
+		expect( contrastColor( '#808080' ) ).toBe( '#fff' );
+	} );
+	test( 'light colour returns black text', () => {
+		expect( contrastColor( '#E0E0E0' ) ).toBe( '#000' );
+	} );
+	test( '3-digit hex is handled correctly', () => {
+		expect( contrastColor( '#fff' ) ).toBe( '#000' );
+	} );
+	test( 'invalid input returns black text', () => {
+		expect( contrastColor( '' ) ).toBe( '#000' );
+		expect( contrastColor( null ) ).toBe( '#000' );
+		expect( contrastColor( 'not-a-color' ) ).toBe( '#000' );
 	} );
 } );
 

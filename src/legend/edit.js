@@ -17,9 +17,11 @@ export default function Edit( { attributes, clientId } ) {
 
 	const items = useSelect(
 		( select ) => {
-			const { getBlockParents, getBlock } = select( blockEditorStore );
-			const parents = getBlockParents( clientId );
-			const chartId = parents[ parents.length - 1 ];
+			const { getBlockParentsByBlockName, getBlock } = select( blockEditorStore );
+			const [ chartId ] = getBlockParentsByBlockName(
+				clientId,
+				'simple-graphs/chart'
+			);
 			if ( ! chartId ) {
 				return [];
 			}
