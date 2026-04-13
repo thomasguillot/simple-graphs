@@ -6,6 +6,7 @@ import {
 import { useSelect, useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { resolveBlockGap } from '../shared/utils';
+import { NEUTRAL_GRAY } from '../shared/constants';
 
 export default function Edit( { attributes, clientId } ) {
 	const resolvedGap = resolveBlockGap( attributes.style?.spacing?.blockGap );
@@ -41,7 +42,7 @@ export default function Edit( { attributes, clientId } ) {
 						b.attributes.style?.color?.background ||
 						( b.attributes.backgroundColor
 							? `var(--wp--preset--color--${ b.attributes.backgroundColor })`
-							: '#F0F0F0' ),
+							: NEUTRAL_GRAY ),
 				} ) );
 		},
 		[ clientId ]

@@ -3,6 +3,12 @@
 	flex-direction: column;
 	justify-content: flex-end;
 
+	// When editing, ensure the item is tall enough to see the content.
+	&.is-editing {
+		height: auto !important;
+		min-height: fit-content !important;
+	}
+
 	.simple-graphs-data-item__bar {
 		display: flex;
 		flex-direction: column;
@@ -17,7 +23,8 @@
 	.simple-graphs-data-item__value {
 		display: flex;
 		align-items: baseline;
-		gap: 0.1em;
+		gap: 0;
+		white-space: pre;
 	}
 
 	.simple-graphs-data-item__title {

@@ -9,7 +9,7 @@
   "parent": ["simple-graphs/data"],
   "supports": {
     "html": false,
-    "color": { "background": true, "text": false, "link": false },
+    "color": { "background": true, "text": false, "link": false, "__experimentalSkipSerialization": true },
     "reusable": false
   },
   "attributes": {

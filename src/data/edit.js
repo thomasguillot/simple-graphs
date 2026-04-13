@@ -7,7 +7,7 @@ import {
 } from '@wordpress/block-editor';
 import {
 	PanelBody,
-	ToggleControl,
+	TextControl,
 	ToolbarGroup,
 	ToolbarButton,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
@@ -15,17 +15,18 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 } from '@wordpress/components';
-import { useState } from '@wordpress/element';
+import { useState, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { pencil as editIcon, seen } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import { parseNumeric, resolveBlockGap, isZeroGap, resolveRadius } from '../shared/utils';
+import { NEUTRAL_GRAY } from '../shared/constants';
 import CircularChart from '../chart/CircularChart';
 
-const TEMPLATE = [
-	[ 'simple-graphs/data-item', { value: '40', title: 'Item A', style: { color: { background: '#DB2777' } } } ],
-	[ 'simple-graphs/data-item', { value: '30', title: 'Item B', style: { color: { background: '#0891B2' } } } ],
-	[ 'simple-graphs/data-item', { value: '30', title: 'Item C', style: { color: { background: '#7C3AED' } } } ],
+const DEFAULT_BG = [
+	`var(--wp--preset--color--accent, ${ NEUTRAL_GRAY })`,
+	`var(--wp--preset--color--accent-2, ${ NEUTRAL_GRAY })`,
+	`var(--wp--preset--color--accent-3, ${ NEUTRAL_GRAY })`,
 ];
 
 const ALLOWED_BLOCKS = [ 'simple-graphs/data-item' ];
@@ -37,7 +38,7 @@ function resolveVariation( className = '' ) {
 }
 
 export default function Edit( { clientId, attributes, setAttributes } ) {
-	const { valueMode, compensateGap } = attributes;
+	const { valueMode, valuePrefix, valueSuffix, compensateGap } = attributes;
 	const blockGap = attributes.style?.spacing?.blockGap;
 	const resolvedGap = resolveBlockGap( blockGap );
 	const noGap = isZeroGap( blockGap );
@@ -61,7 +62,7 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 						b.attributes.style?.color?.background ||
 						( b.attributes.backgroundColor
 							? `var(--wp--preset--color--${ b.attributes.backgroundColor })`
-							: '#F0F0F0' ),
+							: NEUTRAL_GRAY ),
 				} ) );
 		},
 		[ clientId ]
@@ -104,8 +105,15 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 	const orientation =
 		variation === 'bar' || variation === 'stacked' ? 'vertical' : 'horizontal';
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const template = useMemo( () => [
+		[ 'simple-graphs/data-item', { value: '40', title: __( 'Item A', 'simple-graphs' ), style: { color: { background: DEFAULT_BG[ 0 ] } } } ],
+		[ 'simple-graphs/data-item', { value: '30', title: __( 'Item B', 'simple-graphs' ), style: { color: { background: DEFAULT_BG[ 1 ] } } } ],
+		[ 'simple-graphs/data-item', { value: '30', title: __( 'Item C', 'simple-graphs' ), style: { color: { background: DEFAULT_BG[ 2 ] } } } ],
+	], [] );
+
 	const innerBlocksProps = useInnerBlocksProps( blockProps, {
-		template: TEMPLATE,
+		template,
 		allowedBlocks: ALLOWED_BLOCKS,
 		orientation,
 		defaultBlock: { name: 'simple-graphs/data-item' },
@@ -134,6 +142,7 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 				<PanelBody title={ __( 'Values', 'simple-graphs' ) }>
 					<ToggleGroupControl
 						label={ __( 'Value format', 'simple-graphs' ) }
+						help={ __( 'Percentage appends %. Custom lets you set a prefix and suffix.', 'simple-graphs' ) }
 						value={ valueMode }
 						onChange={ ( v ) => setAttributes( { valueMode: v } ) }
 						isBlock
@@ -149,13 +158,44 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 							label={ __( 'Custom', 'simple-graphs' ) }
 						/>
 					</ToggleGroupControl>
-					<ToggleControl
-						label={ __( 'Compensate gap', 'simple-graphs' ) }
-						help={ __( 'Reduce bar size to account for spacing between items.', 'simple-graphs' ) }
-						checked={ compensateGap }
-						onChange={ ( v ) => setAttributes( { compensateGap: v } ) }
+					{ valueMode === 'custom' && (
+						<>
+							<TextControl
+								label={ __( 'Prefix', 'simple-graphs' ) }
+								help={ __( 'Text before the value, e.g. $ or "Revenue: ". Spaces are preserved.', 'simple-graphs' ) }
+								value={ valuePrefix }
+								onChange={ ( v ) => setAttributes( { valuePrefix: v } ) }
+								__next40pxDefaultSize
+								__nextHasNoMarginBottom
+							/>
+							<TextControl
+								label={ __( 'Suffix', 'simple-graphs' ) }
+								help={ __( 'Text after the value, e.g. k, % or " units". Spaces are preserved.', 'simple-graphs' ) }
+								value={ valueSuffix }
+								onChange={ ( v ) => setAttributes( { valueSuffix: v } ) }
+								__next40pxDefaultSize
+								__nextHasNoMarginBottom
+							/>
+						</>
+					) }
+					<ToggleGroupControl
+						label={ __( 'Bar sizing', 'simple-graphs' ) }
+						help={ __( 'Adjusted shrinks bars to account for the spacing between them.', 'simple-graphs' ) }
+						value={ compensateGap ? 'adjusted' : 'full' }
+						onChange={ ( v ) => setAttributes( { compensateGap: v === 'adjusted' } ) }
+						isBlock
+						__next40pxDefaultSize
 						__nextHasNoMarginBottom
-					/>
+					>
+						<ToggleGroupControlOption
+							value="full"
+							label={ __( 'Full', 'simple-graphs' ) }
+						/>
+						<ToggleGroupControlOption
+							value="adjusted"
+							label={ __( 'Adjusted', 'simple-graphs' ) }
+						/>
+					</ToggleGroupControl>
 				</PanelBody>
 			</InspectorControls>
 			{ isCircular && ! editMode ? (

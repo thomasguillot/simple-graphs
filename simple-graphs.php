@@ -15,6 +15,9 @@ defined( 'ABSPATH' ) || exit;
 if ( ! defined( 'SIMPLE_GRAPHS_VERSION' ) ) {
 	define( 'SIMPLE_GRAPHS_VERSION', '2.0.0' );
 }
+if ( ! defined( 'SIMPLE_GRAPHS_NEUTRAL_GRAY' ) ) {
+	define( 'SIMPLE_GRAPHS_NEUTRAL_GRAY', '#E0E0E0' );
+}
 
 add_action(
 	'init',
@@ -419,7 +422,7 @@ function simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suf
 	$bar_class  = 'simple-graphs-data-item__bar';
 	$bar_styles = array();
 	if ( ! $has_preset_bg && ! $has_custom_bg ) {
-		$bar_styles[] = 'background-color:#F0F0F0';
+		$bar_styles[] = 'background-color:' . SIMPLE_GRAPHS_NEUTRAL_GRAY;
 		$bar_styles[] = 'color:#000';
 	} else {
 		$text_color = '#fff';
@@ -587,5 +590,5 @@ function simple_graphs_resolve_color( $attrs ) {
 	if ( ! empty( $attrs['backgroundColor'] ) ) {
 		return 'var(--wp--preset--color--' . $attrs['backgroundColor'] . ')';
 	}
-	return '#F0F0F0';
+	return SIMPLE_GRAPHS_NEUTRAL_GRAY;
 }
