@@ -4,8 +4,11 @@
 	justify-content: flex-end;
 
 	// When editing, ensure the item is tall enough to see the content.
+	// The Data block sets an explicit height + min-height: 0 on items.
+	// fit-content as min-height lets the item grow for its content
+	// while the explicit height still applies when it's larger.
 	&.is-editing {
-		min-height: 3em !important;
+		min-height: fit-content !important;
 	}
 
 	.simple-graphs-data-item__bar {
