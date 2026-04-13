@@ -413,9 +413,17 @@ function simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suf
 	// Inner bar gets the background color and text color.
 	$bar_class  = 'simple-graphs-data-item__bar';
 	$bar_styles = array();
+	$has_preset_text = ! empty( $attrs['textColor'] );
+	$has_custom_text = ! empty( $attrs['style']['color']['text'] );
 	if ( ! $has_preset_bg && ! $has_custom_bg ) {
 		$bar_styles[] = 'background-color:' . SIMPLE_GRAPHS_NEUTRAL_GRAY;
-		$bar_styles[] = 'color:#000';
+		$user_text    = '#000';
+		if ( $has_preset_text ) {
+			$bar_class .= ' has-' . sanitize_html_class( $attrs['textColor'] ) . '-color has-text-color';
+		} elseif ( $has_custom_text ) {
+			$user_text = simple_graphs_resolve_color_value( $attrs['style']['color']['text'] );
+		}
+		$bar_styles[] = 'color:' . $user_text;
 	} else {
 		$text_color = '#fff';
 		if ( $has_custom_bg ) {
@@ -428,6 +436,12 @@ function simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suf
 		}
 		if ( $has_preset_bg ) {
 			$bar_class .= ' has-' . sanitize_html_class( $attrs['backgroundColor'] ) . '-background-color has-background';
+		}
+		// User-set text colour takes priority over auto-contrast.
+		if ( $has_preset_text ) {
+			$bar_class .= ' has-' . sanitize_html_class( $attrs['textColor'] ) . '-color has-text-color';
+		} elseif ( $has_custom_text ) {
+			$text_color = simple_graphs_resolve_color_value( $attrs['style']['color']['text'] );
 		}
 		$bar_styles[] = 'color:' . $text_color;
 	}

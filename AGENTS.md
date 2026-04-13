@@ -87,7 +87,7 @@ The outer div is the track container (full height in track mode). The inner `.ba
 - **Data item colours** → `__experimentalSkipSerialization` on both Data and Data Item. Colours are computed manually and applied to `.simple-graphs-data-item__bar`
 - **Neutral gray fallback** → `NEUTRAL_GRAY` constant (JS) / `SIMPLE_GRAPHS_NEUTRAL_GRAY` (PHP), currently `#E0E0E0`
 - **Default template colours** → `var(--wp--preset--color--accent)`, `accent-2`, `accent-3` with neutral gray fallback
-- **Contrast text** → `contrastColor()` uses APCA (Accessible Perceptual Contrast Algorithm) to pick black or white text. Vars/presets default to white
+- **Contrast text** → `contrastColor()` uses APCA to pick black or white text as default. Users can override via the text colour control on each Data Item. Vars/presets resolved via `getComputedStyle`
 - **Color normalization** → `resolveColorValue()` converts `var:preset|color|slug` tokens to `var(--wp--preset--color--slug)`. Used in data-item, data, and legend editors
 
 ## PHP rendering
