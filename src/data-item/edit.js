@@ -59,7 +59,13 @@ export default function Edit( { attributes, setAttributes, context, clientId, is
 		}
 	}, [ barBg, initialTextColor, isVarBg, hasPresetBg ] );
 
-	const textColor = resolvedTextColor;
+	// User-set text colour takes priority over auto-contrast.
+	const presetText = attributes.textColor;
+	const customText = attributes.style?.color?.text;
+	const userTextColor = presetText
+		? `var(--wp--preset--color--${ presetText })`
+		: ( customText ? resolveColorValue( customText ) : null );
+	const textColor = userTextColor || resolvedTextColor;
 
 	// useLayoutEffect fires after DOM update but before browser paint,
 	// so the user never sees the intermediate state.
