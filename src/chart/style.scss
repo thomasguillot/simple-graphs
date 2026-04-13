@@ -10,7 +10,7 @@
 
 	// Side legend: 1/5 of the available width after accounting for gaps.
 	> .wp-block-simple-graphs-legend {
-		flex: 0 0 calc((100% - (4 * var(--wp--preset--spacing--50, 32px))) / 5);
+		flex: 0 0 calc((100% - (4 * var(--sg-chart-gap, 32px))) / 5);
 		min-width: 0;
 		align-self: flex-end;
 	}

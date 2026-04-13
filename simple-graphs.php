@@ -98,7 +98,7 @@ function simple_graphs_render_chart( $attributes, $content, $block ) {
 	);
 	$wrapper       = get_block_wrapper_attributes(
 		array(
-			'style' => '--sg-radius:' . esc_attr( $chart_radius ) . ';gap:' . esc_attr( $chart_gap_css ) . ';',
+			'style' => '--sg-radius:' . esc_attr( $chart_radius ) . ';--sg-chart-gap:' . esc_attr( $chart_gap_css ) . ';gap:' . esc_attr( $chart_gap_css ) . ';',
 		)
 	);
 
