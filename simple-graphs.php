@@ -107,6 +107,12 @@ function simple_graphs_render_chart( $attributes, $content, $block ) {
 	}
 	$sg_max = ( 'percentage' === $value_mode ) ? max( 100.0, $data_max ) : $data_max;
 
+	// Resolve the border radius from the Data block so the chart wrapper
+	// can expose --sg-radius for both Data items and Legend swatches.
+	$chart_radius = simple_graphs_resolve_radius(
+		isset( $data_attrs['style']['border']['radius'] ) ? $data_attrs['style']['border']['radius'] : '6px'
+	);
+
 	// Chart wrapper adds its own blockGap as flex gap. Flex direction is
 	// driven by the legend's block style via CSS :has() so it stays in sync
 	// with whichever arrangement the user picks for the legend.
@@ -115,7 +121,7 @@ function simple_graphs_render_chart( $attributes, $content, $block ) {
 	);
 	$wrapper       = get_block_wrapper_attributes(
 		array(
-			'style' => 'gap:' . $chart_gap_css . ';',
+			'style' => '--sg-radius:' . esc_attr( $chart_radius ) . ';gap:' . esc_attr( $chart_gap_css ) . ';',
 		)
 	);
 
@@ -158,6 +164,9 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 	$normalized  = trim( str_replace( ' ', '', (string) $block_gap ) );
 	$is_zero_gap = in_array( $normalized, array( '0', '0px', '0rem', '0em' ), true );
 	$gap_css     = simple_graphs_resolve_block_gap( $block_gap );
+	$radius = simple_graphs_resolve_radius(
+		isset( $attrs['style']['border']['radius'] ) ? $attrs['style']['border']['radius'] : '6px'
+	);
 
 	$classes = array( 'wp-block-simple-graphs-data' );
 	if ( $is_zero_gap ) {
@@ -185,9 +194,10 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 	}
 
 	$style = sprintf(
-		'--sg-max:%s;--sg-gap:%s;gap:%s;%s',
+		'--sg-max:%s;--sg-gap:%s;--sg-radius:%s;gap:%s;%s',
 		esc_attr( (string) $sg_max ),
 		esc_attr( $gap_css ),
+		esc_attr( $radius ),
 		esc_attr( $gap_css ),
 		$bg_inline
 	);
@@ -248,6 +258,37 @@ function simple_graphs_resolve_block_gap( $gap ) {
 		return 'var(--wp--preset--spacing--' . $slug . ')';
 	}
 	return $gap;
+}
+
+/**
+ * Resolve a border radius value to a CSS string.
+ *
+ * WordPress may store this as a string ("6px"), a number, or an object with
+ * per-corner values ({ topLeft, topRight, bottomRight, bottomLeft }).
+ *
+ * @param mixed $radius Raw border radius attribute value.
+ * @return string
+ */
+function simple_graphs_resolve_radius( $radius ) {
+	if ( is_array( $radius ) ) {
+		$resolved = null;
+		foreach ( array( 'topLeft', 'topRight', 'bottomRight', 'bottomLeft' ) as $key ) {
+			if ( isset( $radius[ $key ] ) && '' !== $radius[ $key ] ) {
+				$resolved = $radius[ $key ];
+				break;
+			}
+		}
+		$radius = null !== $resolved ? $resolved : '6px';
+	}
+	if ( is_numeric( $radius ) ) {
+		return $radius . 'px';
+	}
+	$radius = (string) $radius;
+	// Only allow safe CSS values: lengths, percentages, var() references.
+	if ( preg_match( '/^[\d.]+(px|em|rem|%|vw|vh)$/', $radius ) || preg_match( '/^var\(--[\w-]+/', $radius ) ) {
+		return $radius;
+	}
+	return '6px';
 }
 
 /**
