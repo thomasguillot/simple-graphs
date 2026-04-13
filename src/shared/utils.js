@@ -42,6 +42,17 @@ export function resolveBlockGap( gap ) {
 	return s;
 }
 
+export function resolveColorValue( value ) {
+	if ( ! value ) {
+		return '';
+	}
+	const s = String( value ).trim();
+	if ( s.startsWith( 'var:preset|color|' ) ) {
+		return `var(--wp--preset--color--${ s.replace( 'var:preset|color|', '' ) })`;
+	}
+	return s;
+}
+
 export function resolveRadius( raw ) {
 	if ( raw == null ) {
 		return '6px';

@@ -16,12 +16,13 @@
 	align-items: flex-end;
 
 	.wp-block-simple-graphs-data-item {
-		flex: 1 1 0;
-		min-width: 0;
-		height: calc(
+		--sg-item-height: calc(
 			(var(--sg-value, 0) / var(--sg-max, 100)) *
 			var(--sg-size-base)
 		);
+		flex: 1 1 0;
+		min-width: 0;
+		height: var(--sg-item-height);
 		min-height: 0;
 
 		.simple-graphs-data-item__bar {
