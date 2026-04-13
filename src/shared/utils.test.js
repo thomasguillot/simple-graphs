@@ -7,6 +7,7 @@ import {
 	resolveMaxValue,
 	parseNumeric,
 	resolveBlockGap,
+	resolveColorValue,
 } from './utils';
 import { BORDER_RADIUS, LOW_VALUE_THRESHOLD } from './constants';
 
@@ -153,6 +154,30 @@ describe( 'resolveBlockGap', () => {
 		expect( resolveBlockGap( '16px' ) ).toBe( '16px' );
 		expect( resolveBlockGap( 'clamp(1rem, 2vw, 2rem)' ) ).toBe(
 			'clamp(1rem, 2vw, 2rem)'
+		);
+	} );
+} );
+
+describe( 'resolveColorValue', () => {
+	test( 'empty / falsy input returns empty string', () => {
+		expect( resolveColorValue() ).toBe( '' );
+		expect( resolveColorValue( '' ) ).toBe( '' );
+		expect( resolveColorValue( null ) ).toBe( '' );
+	} );
+	test( 'translates var:preset|color|* tokens to CSS var references', () => {
+		expect( resolveColorValue( 'var:preset|color|accent' ) ).toBe(
+			'var(--wp--preset--color--accent)'
+		);
+		expect( resolveColorValue( 'var:preset|color|vivid-red' ) ).toBe(
+			'var(--wp--preset--color--vivid-red)'
+		);
+	} );
+	test( 'passes hex values through unchanged', () => {
+		expect( resolveColorValue( '#DB2777' ) ).toBe( '#DB2777' );
+	} );
+	test( 'passes var() references through unchanged', () => {
+		expect( resolveColorValue( 'var(--wp--preset--color--accent)' ) ).toBe(
+			'var(--wp--preset--color--accent)'
 		);
 	} );
 } );

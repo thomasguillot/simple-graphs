@@ -28,7 +28,7 @@ simple-graphs/chart          (outer container)
 | `src/data-item/block.json` | Data item supports: color (skip serialization) |
 | `src/legend/edit.js` | Legend editor. Reads data from sibling Data block's children |
 | `src/legend/block.json` | Legend supports: spacing, typography, color, border, shadow, padding |
-| `src/shared/utils.js` | Shared helpers: `parseNumeric`, `resolveBlockGap`, `resolveRadius`, `contrastColor`, etc. |
+| `src/shared/utils.js` | Shared helpers: `parseNumeric`, `resolveBlockGap`, `resolveColorValue`, `resolveRadius`, `contrastColor` (APCA), etc. |
 | `src/shared/constants.js` | `BORDER_RADIUS` (6), `LOW_VALUE_THRESHOLD` (4), `NEUTRAL_GRAY` (#E0E0E0) |
 | `src/shared/utils.test.js` | Unit tests for shared helpers |
 
@@ -87,7 +87,8 @@ The outer div is the track container (full height in track mode). The inner `.ba
 - **Data item colours** → `__experimentalSkipSerialization` on both Data and Data Item. Colours are computed manually and applied to `.simple-graphs-data-item__bar`
 - **Neutral gray fallback** → `NEUTRAL_GRAY` constant (JS) / `SIMPLE_GRAPHS_NEUTRAL_GRAY` (PHP), currently `#E0E0E0`
 - **Default template colours** → `var(--wp--preset--color--accent)`, `accent-2`, `accent-3` with neutral gray fallback
-- **Contrast text** → `contrastColor()` computes black/white from hex luminance. Vars/presets default to white
+- **Contrast text** → `contrastColor()` uses APCA (Accessible Perceptual Contrast Algorithm) to pick black or white text. Vars/presets default to white
+- **Color normalization** → `resolveColorValue()` converts `var:preset|color|slug` tokens to `var(--wp--preset--color--slug)`. Used in data-item, data, and legend editors
 
 ## PHP rendering
 
@@ -109,7 +110,7 @@ All frontend rendering is in `simple-graphs.php`:
 ## Testing
 
 ```bash
-npm test           # 21 unit tests for shared helpers
+npm test           # 25 unit tests for shared helpers
 npm run build      # production build
 npm start          # watch mode
 ```
