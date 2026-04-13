@@ -190,8 +190,8 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 	);
 
 	if ( $is_circular ) {
-		// Simple fallback rendering for circular charts on frontend.
-		// TODO: port SVG rendering from JS to PHP for proper visualization.
+		// Circular charts (pie/donut/bubble) show a text fallback on the frontend.
+		// SVG rendering is editor-only for now.
 		$items_html = '<div class="simple-graphs-data__circular-fallback">';
 		foreach ( $inner_items as $inner ) {
 			if ( 'simple-graphs/data-item' !== $inner['blockName'] ) {
