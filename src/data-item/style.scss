@@ -6,7 +6,7 @@
 	justify-content: flex-end;
 	padding: 16px;
 	line-height: 1;
-	border-radius: 6px;
+	border-radius: var(--sg-radius, 6px);
 
 	.simple-graphs-data-item__value {
 		display: flex;

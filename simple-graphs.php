@@ -158,6 +158,7 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 	$normalized  = trim( str_replace( ' ', '', (string) $block_gap ) );
 	$is_zero_gap = in_array( $normalized, array( '0', '0px', '0rem', '0em' ), true );
 	$gap_css     = simple_graphs_resolve_block_gap( $block_gap );
+	$radius      = isset( $attrs['style']['border']['radius'] ) ? $attrs['style']['border']['radius'] : '6px';
 
 	$classes = array( 'wp-block-simple-graphs-data' );
 	if ( $is_zero_gap ) {
@@ -185,9 +186,10 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 	}
 
 	$style = sprintf(
-		'--sg-max:%s;--sg-gap:%s;gap:%s;%s',
+		'--sg-max:%s;--sg-gap:%s;--sg-radius:%s;gap:%s;%s',
 		esc_attr( (string) $sg_max ),
 		esc_attr( $gap_css ),
+		esc_attr( $radius ),
 		esc_attr( $gap_css ),
 		$bg_inline
 	);

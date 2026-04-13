@@ -40,6 +40,7 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 	const blockGap = attributes.style?.spacing?.blockGap;
 	const resolvedGap = resolveBlockGap( blockGap );
 	const noGap = isZeroGap( blockGap );
+	const radius = attributes.style?.border?.radius || '6px';
 	const [ editMode, setEditMode ] = useState( false );
 
 	const items = useSelect(
@@ -73,7 +74,9 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 		style: {
 			'--sg-max': sgMax,
 			'--sg-gap': resolvedGap,
+			'--sg-radius': radius,
 			gap: resolvedGap,
+			borderRadius: undefined,
 		},
 	} );
 

@@ -48,7 +48,7 @@
 
 // Zero-gap track: outer radius on Data, items lose their own.
 .wp-block-simple-graphs-data.simple-graphs-data--no-gap {
-	border-radius: 6px;
+	border-radius: var(--sg-radius, 6px);
 	overflow: hidden;
 
 	.wp-block-simple-graphs-data-item {
@@ -58,11 +58,11 @@
 
 .wp-block-simple-graphs-data.is-style-column.simple-graphs-data--no-gap .wp-block-simple-graphs-data-item,
 .wp-block-simple-graphs-data:not([class*="is-style-"]).simple-graphs-data--no-gap .wp-block-simple-graphs-data-item {
-	border-radius: 6px 6px 0 0 !important;
+	border-radius: var(--sg-radius, 6px) var(--sg-radius, 6px) 0 0 !important;
 }
 
 .wp-block-simple-graphs-data.is-style-bar.simple-graphs-data--no-gap .wp-block-simple-graphs-data-item {
-	border-radius: 0 6px 6px 0 !important;
+	border-radius: 0 var(--sg-radius, 6px) var(--sg-radius, 6px) 0 !important;
 }
 
 .wp-block-simple-graphs-data.is-style-stacked.simple-graphs-data--no-gap .wp-block-simple-graphs-data-item {

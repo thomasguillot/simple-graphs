@@ -11,6 +11,7 @@
     "html": false,
     "spacing": { "blockGap": true },
     "color": { "background": true, "text": false, "link": false },
+    "__experimentalBorder": { "radius": true, "color": false, "style": false, "width": false },
     "reusable": false,
     "inserter": false
   },
@@ -21,7 +22,8 @@
     "style": {
       "type": "object",
       "default": {
-        "spacing": { "blockGap": "var:preset|spacing|30" }
+        "spacing": { "blockGap": "var:preset|spacing|30" },
+        "border": { "radius": "6px" }
       }
     }
   },
