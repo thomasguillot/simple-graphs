@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Simple Graphs
  * Description: Create simple, visually-striking charts.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Thomas Guillot
  * Author URI: https://thomasguillot.com
  * Requires at least: 6.4
@@ -13,7 +13,7 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( ! defined( 'SIMPLE_GRAPHS_VERSION' ) ) {
-	define( 'SIMPLE_GRAPHS_VERSION', '1.0.0' );
+	define( 'SIMPLE_GRAPHS_VERSION', '1.0.1' );
 }
 if ( ! defined( 'SIMPLE_GRAPHS_NEUTRAL_GRAY' ) ) {
 	define( 'SIMPLE_GRAPHS_NEUTRAL_GRAY', '#E0E0E0' );
@@ -31,6 +31,18 @@ add_action(
 		register_block_type( __DIR__ . '/build/data' );
 		register_block_type( __DIR__ . '/build/data-item' );
 		register_block_type( __DIR__ . '/build/legend' );
+
+		// Use the content hash from wp-scripts as the style version for cache busting.
+		// Version styles from the actual CSS file modification time so
+		// CSS-only changes also bust caches.
+		$style_file = __DIR__ . '/build/chart/style-index.css';
+		$version    = file_exists( $style_file ) ? (string) filemtime( $style_file ) : SIMPLE_GRAPHS_VERSION;
+		$styles     = wp_styles();
+		foreach ( array( 'simple-graphs-chart-style', 'simple-graphs-chart-editor-style' ) as $handle ) {
+			if ( isset( $styles->registered[ $handle ] ) ) {
+				$styles->registered[ $handle ]->ver = $version;
+			}
+		}
 	}
 );
 
