@@ -180,13 +180,36 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 		}
 	}
 
+	// Typography: preset classes and inline styles.
+	if ( ! empty( $attrs['fontSize'] ) ) {
+		$classes[] = 'has-' . sanitize_html_class( $attrs['fontSize'] ) . '-font-size';
+	}
+	if ( ! empty( $attrs['fontFamily'] ) ) {
+		$classes[] = 'has-' . sanitize_html_class( $attrs['fontFamily'] ) . '-font-family';
+	}
+	$typo_css = '';
+	$typo_props = array(
+		'fontSize'      => 'font-size',
+		'fontWeight'    => 'font-weight',
+		'fontStyle'     => 'font-style',
+		'lineHeight'    => 'line-height',
+		'letterSpacing' => 'letter-spacing',
+		'textTransform' => 'text-transform',
+	);
+	foreach ( $typo_props as $attr_key => $css_prop ) {
+		if ( ! empty( $attrs['style']['typography'][ $attr_key ] ) ) {
+			$typo_css .= $css_prop . ':' . $attrs['style']['typography'][ $attr_key ] . ';';
+		}
+	}
+
 	$style = sprintf(
-		'--sg-max:%s;--sg-gap:%s;--sg-radius:%s;gap:%s;%s',
+		'--sg-max:%s;--sg-gap:%s;--sg-radius:%s;gap:%s;%s%s',
 		esc_attr( (string) $sg_max ),
 		esc_attr( $gap_css ),
 		esc_attr( $radius ),
 		esc_attr( $gap_css ),
-		$track_css
+		$track_css,
+		$typo_css
 	);
 
 	if ( $is_circular ) {
@@ -417,13 +440,14 @@ function simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suf
 	$has_custom_text = ! empty( $attrs['style']['color']['text'] );
 	if ( ! $has_preset_bg && ! $has_custom_bg ) {
 		$bar_styles[] = 'background-color:' . SIMPLE_GRAPHS_NEUTRAL_GRAY;
-		$user_text    = '#000';
 		if ( $has_preset_text ) {
 			$bar_class .= ' has-' . sanitize_html_class( $attrs['textColor'] ) . '-color has-text-color';
+			$bar_styles[] = 'color:var(--wp--preset--color--' . sanitize_key( $attrs['textColor'] ) . ')';
 		} elseif ( $has_custom_text ) {
-			$user_text = simple_graphs_resolve_color_value( $attrs['style']['color']['text'] );
+			$bar_styles[] = 'color:' . simple_graphs_resolve_color_value( $attrs['style']['color']['text'] );
+		} else {
+			$bar_styles[] = 'color:#000';
 		}
-		$bar_styles[] = 'color:' . $user_text;
 	} else {
 		$text_color = '#fff';
 		if ( $has_custom_bg ) {
@@ -440,6 +464,7 @@ function simple_graphs_render_data_item_html( $attrs, $value_mode, $prefix, $suf
 		// User-set text colour takes priority over auto-contrast.
 		if ( $has_preset_text ) {
 			$bar_class .= ' has-' . sanitize_html_class( $attrs['textColor'] ) . '-color has-text-color';
+			$text_color = 'var(--wp--preset--color--' . sanitize_key( $attrs['textColor'] ) . ')';
 		} elseif ( $has_custom_text ) {
 			$text_color = simple_graphs_resolve_color_value( $attrs['style']['color']['text'] );
 		}
