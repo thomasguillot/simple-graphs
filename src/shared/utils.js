@@ -54,9 +54,10 @@ export function resolveRadius( raw ) {
 }
 
 /**
- * Linearise an sRGB channel (0-255) to luminance using the sRGB transfer curve.
+ * Linearise an sRGB channel value (0-255) using the sRGB transfer curve.
+ * Returns a linear-light component, not luminance (Y is computed separately).
  */
-function sRGBtoY( val ) {
+function sRGBtoLin( val ) {
 	const s = val / 255;
 	return s <= 0.04045 ? s / 12.92 : Math.pow( ( s + 0.055 ) / 1.055, 2.4 );
 }
@@ -100,14 +101,17 @@ export function contrastColor( hex ) {
 	if ( ! hex || typeof hex !== 'string' ) {
 		return '#000';
 	}
-	const c = hex.replace( '#', '' );
-	if ( c.length < 6 ) {
+	let c = hex.replace( '#', '' );
+	if ( c.length === 3 ) {
+		c = c[ 0 ] + c[ 0 ] + c[ 1 ] + c[ 1 ] + c[ 2 ] + c[ 2 ];
+	}
+	if ( c.length !== 6 ) {
 		return '#000';
 	}
 	const bgY =
-		0.2126729 * sRGBtoY( parseInt( c.substring( 0, 2 ), 16 ) ) +
-		0.7151522 * sRGBtoY( parseInt( c.substring( 2, 4 ), 16 ) ) +
-		0.0721750 * sRGBtoY( parseInt( c.substring( 4, 6 ), 16 ) );
+		0.2126729 * sRGBtoLin( parseInt( c.substring( 0, 2 ), 16 ) ) +
+		0.7151522 * sRGBtoLin( parseInt( c.substring( 2, 4 ), 16 ) ) +
+		0.0721750 * sRGBtoLin( parseInt( c.substring( 4, 6 ), 16 ) );
 
 	const lcBlack = apcaContrast( 0, bgY );
 	const lcWhite = apcaContrast( 1, bgY );

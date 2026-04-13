@@ -299,12 +299,13 @@ function simple_graphs_resolve_radius( $radius ) {
 }
 
 /**
- * Linearise an sRGB channel (0-255) using the sRGB transfer curve.
+ * Linearise an sRGB channel value (0-255) using the sRGB transfer curve.
+ * Returns a linear-light component, not luminance (Y is computed separately).
  *
  * @param int $val Channel value 0-255.
- * @return float Linear luminance component.
+ * @return float Linear-light component.
  */
-function simple_graphs_srgb_to_y( $val ) {
+function simple_graphs_srgb_to_lin( $val ) {
 	$s = $val / 255;
 	return $s <= 0.04045 ? $s / 12.92 : pow( ( $s + 0.055 ) / 1.055, 2.4 );
 }
@@ -349,9 +350,9 @@ function simple_graphs_contrast_color( $value ) {
 	if ( 3 === strlen( $hex ) ) {
 		$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
 	}
-	$bg_y = 0.2126729 * simple_graphs_srgb_to_y( hexdec( substr( $hex, 0, 2 ) ) )
-		+ 0.7151522 * simple_graphs_srgb_to_y( hexdec( substr( $hex, 2, 2 ) ) )
-		+ 0.0721750 * simple_graphs_srgb_to_y( hexdec( substr( $hex, 4, 2 ) ) );
+	$bg_y = 0.2126729 * simple_graphs_srgb_to_lin( hexdec( substr( $hex, 0, 2 ) ) )
+		+ 0.7151522 * simple_graphs_srgb_to_lin( hexdec( substr( $hex, 2, 2 ) ) )
+		+ 0.0721750 * simple_graphs_srgb_to_lin( hexdec( substr( $hex, 4, 2 ) ) );
 
 	$lc_black = simple_graphs_apca_contrast( 0, $bg_y );
 	$lc_white = simple_graphs_apca_contrast( 1, $bg_y );
