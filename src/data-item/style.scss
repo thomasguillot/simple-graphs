@@ -22,7 +22,7 @@
 		z-index: 1;
 
 		.simple-graphs-data-item__bar {
-			height: auto;
+			height: auto !important;
 			min-height: 100%;
 		}
 	}
