@@ -1,7 +1,7 @@
 import { useBlockProps, RichText, store as blockEditorStore } from '@wordpress/block-editor';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { contrastColor, parseNumeric } from '../shared/utils';
+import { contrastColor, parseNumeric, resolveColorValue } from '../shared/utils';
 import { NEUTRAL_GRAY } from '../shared/constants';
 
 export default function Edit( { attributes, setAttributes, context, clientId, isSelected } ) {
@@ -12,12 +12,11 @@ export default function Edit( { attributes, setAttributes, context, clientId, is
 	// If nothing is set, fall back to a neutral gray with dark text so a new
 	// data-item is visible immediately without the user having to pick a color.
 	const presetBg = attributes.backgroundColor;
-	const customBg = attributes.style?.color?.background;
+	const rawCustomBg = attributes.style?.color?.background;
+	const customBg = resolveColorValue( rawCustomBg );
 	const hasPresetBg = !! presetBg;
 	const hasCustomBg = !! customBg;
-	const isVarBg =
-		hasCustomBg &&
-		( customBg.startsWith( 'var' ) || customBg.startsWith( 'var:' ) );
+	const isVarBg = hasCustomBg && customBg.startsWith( 'var(' );
 
 	let textColor;
 	let barBg;

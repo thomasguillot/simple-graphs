@@ -29,7 +29,7 @@ Simple Graphs (Chart)
 ```
 
 - **Chart**: outer wrapper. Controls layout, min-height, padding, background, border, shadow, text colour.
-- **Data**: owns the chart style, value format, border-radius, and track background. Has a "Compensate gap" toggle.
+- **Data**: owns the chart style, value format, border-radius, and track background. Has a "Bar sizing" control (Full or Adjusted).
 - **Data Item**: each data point. Edit value and label inline, drag to reorder, colour with any theme colour.
 - **Legend**: toggled from the Chart toolbar. Side or Stack style. Swatches inherit border-radius from Data.
 

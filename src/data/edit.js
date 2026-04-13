@@ -19,7 +19,7 @@ import { useState, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { pencil as editIcon, seen } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
-import { parseNumeric, resolveBlockGap, isZeroGap, resolveRadius } from '../shared/utils';
+import { parseNumeric, resolveBlockGap, isZeroGap, resolveRadius, resolveColorValue } from '../shared/utils';
 import { NEUTRAL_GRAY } from '../shared/constants';
 import CircularChart from '../chart/CircularChart';
 
@@ -59,7 +59,7 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 					value: b.attributes.value || '0',
 					title: b.attributes.title || '',
 					color:
-						b.attributes.style?.color?.background ||
+						resolveColorValue( b.attributes.style?.color?.background ) ||
 						( b.attributes.backgroundColor
 							? `var(--wp--preset--color--${ b.attributes.backgroundColor })`
 							: NEUTRAL_GRAY ),
@@ -71,13 +71,8 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 	const dataMax = Math.max( 1, ...items.map( ( i ) => parseNumeric( i.value ) ) );
 	const sgMax = valueMode === 'percentage' ? Math.max( 100, dataMax ) : dataMax;
 
-	const rawTrackColor = attributes.style?.color?.background;
 	const trackColor =
-		( rawTrackColor
-			? ( rawTrackColor.startsWith( 'var:preset|color|' )
-				? `var(--wp--preset--color--${ rawTrackColor.replace( 'var:preset|color|', '' ) })`
-				: rawTrackColor )
-			: null ) ||
+		resolveColorValue( attributes.style?.color?.background ) ||
 		( attributes.backgroundColor
 			? `var(--wp--preset--color--${ attributes.backgroundColor })`
 			: null );
@@ -105,12 +100,11 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 	const orientation =
 		variation === 'bar' || variation === 'stacked' ? 'vertical' : 'horizontal';
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const template = useMemo( () => [
 		[ 'simple-graphs/data-item', { value: '40', title: __( 'Item A', 'simple-graphs' ), style: { color: { background: DEFAULT_BG[ 0 ] } } } ],
 		[ 'simple-graphs/data-item', { value: '30', title: __( 'Item B', 'simple-graphs' ), style: { color: { background: DEFAULT_BG[ 1 ] } } } ],
 		[ 'simple-graphs/data-item', { value: '30', title: __( 'Item C', 'simple-graphs' ), style: { color: { background: DEFAULT_BG[ 2 ] } } } ],
-	], [] );
+	], [ __ ] );
 
 	const innerBlocksProps = useInnerBlocksProps( blockProps, {
 		template,

@@ -5,7 +5,7 @@ import {
 } from '@wordpress/block-editor';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { resolveBlockGap } from '../shared/utils';
+import { resolveBlockGap, resolveColorValue } from '../shared/utils';
 import { NEUTRAL_GRAY } from '../shared/constants';
 
 export default function Edit( { attributes, clientId } ) {
@@ -39,7 +39,7 @@ export default function Edit( { attributes, clientId } ) {
 					clientId: b.clientId,
 					title: b.attributes.title || '',
 					color:
-						b.attributes.style?.color?.background ||
+						resolveColorValue( b.attributes.style?.color?.background ) ||
 						( b.attributes.backgroundColor
 							? `var(--wp--preset--color--${ b.attributes.backgroundColor })`
 							: NEUTRAL_GRAY ),
