@@ -14,10 +14,11 @@
 		overflow: visible;
 	}
 
-	// When editing, let the wrapper size itself to its content so the
-	// focus outline and text are always visible and interactive.
+	// When editing, switch to auto height so content is always visible,
+	// but use the value-based calc as min-height so tall bars don't shrink.
 	&.is-editing {
 		height: auto !important;
+		min-height: var(--sg-item-height, 0px) !important;
 	}
 
 	.simple-graphs-data-item__value {
