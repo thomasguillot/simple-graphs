@@ -14,17 +14,12 @@
 		overflow: visible;
 	}
 
-	// When editing, the outer wrapper keeps its value-based height.
-	// The inner bar grows to fit content and overflows upward with
-	// its background so text is always readable against the bar colour.
+	// When editing, the wrapper must be large enough to interact with.
+	// Use max() so it's the larger of the value-based height or content.
+	// This is editor-only (the class only exists in the editor).
 	&.is-editing {
-		overflow: visible;
+		height: max(var(--sg-item-height, 0px), fit-content) !important;
 		z-index: 1;
-
-		.simple-graphs-data-item__bar {
-			height: auto !important;
-			min-height: 100%;
-		}
 	}
 
 	.simple-graphs-data-item__value {
