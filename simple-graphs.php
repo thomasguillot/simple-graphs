@@ -158,7 +158,13 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 	$normalized  = trim( str_replace( ' ', '', (string) $block_gap ) );
 	$is_zero_gap = in_array( $normalized, array( '0', '0px', '0rem', '0em' ), true );
 	$gap_css     = simple_graphs_resolve_block_gap( $block_gap );
-	$radius      = isset( $attrs['style']['border']['radius'] ) ? $attrs['style']['border']['radius'] : '6px';
+	$radius = isset( $attrs['style']['border']['radius'] ) ? $attrs['style']['border']['radius'] : '6px';
+	if ( is_array( $radius ) ) {
+		$radius = reset( $radius ) ?: '6px';
+	}
+	if ( is_numeric( $radius ) ) {
+		$radius = $radius . 'px';
+	}
 
 	$classes = array( 'wp-block-simple-graphs-data' );
 	if ( $is_zero_gap ) {

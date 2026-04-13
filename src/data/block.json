@@ -11,7 +11,7 @@
     "html": false,
     "spacing": { "blockGap": true },
     "color": { "background": true, "text": false, "link": false },
-    "__experimentalBorder": { "radius": true, "color": false, "style": false, "width": false },
+    "__experimentalBorder": { "radius": true, "color": false, "style": false, "width": false, "__experimentalSkipSerialization": true },
     "reusable": false,
     "inserter": false
   },

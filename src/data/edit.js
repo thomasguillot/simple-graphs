@@ -40,7 +40,10 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 	const blockGap = attributes.style?.spacing?.blockGap;
 	const resolvedGap = resolveBlockGap( blockGap );
 	const noGap = isZeroGap( blockGap );
-	const radius = attributes.style?.border?.radius || '6px';
+	const rawRadius = attributes.style?.border?.radius ?? '6px';
+	const radius = typeof rawRadius === 'object'
+		? ( rawRadius.topLeft || rawRadius.topRight || rawRadius.bottomRight || rawRadius.bottomLeft || '6px' )
+		: ( typeof rawRadius === 'number' ? `${ rawRadius }px` : rawRadius );
 	const [ editMode, setEditMode ] = useState( false );
 
 	const items = useSelect(
@@ -76,7 +79,6 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 			'--sg-gap': resolvedGap,
 			'--sg-radius': radius,
 			gap: resolvedGap,
-			borderRadius: undefined,
 		},
 	} );
 
