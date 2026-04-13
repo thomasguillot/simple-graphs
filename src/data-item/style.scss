@@ -14,17 +14,10 @@
 		overflow: visible;
 	}
 
-	// When editing, the wrapper must be tall enough to see and interact
-	// with the content. Replace the explicit height with max() so it's
-	// at least 4em but keeps the value-based size if it's larger.
+	// When editing, let the wrapper size itself to its content so the
+	// focus outline and text are always visible and interactive.
 	&.is-editing {
-		height: max(
-			calc(
-				(var(--sg-value, 0) / var(--sg-max, 100)) *
-				var(--sg-size-base, 100%)
-			),
-			4em
-		) !important;
+		height: auto !important;
 	}
 
 	.simple-graphs-data-item__value {
