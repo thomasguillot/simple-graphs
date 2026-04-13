@@ -34,14 +34,17 @@ add_action(
 
 		// Use the content hash from wp-scripts as the style version for cache busting.
 		$asset_file = __DIR__ . '/build/chart/index.asset.php';
+		$version    = SIMPLE_GRAPHS_VERSION;
 		if ( file_exists( $asset_file ) ) {
-			$asset   = require $asset_file;
-			$version = isset( $asset['version'] ) ? $asset['version'] : SIMPLE_GRAPHS_VERSION;
-			$styles  = wp_styles();
-			foreach ( array( 'simple-graphs-chart-style', 'simple-graphs-chart-editor-style' ) as $handle ) {
-				if ( isset( $styles->registered[ $handle ] ) ) {
-					$styles->registered[ $handle ]->ver = $version;
-				}
+			$asset = require $asset_file;
+			if ( is_array( $asset ) && ! empty( $asset['version'] ) ) {
+				$version = $asset['version'];
+			}
+		}
+		$styles = wp_styles();
+		foreach ( array( 'simple-graphs-chart-style', 'simple-graphs-chart-editor-style' ) as $handle ) {
+			if ( isset( $styles->registered[ $handle ] ) ) {
+				$styles->registered[ $handle ]->ver = $version;
 			}
 		}
 	}
