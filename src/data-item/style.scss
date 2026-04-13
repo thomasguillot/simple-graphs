@@ -14,11 +14,7 @@
 		overflow: visible;
 	}
 
-	// When editing, the wrapper must be large enough to interact with.
-	// Use max() so it's the larger of the value-based height or content.
-	// This is editor-only (the class only exists in the editor).
 	&.is-editing {
-		height: max(var(--sg-item-height, 0px), fit-content) !important;
 		z-index: 1;
 	}
 

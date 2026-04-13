@@ -36,7 +36,10 @@ export default function Edit( { attributes, setAttributes, context, clientId, is
 
 	const blockProps = useBlockProps( {
 		className: isSelected ? 'is-editing' : undefined,
-		style: { '--sg-value': numericValue },
+		style: {
+			'--sg-value': numericValue,
+			...( isSelected ? { height: 'auto', minHeight: 'var(--sg-item-height, auto)' } : {} ),
+		},
 	} );
 	const valueMode = context[ 'simple-graphs/valueMode' ] || 'percentage';
 	const valuePrefix = context[ 'simple-graphs/valuePrefix' ] || '';
