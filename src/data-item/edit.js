@@ -1,5 +1,5 @@
 import { useBlockProps, RichText, store as blockEditorStore } from '@wordpress/block-editor';
-import { useRef, useState, useEffect } from '@wordpress/element';
+import { useRef, useState, useLayoutEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { contrastColor, parseNumeric, resolveColorValue } from '../shared/utils';
@@ -38,11 +38,11 @@ export default function Edit( { attributes, setAttributes, context, clientId, is
 	const barRef = useRef( null );
 	const [ needsGrow, setNeedsGrow ] = useState( false );
 
-	useEffect( () => {
+	// useLayoutEffect fires after DOM update but before browser paint,
+	// so the user never sees the intermediate state.
+	useLayoutEffect( () => {
 		if ( ! isSelected || ! barRef.current ) {
-			if ( needsGrow ) {
-				setNeedsGrow( false );
-			}
+			setNeedsGrow( false );
 			return;
 		}
 		const bar = barRef.current;
@@ -50,14 +50,12 @@ export default function Edit( { attributes, setAttributes, context, clientId, is
 		if ( ! wrapper ) {
 			return;
 		}
-		// Temporarily remove height constraint to measure natural content height.
 		const prevHeight = bar.style.height;
 		bar.style.height = 'auto';
 		const contentHeight = bar.offsetHeight;
 		bar.style.height = prevHeight;
-		const wrapperHeight = wrapper.offsetHeight;
-		setNeedsGrow( contentHeight > wrapperHeight );
-	}, [ isSelected, value, title, needsGrow ] );
+		setNeedsGrow( contentHeight > wrapper.offsetHeight );
+	}, [ isSelected, value, title ] );
 
 	const blockProps = useBlockProps( {
 		style: {
