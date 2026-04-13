@@ -42,6 +42,17 @@ export function resolveBlockGap( gap ) {
 	return s;
 }
 
+export function resolveRadius( raw ) {
+	if ( raw == null ) {
+		return '6px';
+	}
+	if ( typeof raw === 'object' ) {
+		const v = raw.topLeft ?? raw.topRight ?? raw.bottomRight ?? raw.bottomLeft;
+		return v != null ? String( v ) : '6px';
+	}
+	return typeof raw === 'number' ? `${ raw }px` : String( raw );
+}
+
 export function contrastColor( hex ) {
 	if ( ! hex || typeof hex !== 'string' ) {
 		return '#000';

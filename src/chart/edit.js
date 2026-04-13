@@ -9,7 +9,7 @@ import { useSelect, useDispatch } from '@wordpress/data';
 import { createBlock } from '@wordpress/blocks';
 import { caption } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
-import { resolveBlockGap } from '../shared/utils';
+import { resolveBlockGap, resolveRadius } from '../shared/utils';
 
 const TEMPLATE = [
 	[ 'simple-graphs/data', { lock: { move: true, remove: true } } ],
@@ -35,16 +35,9 @@ export default function Edit( { attributes, clientId } ) {
 			const data = chartBlock.innerBlocks.find(
 				( b ) => b.name === 'simple-graphs/data'
 			);
-			const rawRadius = data?.attributes?.style?.border?.radius ?? '6px';
-			let radius;
-			if ( typeof rawRadius === 'object' ) {
-				radius = rawRadius.topLeft || rawRadius.topRight || rawRadius.bottomRight || rawRadius.bottomLeft || '6px';
-			} else {
-				radius = typeof rawRadius === 'number' ? `${ rawRadius }px` : rawRadius;
-			}
 			return {
 				legendClientId: legend ? legend.clientId : null,
-				dataRadius: radius,
+				dataRadius: resolveRadius( data?.attributes?.style?.border?.radius ),
 			};
 		},
 		[ clientId ]

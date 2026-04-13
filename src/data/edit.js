@@ -18,7 +18,7 @@ import { useState } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { pencil as editIcon, seen } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
-import { parseNumeric, resolveBlockGap, isZeroGap } from '../shared/utils';
+import { parseNumeric, resolveBlockGap, isZeroGap, resolveRadius } from '../shared/utils';
 import CircularChart from '../chart/CircularChart';
 
 const TEMPLATE = [
@@ -40,10 +40,7 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 	const blockGap = attributes.style?.spacing?.blockGap;
 	const resolvedGap = resolveBlockGap( blockGap );
 	const noGap = isZeroGap( blockGap );
-	const rawRadius = attributes.style?.border?.radius ?? '6px';
-	const radius = typeof rawRadius === 'object'
-		? ( rawRadius.topLeft || rawRadius.topRight || rawRadius.bottomRight || rawRadius.bottomLeft || '6px' )
-		: ( typeof rawRadius === 'number' ? `${ rawRadius }px` : rawRadius );
+	const radius = resolveRadius( attributes.style?.border?.radius );
 	const [ editMode, setEditMode ] = useState( false );
 
 	const items = useSelect(

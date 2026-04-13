@@ -121,7 +121,7 @@ function simple_graphs_render_chart( $attributes, $content, $block ) {
 	);
 	$wrapper       = get_block_wrapper_attributes(
 		array(
-			'style' => '--sg-radius:' . esc_attr( $chart_radius ) . ';gap:' . $chart_gap_css . ';',
+			'style' => '--sg-radius:' . esc_attr( $chart_radius ) . ';gap:' . esc_attr( $chart_gap_css ) . ';',
 		)
 	);
 
@@ -271,12 +271,24 @@ function simple_graphs_resolve_block_gap( $gap ) {
  */
 function simple_graphs_resolve_radius( $radius ) {
 	if ( is_array( $radius ) ) {
-		$radius = reset( $radius ) ?: '6px';
+		$resolved = null;
+		foreach ( array( 'topLeft', 'topRight', 'bottomRight', 'bottomLeft' ) as $key ) {
+			if ( isset( $radius[ $key ] ) && '' !== $radius[ $key ] ) {
+				$resolved = $radius[ $key ];
+				break;
+			}
+		}
+		$radius = null !== $resolved ? $resolved : '6px';
 	}
 	if ( is_numeric( $radius ) ) {
 		return $radius . 'px';
 	}
-	return (string) $radius;
+	$radius = (string) $radius;
+	// Only allow safe CSS values: lengths, percentages, var() references.
+	if ( preg_match( '/^[\d.]+(px|em|rem|%|vw|vh)$/', $radius ) || preg_match( '/^var\(--[\w-]+/', $radius ) ) {
+		return $radius;
+	}
+	return '6px';
 }
 
 /**
