@@ -37,10 +37,7 @@ add_action(
 /**
  * Render the chart block on the frontend.
  *
- * Chart is a flex column that stacks a Data block and an optional Legend. The
- * renderer accepts the current shape (data-items nested inside a Data block)
- * and a legacy shape (data-items directly under the chart) by virtually
- * wrapping stray data-items into a synthetic Data block.
+ * Chart is a flex container that holds a Data block and an optional Legend.
  *
  * @param array    $attributes Block attributes.
  * @param string   $content    Block content.
@@ -53,30 +50,10 @@ function simple_graphs_render_chart( $attributes, $content, $block ) {
 		$inner_blocks = $block->parsed_block['innerBlocks'];
 	}
 
-	// Normalize: if data-items appear directly (legacy shape), wrap them in a
-	// synthetic data block so rendering below can assume the new shape.
-	$normalized_inner = array();
-	$stray_items      = array();
-	foreach ( $inner_blocks as $inner ) {
-		if ( 'simple-graphs/data-item' === $inner['blockName'] ) {
-			$stray_items[] = $inner;
-		} else {
-			$normalized_inner[] = $inner;
-		}
-	}
-	if ( ! empty( $stray_items ) ) {
-		$synthetic = array(
-			'blockName'   => 'simple-graphs/data',
-			'attrs'       => array(),
-			'innerBlocks' => $stray_items,
-		);
-		array_unshift( $normalized_inner, $synthetic );
-	}
-
 	// Find the first Data block (there should only ever be one) and detect Legend presence.
 	$data_block = null;
 	$has_legend = false;
-	foreach ( $normalized_inner as $inner ) {
+	foreach ( $inner_blocks as $inner ) {
 		if ( null === $data_block && 'simple-graphs/data' === $inner['blockName'] ) {
 			$data_block = $inner;
 		} elseif ( 'simple-graphs/legend' === $inner['blockName'] ) {
@@ -128,7 +105,7 @@ function simple_graphs_render_chart( $attributes, $content, $block ) {
 	// Render each chart inner block in order so the Legend can appear above,
 	// below, or beside the Data block depending on the user's arrangement.
 	$inner_html = '';
-	foreach ( $normalized_inner as $inner ) {
+	foreach ( $inner_blocks as $inner ) {
 		if ( 'simple-graphs/data' === $inner['blockName'] ) {
 			$inner_html .= simple_graphs_render_data_html(
 				isset( $inner['attrs'] ) ? $inner['attrs'] : array(),

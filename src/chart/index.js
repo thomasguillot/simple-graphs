@@ -4,7 +4,6 @@ import { chartBar, category, homeButton, caption } from '@wordpress/icons';
 import metadata from './block.json';
 import Edit from './edit';
 import save from './save';
-import deprecated from './deprecated';
 import './style.scss';
 import './editor.scss';
 
@@ -27,7 +26,6 @@ registerBlockType( metadata.name, {
 	icon: chartBar,
 	edit: Edit,
 	save,
-	deprecated,
 } );
 
 registerBlockType( dataMetadata.name, {
