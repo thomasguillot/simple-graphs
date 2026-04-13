@@ -24,7 +24,7 @@
 	.simple-graphs-legend__swatch {
 		width: 2em;
 		height: 2em;
-		border-radius: 0.375em;
+		border-radius: var(--sg-radius, 6px);
 		display: inline-block;
 		flex-shrink: 0;
 	}
