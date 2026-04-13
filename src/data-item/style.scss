@@ -3,14 +3,6 @@
 	flex-direction: column;
 	justify-content: flex-end;
 
-	// When editing, ensure the item is tall enough to see the content.
-	// The Data block sets an explicit height + min-height: 0 on items.
-	// fit-content as min-height lets the item grow for its content
-	// while the explicit height still applies when it's larger.
-	&.is-editing {
-		min-height: fit-content !important;
-	}
-
 	.simple-graphs-data-item__bar {
 		display: flex;
 		flex-direction: column;
@@ -20,6 +12,17 @@
 		line-height: 1;
 		border-radius: var(--sg-radius, 6px);
 		overflow: visible;
+	}
+
+	// When editing a small bar, the background needs to expand so text
+	// is readable. The outer wrapper keeps its value-based height via
+	// overflow: visible, but the bar itself grows to fit its content.
+	&.is-editing {
+		overflow: visible;
+
+		.simple-graphs-data-item__bar {
+			min-height: max(100%, 3.5em);
+		}
 	}
 
 	.simple-graphs-data-item__value {
