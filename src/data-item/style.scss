@@ -14,11 +14,16 @@
 		overflow: visible;
 	}
 
-	// When editing, switch to auto height so content is always visible,
-	// but use the value-based calc as min-height so tall bars don't shrink.
+	// When editing, the outer wrapper keeps its value-based height.
+	// The inner bar grows to fit content and overflows upward with
+	// its background so text is always readable against the bar colour.
 	&.is-editing {
-		height: auto !important;
-		min-height: var(--sg-item-height, 0px) !important;
+		overflow: visible;
+		z-index: 1;
+
+		.simple-graphs-data-item__bar {
+			min-height: 100%;
+		}
 	}
 
 	.simple-graphs-data-item__value {
