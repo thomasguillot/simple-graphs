@@ -1,30 +1,29 @@
 .wp-block-simple-graphs-chart {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	min-height: 480px;
 
-	// Stack legend: chart flips to vertical so data sits above legend.
-	&:has(> .wp-block-simple-graphs-legend.is-style-stack) {
-		flex-direction: column;
-	}
+	// Side legend on desktop: switch to a 5-column grid so Data gets 4
+	// columns and Legend gets 1, with gutters matching the block spacing.
+	@media (min-width: 601px) {
+		&:has(> .wp-block-simple-graphs-legend:not(.is-style-stack)) {
+			display: grid;
+			grid-template-columns: repeat(5, 1fr);
+			align-items: end;
 
-	// Side legend: 1/5 of the available width after accounting for gaps.
-	> .wp-block-simple-graphs-legend {
-		flex: 0 0 calc((100% - (4 * var(--sg-chart-gap, var(--wp--preset--spacing--50)))) / 5);
-		min-width: 0;
-		align-self: flex-end;
-	}
+			> .wp-block-simple-graphs-data {
+				grid-column: span 4;
+			}
 
-	> .wp-block-simple-graphs-legend.is-style-stack {
-		flex: 0 0 auto;
-	}
-
-	// On small screens, always stack vertically.
-	@media (max-width: 600px) {
-		flex-direction: column;
-
-		> .wp-block-simple-graphs-legend {
-			flex: 0 0 auto;
+			> .wp-block-simple-graphs-legend {
+				grid-column: span 1;
+				align-self: end;
+			}
 		}
 	}
+
+	// Stack legend: stays flex column (data above legend).
+	// No grid needed since both are full width.
+
+	// On small screens, always stack vertically (flex column default).
 }
