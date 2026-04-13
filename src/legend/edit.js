@@ -11,7 +11,7 @@ import { NEUTRAL_GRAY } from '../shared/constants';
 export default function Edit( { attributes, clientId } ) {
 	const resolvedGap = resolveBlockGap( attributes.style?.spacing?.blockGap );
 	const blockProps = useBlockProps( {
-		style: { gap: resolvedGap },
+		style: { gap: resolvedGap, '--sg-legend-gap': resolvedGap },
 	} );
 	const { updateBlockAttributes } = useDispatch( blockEditorStore );
 

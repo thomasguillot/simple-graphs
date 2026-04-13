@@ -1,14 +1,18 @@
 .wp-block-simple-graphs-legend {
 	display: flex;
 	flex-direction: column;
-	gap: var(--wp--preset--spacing--20);
 	font-size: var(--wp--preset--font-size--small, 1rem);
 	line-height: var(--wp--custom--line-height--small, 1.5);
 
 	// Side (default): column of items pushed to the bottom of the legend's
 	// vertical space so they sit flush with the chart's baseline.
+	// Halve the gap on desktop for a tighter vertical layout.
 	&:not(.is-style-stack) {
 		justify-content: flex-end;
+
+		@media (min-width: 601px) {
+			row-gap: calc(var(--sg-legend-gap, var(--wp--preset--spacing--30)) / 2) !important;
+		}
 	}
 
 	// Stack: legend items laid out horizontally in a row.
@@ -16,7 +20,6 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		justify-content: flex-start;
-		gap: var(--wp--preset--spacing--30);
 	}
 
 	.simple-graphs-legend__item {
