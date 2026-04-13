@@ -1,6 +1,6 @@
 .wp-block-simple-graphs-chart {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	min-height: 480px;
 
 	// Side legend on desktop: switch to a 5-column grid so Data gets 4
@@ -22,8 +22,13 @@
 		}
 	}
 
-	// Stack legend: stays flex column (data above legend).
-	// No grid needed since both are full width.
+	// Stack legend: chart flips to vertical so data sits above legend.
+	&:has(> .wp-block-simple-graphs-legend.is-style-stack) {
+		flex-direction: column;
+	}
 
-	// On small screens, always stack vertically (flex column default).
+	// On small screens, always stack vertically.
+	@media (max-width: 600px) {
+		flex-direction: column;
+	}
 }
