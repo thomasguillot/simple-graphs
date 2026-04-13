@@ -184,15 +184,20 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 
 	// Background color becomes the track color behind each bar rather than
 	// filling the entire Data wrapper.
-	$track_css = '';
+	$track_css  = '';
+	$is_stacked = ! empty( $attrs['className'] ) && false !== strpos( $attrs['className'], 'is-style-stacked' );
 	if ( ! empty( $attrs['backgroundColor'] ) ) {
-		$track_color = 'var(--wp--preset--color--' . $attrs['backgroundColor'] . ')';
+		$track_color = 'var(--wp--preset--color--' . sanitize_html_class( $attrs['backgroundColor'] ) . ')';
 		$track_css   = '--sg-track:' . esc_attr( $track_color ) . ';';
-		$classes[]   = 'simple-graphs-data--has-track';
+		if ( ! $is_stacked ) {
+			$classes[] = 'simple-graphs-data--has-track';
+		}
 	} elseif ( ! empty( $attrs['style']['color']['background'] ) ) {
 		$track_color = simple_graphs_resolve_color_value( $attrs['style']['color']['background'] );
 		$track_css   = '--sg-track:' . esc_attr( $track_color ) . ';';
-		$classes[]   = 'simple-graphs-data--has-track';
+		if ( ! $is_stacked ) {
+			$classes[] = 'simple-graphs-data--has-track';
+		}
 	}
 
 	$style = sprintf(
@@ -464,6 +469,51 @@ function simple_graphs_render_legend_html( $items, $legend_attrs ) {
 	}
 	if ( ! empty( $legend_attrs['style']['spacing']['blockGap'] ) ) {
 		$styles[] = 'gap:' . simple_graphs_resolve_block_gap( $legend_attrs['style']['spacing']['blockGap'] );
+	}
+
+	// Padding.
+	if ( ! empty( $legend_attrs['style']['spacing']['padding'] ) ) {
+		$padding = $legend_attrs['style']['spacing']['padding'];
+		foreach ( array( 'top', 'right', 'bottom', 'left' ) as $side ) {
+			if ( ! empty( $padding[ $side ] ) ) {
+				$styles[] = 'padding-' . $side . ':' . simple_graphs_resolve_block_gap( $padding[ $side ] );
+			}
+		}
+	}
+
+	// Background color.
+	if ( ! empty( $legend_attrs['backgroundColor'] ) ) {
+		$classes[] = 'has-' . sanitize_html_class( $legend_attrs['backgroundColor'] ) . '-background-color';
+		$classes[] = 'has-background';
+	} elseif ( ! empty( $legend_attrs['style']['color']['background'] ) ) {
+		$styles[] = 'background-color:' . simple_graphs_resolve_color_value( $legend_attrs['style']['color']['background'] );
+	}
+
+	// Border.
+	if ( ! empty( $legend_attrs['style']['border']['color'] ) ) {
+		$styles[] = 'border-color:' . simple_graphs_resolve_color_value( $legend_attrs['style']['border']['color'] );
+	}
+	if ( ! empty( $legend_attrs['style']['border']['width'] ) ) {
+		$styles[] = 'border-width:' . $legend_attrs['style']['border']['width'];
+	}
+	if ( ! empty( $legend_attrs['style']['border']['style'] ) ) {
+		$styles[] = 'border-style:' . $legend_attrs['style']['border']['style'];
+	}
+	if ( ! empty( $legend_attrs['style']['border']['radius'] ) ) {
+		$radius_val = simple_graphs_resolve_radius( $legend_attrs['style']['border']['radius'] );
+		$styles[]   = 'border-radius:' . $radius_val;
+	}
+	if ( ! empty( $legend_attrs['borderColor'] ) ) {
+		$classes[] = 'has-border-color';
+		$classes[] = 'has-' . sanitize_html_class( $legend_attrs['borderColor'] ) . '-border-color';
+	}
+
+	// Shadow.
+	if ( ! empty( $legend_attrs['style']['shadow'] ) ) {
+		$styles[] = 'box-shadow:' . $legend_attrs['style']['shadow'];
+	}
+	if ( ! empty( $legend_attrs['shadow'] ) ) {
+		$classes[] = 'has-shadow-' . sanitize_html_class( $legend_attrs['shadow'] );
 	}
 
 	$style_attr = ! empty( $styles ) ? sprintf( ' style="%s"', esc_attr( implode( ';', $styles ) ) ) : '';

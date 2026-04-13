@@ -83,6 +83,9 @@ export default function Edit( { attributes, setAttributes, context, clientId } )
 				style={ {
 					...barStyle,
 					color: textColor,
+					...( hasPresetBg
+						? { backgroundColor: `var(--wp--preset--color--${ presetBg })` }
+						: {} ),
 				} }
 			>
 				<div className="simple-graphs-data-item__value">

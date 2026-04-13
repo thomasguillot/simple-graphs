@@ -70,15 +70,24 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 	const dataMax = Math.max( 1, ...items.map( ( i ) => parseNumeric( i.value ) ) );
 	const sgMax = valueMode === 'percentage' ? Math.max( 100, dataMax ) : dataMax;
 
+	const rawTrackColor = attributes.style?.color?.background;
 	const trackColor =
-		attributes.style?.color?.background ||
+		( rawTrackColor
+			? ( rawTrackColor.startsWith( 'var:preset|color|' )
+				? `var(--wp--preset--color--${ rawTrackColor.replace( 'var:preset|color|', '' ) })`
+				: rawTrackColor )
+			: null ) ||
 		( attributes.backgroundColor
 			? `var(--wp--preset--color--${ attributes.backgroundColor })`
 			: null );
 
+	const variation = resolveVariation( attributes.className );
+	const isCircular = CIRCULAR_VARIATIONS.includes( variation );
+	const isStacked = variation === 'stacked';
+
 	const classNames = [
 		noGap ? 'simple-graphs-data--no-gap' : '',
-		trackColor ? 'simple-graphs-data--has-track' : '',
+		trackColor && ! isStacked ? 'simple-graphs-data--has-track' : '',
 		compensateGap ? 'simple-graphs-data--compensate-gap' : '',
 	].filter( Boolean ).join( ' ' ) || undefined;
 
@@ -92,9 +101,6 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 			gap: resolvedGap,
 		},
 	} );
-
-	const variation = resolveVariation( blockProps.className );
-	const isCircular = CIRCULAR_VARIATIONS.includes( variation );
 	const orientation =
 		variation === 'bar' || variation === 'stacked' ? 'vertical' : 'horizontal';
 
