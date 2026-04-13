@@ -6,7 +6,7 @@ A WordPress block plugin for creating simple, visually-striking charts. Built on
 
 ## Features
 
-- **6 chart styles** — Column, Bar, Stacked, Pie, Donut, and Bubble, set as block styles on the Data block.
+- **6 chart styles** — Column, Bar, and Stacked are fully working. Pie, Donut, and Bubble have editor previews but still need proper frontend rendering.
 - **Nested block architecture** — Chart > Data > Data Items, with an optional Legend. Each level has its own controls.
 - **Percentage or custom values** — Percentage mode appends %. Custom mode lets you set a prefix and suffix (e.g. "$100k").
 - **Track background** — Set a background colour on the Data block and each bar gets a full-height track behind it.
