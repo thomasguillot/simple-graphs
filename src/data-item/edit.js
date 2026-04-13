@@ -1,4 +1,5 @@
 import { useBlockProps, RichText, store as blockEditorStore } from '@wordpress/block-editor';
+import { useRef, useState, useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { contrastColor, parseNumeric, resolveColorValue } from '../shared/utils';
@@ -34,10 +35,27 @@ export default function Edit( { attributes, setAttributes, context, clientId, is
 		textColor = contrastColor( customBg );
 	}
 
+	const barRef = useRef( null );
+	const [ needsGrow, setNeedsGrow ] = useState( false );
+
+	useEffect( () => {
+		if ( ! isSelected || ! barRef.current ) {
+			setNeedsGrow( false );
+			return;
+		}
+		const wrapper = barRef.current.parentElement;
+		if ( ! wrapper ) {
+			return;
+		}
+		const barHeight = barRef.current.scrollHeight;
+		const wrapperHeight = wrapper.offsetHeight;
+		setNeedsGrow( barHeight > wrapperHeight );
+	}, [ isSelected, value, title ] );
+
 	const blockProps = useBlockProps( {
 		style: {
 			'--sg-value': numericValue,
-			...( isSelected ? { height: 'auto', minHeight: 'var(--sg-item-height, auto)' } : {} ),
+			...( needsGrow ? { height: 'auto' } : {} ),
 		},
 	} );
 	const valueMode = context[ 'simple-graphs/valueMode' ] || 'percentage';
@@ -65,6 +83,7 @@ export default function Edit( { attributes, setAttributes, context, clientId, is
 	return (
 		<div { ...blockProps }>
 			<div
+				ref={ barRef }
 				className="simple-graphs-data-item__bar"
 				style={ {
 					backgroundColor: barBg,
