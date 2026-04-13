@@ -1,0 +1,142 @@
+.wp-block-simple-graphs-data {
+	display: flex;
+	flex: 1 1 auto;
+	min-height: 0;
+	--sg-size-base: 100%;
+
+	&.simple-graphs-data--compensate-gap {
+		--sg-size-base: calc(100% - var(--sg-gap, 0px));
+	}
+}
+
+// Column: vertical bars side by side, aligned to the bottom.
+.wp-block-simple-graphs-data.is-style-column,
+.wp-block-simple-graphs-data:not([class*="is-style-"]) {
+	flex-direction: row;
+	align-items: flex-end;
+
+	.wp-block-simple-graphs-data-item {
+		--sg-item-height: calc(
+			(var(--sg-value, 0) / var(--sg-max, 100)) *
+			var(--sg-size-base)
+		);
+		flex: 1 1 0;
+		min-width: 0;
+		height: var(--sg-item-height);
+		min-height: 0;
+
+		.simple-graphs-data-item__bar {
+			height: 100%;
+		}
+	}
+
+	// Track mode: items stretch full height, bar inside gets value-based height.
+	&.simple-graphs-data--has-track {
+		align-items: stretch;
+
+		.wp-block-simple-graphs-data-item {
+			height: auto;
+			background: var(--sg-track);
+			border-radius: var(--sg-radius, 6px);
+
+			.simple-graphs-data-item__bar {
+				height: calc(
+					(var(--sg-value, 0) / var(--sg-max, 100)) *
+					var(--sg-size-base)
+				);
+				min-height: 0;
+			}
+		}
+	}
+}
+
+// Bar: horizontal bars stacked.
+.wp-block-simple-graphs-data.is-style-bar {
+	flex-direction: column;
+	align-items: stretch;
+
+	.wp-block-simple-graphs-data-item {
+		flex: 1 1 0;
+		min-height: 0;
+		width: calc(
+			(var(--sg-value, 0) / var(--sg-max, 100)) *
+			var(--sg-size-base)
+		);
+		min-width: 0;
+
+		.simple-graphs-data-item__bar {
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	// Track mode: items stretch full width, bar inside gets value-based width.
+	&.simple-graphs-data--has-track {
+		.wp-block-simple-graphs-data-item {
+			width: auto;
+			background: var(--sg-track);
+			border-radius: var(--sg-radius, 6px);
+
+			.simple-graphs-data-item__bar {
+				width: calc(
+					(var(--sg-value, 0) / var(--sg-max, 100)) *
+					var(--sg-size-base)
+				);
+				min-width: 0;
+				height: 100%;
+			}
+		}
+	}
+}
+
+// Stacked: vertical flex, items grow proportionally by value.
+.wp-block-simple-graphs-data.is-style-stacked {
+	flex-direction: column;
+
+	.wp-block-simple-graphs-data-item {
+		flex: var(--sg-value, 1) 1 0;
+
+		.simple-graphs-data-item__bar {
+			height: 100%;
+		}
+	}
+}
+
+// Zero-gap track: outer radius on Data, items lose their own.
+.wp-block-simple-graphs-data.simple-graphs-data--no-gap {
+	border-radius: var(--sg-radius, 6px);
+	overflow: hidden;
+
+	.wp-block-simple-graphs-data-item .simple-graphs-data-item__bar {
+		border-radius: 0 !important;
+	}
+}
+
+.wp-block-simple-graphs-data.is-style-column.simple-graphs-data--no-gap,
+.wp-block-simple-graphs-data:not([class*="is-style-"]).simple-graphs-data--no-gap {
+	.wp-block-simple-graphs-data-item {
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+
+	.wp-block-simple-graphs-data-item .simple-graphs-data-item__bar {
+		border-radius: var(--sg-radius, 6px) var(--sg-radius, 6px) 0 0 !important;
+	}
+}
+
+.wp-block-simple-graphs-data.is-style-bar.simple-graphs-data--no-gap {
+	.wp-block-simple-graphs-data-item {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	.wp-block-simple-graphs-data-item .simple-graphs-data-item__bar {
+		border-radius: 0 var(--sg-radius, 6px) var(--sg-radius, 6px) 0 !important;
+	}
+}
+
+.wp-block-simple-graphs-data.is-style-stacked.simple-graphs-data--no-gap {
+	.wp-block-simple-graphs-data-item .simple-graphs-data-item__bar {
+		border-radius: 0 !important;
+	}
+}

@@ -1,0 +1,30 @@
+.wp-block-simple-graphs-chart {
+	display: flex;
+	flex-direction: row;
+	min-height: 480px;
+
+	// Stack legend: chart flips to vertical so data sits above legend.
+	&:has(> .wp-block-simple-graphs-legend.is-style-stack) {
+		flex-direction: column;
+	}
+
+	// Side legend: fixed 20% width, aligned to bottom.
+	> .wp-block-simple-graphs-legend {
+		flex: 0 0 20%;
+		min-width: 0;
+		align-self: flex-end;
+	}
+
+	> .wp-block-simple-graphs-legend.is-style-stack {
+		flex: 0 0 auto;
+	}
+
+	// On small screens, always stack vertically.
+	@media (max-width: 600px) {
+		flex-direction: column;
+
+		> .wp-block-simple-graphs-legend {
+			flex: 0 0 auto;
+		}
+	}
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "simple-graphs/legend",
+  "title": "Chart Legend",
+  "category": "widgets",
+  "description": "Displays labels for chart data items.",
+  "textdomain": "simple-graphs",
+  "parent": ["simple-graphs/chart"],
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "spacing": { "blockGap": true, "padding": true },
+    "shadow": true,
+    "__experimentalBorder": { "radius": true, "color": true, "style": true, "width": true },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true,
+      "__experimentalFontFamily": true,
+      "__experimentalFontWeight": true,
+      "__experimentalFontStyle": true,
+      "__experimentalTextTransform": true,
+      "__experimentalLetterSpacing": true
+    },
+    "color": { "text": true, "background": true, "link": false },
+    "reusable": false
+  },
+  "attributes": {
+    "style": {
+      "type": "object",
+      "default": {
+        "spacing": { "blockGap": "var:preset|spacing|20" }
+      }
+    }
+  },
+  "styles": [
+    { "name": "side", "label": "Side", "isDefault": true },
+    { "name": "stack", "label": "Stack" }
+  ]
+}
