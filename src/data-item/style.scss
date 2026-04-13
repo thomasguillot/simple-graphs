@@ -14,15 +14,17 @@
 		overflow: visible;
 	}
 
-	// When editing a small bar, the background needs to expand so text
-	// is readable. The outer wrapper keeps its value-based height via
-	// overflow: visible, but the bar itself grows to fit its content.
+	// When editing, the wrapper must be tall enough to see and interact
+	// with the content. Replace the explicit height with max() so it's
+	// at least 4em but keeps the value-based size if it's larger.
 	&.is-editing {
-		overflow: visible;
-
-		.simple-graphs-data-item__bar {
-			min-height: max(100%, 3.5em);
-		}
+		height: max(
+			calc(
+				(var(--sg-value, 0) / var(--sg-max, 100)) *
+				var(--sg-size-base, 100%)
+			),
+			4em
+		) !important;
 	}
 
 	.simple-graphs-data-item__value {
