@@ -18,7 +18,7 @@ const TEMPLATE = [
 const ALLOWED_BLOCKS = [ 'simple-graphs/data', 'simple-graphs/legend' ];
 
 export default function Edit( { attributes, clientId } ) {
-	const blockGap = attributes.style?.spacing?.blockGap;
+	const blockGap = attributes.style?.spacing?.blockGap || 'var:preset|spacing|50';
 	const resolvedGap = resolveBlockGap( blockGap );
 	const { insertBlock, removeBlock } = useDispatch( blockEditorStore );
 
@@ -59,7 +59,9 @@ export default function Edit( { attributes, clientId } ) {
 
 	const innerBlocksProps = useInnerBlocksProps( blockProps, {
 		template: TEMPLATE,
-		allowedBlocks: ALLOWED_BLOCKS,
+		allowedBlocks: hasLegend
+			? ALLOWED_BLOCKS.filter( ( b ) => b !== 'simple-graphs/legend' )
+			: ALLOWED_BLOCKS,
 		templateLock: false,
 	} );
 

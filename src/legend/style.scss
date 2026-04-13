@@ -1,7 +1,7 @@
 .wp-block-simple-graphs-legend {
 	display: flex;
 	flex-direction: column;
-	gap: var(--wp--preset--spacing--20, 0.5rem);
+	gap: var(--wp--preset--spacing--20);
 	font-size: var(--wp--preset--font-size--small, 1rem);
 	line-height: var(--wp--custom--line-height--small, 1.5);
 
@@ -15,7 +15,7 @@
 	&.is-style-stack {
 		flex-direction: row;
 		flex-wrap: wrap;
-		gap: var(--wp--preset--spacing--30, 1rem);
+		gap: var(--wp--preset--spacing--30);
 	}
 
 	.simple-graphs-legend__item {

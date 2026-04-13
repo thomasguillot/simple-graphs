@@ -13,7 +13,8 @@
     "color": { "background": true, "text": false, "link": false, "__experimentalSkipSerialization": true },
     "__experimentalBorder": { "radius": true, "color": false, "style": false, "width": false, "__experimentalSkipSerialization": true },
     "reusable": false,
-    "inserter": false
+    "inserter": false,
+    "lock": false
   },
   "attributes": {
     "valueMode": { "type": "string", "default": "percentage" },

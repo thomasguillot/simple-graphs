@@ -32,7 +32,7 @@ export function resolveMaxValue( items, valueMode = 'percentage' ) {
  */
 export function resolveBlockGap( gap ) {
 	if ( ! gap ) {
-		return 'var(--wp--preset--spacing--30, 1rem)';
+		return 'var(--wp--preset--spacing--30)';
 	}
 	const s = String( gap ).trim();
 	if ( s.startsWith( 'var:preset|spacing|' ) ) {

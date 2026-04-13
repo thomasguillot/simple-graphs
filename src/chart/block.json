@@ -22,7 +22,7 @@
     "style": {
       "type": "object",
       "default": {
-        "spacing": { "blockGap": "var:preset|spacing|30" },
+        "spacing": { "blockGap": "var:preset|spacing|50" },
         "dimensions": { "minHeight": "480px" }
       }
     }

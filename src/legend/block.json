@@ -9,6 +9,7 @@
   "parent": ["simple-graphs/chart"],
   "supports": {
     "html": false,
+    "inserter": false,
     "spacing": { "blockGap": true, "padding": true },
     "shadow": true,
     "__experimentalBorder": { "radius": true, "color": true, "style": true, "width": true },

@@ -113,11 +113,8 @@ function simple_graphs_render_chart( $attributes, $content, $block ) {
 		isset( $data_attrs['style']['border']['radius'] ) ? $data_attrs['style']['border']['radius'] : '6px'
 	);
 
-	// Chart wrapper adds its own blockGap as flex gap. Flex direction is
-	// driven by the legend's block style via CSS :has() so it stays in sync
-	// with whichever arrangement the user picks for the legend.
 	$chart_gap_css = simple_graphs_resolve_block_gap(
-		isset( $attributes['style']['spacing']['blockGap'] ) ? $attributes['style']['spacing']['blockGap'] : ''
+		isset( $attributes['style']['spacing']['blockGap'] ) ? $attributes['style']['spacing']['blockGap'] : 'var:preset|spacing|50'
 	);
 	$wrapper       = get_block_wrapper_attributes(
 		array(
@@ -256,7 +253,7 @@ function simple_graphs_render_data_html( $attrs, $inner_items, $sg_max, $value_m
 function simple_graphs_resolve_block_gap( $gap ) {
 	$gap = trim( (string) $gap );
 	if ( '' === $gap ) {
-		return 'var(--wp--preset--spacing--30, 1rem)';
+		return 'var(--wp--preset--spacing--30)';
 	}
 	if ( strpos( $gap, 'var:preset|spacing|' ) === 0 ) {
 		$slug = str_replace( 'var:preset|spacing|', '', $gap );
