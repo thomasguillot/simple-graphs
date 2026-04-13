@@ -4,14 +4,8 @@
 	justify-content: flex-end;
 
 	// When editing, ensure the item is tall enough to see the content.
-	// Switch to auto height but keep the value-based calc as min-height
-	// so tall bars don't shrink.
 	&.is-editing {
-		height: auto !important;
-		min-height: calc(
-			(var(--sg-value, 0) / var(--sg-max, 100)) *
-			var(--sg-size-base, 100%)
-		) !important;
+		min-height: 3em !important;
 	}
 
 	.simple-graphs-data-item__bar {
