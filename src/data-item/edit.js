@@ -35,19 +35,19 @@ export default function Edit( { attributes, setAttributes, context, clientId, is
 		textColor = contrastColor( customBg );
 	}
 
-	const wrapperRef = useRef( null );
+	const barRef = useRef( null );
 	const [ needsGrow, setNeedsGrow ] = useState( false );
 
 	useEffect( () => {
-		if ( ! isSelected || ! wrapperRef.current ) {
+		if ( ! isSelected || ! barRef.current ) {
 			if ( needsGrow ) {
 				setNeedsGrow( false );
 			}
 			return;
 		}
-		const wrapper = wrapperRef.current;
-		const bar = wrapper.querySelector( '.simple-graphs-data-item__bar' );
-		if ( ! bar ) {
+		const bar = barRef.current;
+		const wrapper = bar.closest( '.wp-block-simple-graphs-data-item' );
+		if ( ! wrapper ) {
 			return;
 		}
 		// Temporarily remove height constraint to measure natural content height.
@@ -60,7 +60,6 @@ export default function Edit( { attributes, setAttributes, context, clientId, is
 	}, [ isSelected, value, title, needsGrow ] );
 
 	const blockProps = useBlockProps( {
-		ref: wrapperRef,
 		style: {
 			'--sg-value': numericValue,
 			...( needsGrow ? { height: 'auto' } : {} ),
