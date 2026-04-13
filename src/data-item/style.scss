@@ -5,7 +5,6 @@
 
 	// When editing, ensure the item is tall enough to see the content.
 	&.is-editing {
-		height: auto !important;
 		min-height: fit-content !important;
 	}
 
